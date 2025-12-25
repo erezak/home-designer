@@ -46,6 +46,7 @@ const initialCanvas: CanvasConfig = {
   snapToGrid: true,
   snapToElements: true,
   autoPosition: true,
+  showAllDistances: false,
 };
 
 // Initial state

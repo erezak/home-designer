@@ -108,6 +108,7 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
                       ? state.canvas.dimensions.height 
                       : state.canvas.dimensions.depth
                   }}
+                  showAllDistances={state.canvas.showAllDistances}
                 />
               ))}
               

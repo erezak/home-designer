@@ -187,6 +187,16 @@ export function CanvasSettings() {
           />
           <span className="text-sm text-gray-700">Auto-position Elements</span>
         </label>
+        
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={canvas.showAllDistances}
+            onChange={(e) => setCanvas({ showAllDistances: e.target.checked })}
+            className="rounded border-gray-300"
+          />
+          <span className="text-sm text-gray-700">Show All Distances</span>
+        </label>
       </div>
     </div>
   );

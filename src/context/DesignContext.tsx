@@ -149,21 +149,64 @@ function computeAutoPositions(
   elements: DesignElement[],
   canvasWidth: number,
   startX: number = 0,
-  startY: number = 0
+  startY: number = 0,
+  allElements?: DesignElement[], // Pass all elements for relative lookup
+  _parentPosition?: Position // Parent position for context (unused but available)
 ): DesignElement[] {
   let currentX = startX;
   let currentY = startY;
   let rowHeight = 0;
+  
+  // Use allElements for lookup, or the current elements array if not provided
+  const lookupElements = allElements || elements;
 
   return elements.map((el) => {
     let computedPosition: Position;
 
     if (el.positioning.mode === 'absolute' && el.positioning.position) {
+      // Absolute positioning is always relative to canvas origin (0,0)
       computedPosition = el.positioning.position;
     } else if (el.positioning.mode === 'relative' && el.positioning.relativeTo) {
-      // Relative positioning is calculated based on the referenced element
-      // For now, use the offset if provided
-      computedPosition = el.positioning.offset || { x: currentX, y: currentY };
+      // Find the reference element
+      const refElement = findElement(lookupElements, el.positioning.relativeTo);
+      const offset = el.positioning.offset || { x: 0, y: 0 };
+      
+      if (refElement && refElement.computedPosition) {
+        const refPos = refElement.computedPosition;
+        const anchor = el.positioning.anchor || 'next-to';
+        
+        switch (anchor) {
+          case 'next-to': // Place to the right of reference
+            computedPosition = {
+              x: refPos.x + refElement.dimensions.width + offset.x,
+              y: refPos.y + offset.y,
+            };
+            break;
+          case 'below': // Place below reference
+            computedPosition = {
+              x: refPos.x + offset.x,
+              y: refPos.y + refElement.dimensions.height + offset.y,
+            };
+            break;
+          case 'above': // Place above reference
+            computedPosition = {
+              x: refPos.x + offset.x,
+              y: refPos.y - el.dimensions.height + offset.y,
+            };
+            break;
+          case 'inside': // Place at reference origin (inside)
+            computedPosition = {
+              x: refPos.x + offset.x,
+              y: refPos.y + offset.y,
+            };
+            break;
+          default:
+            computedPosition = { x: offset.x, y: offset.y };
+        }
+      } else {
+        // Reference not found or not yet computed, use offset as position
+        computedPosition = { x: offset.x, y: offset.y };
+      }
     } else {
       // Auto positioning
       if (currentX + el.dimensions.width > canvasWidth && currentX > startX) {
@@ -179,13 +222,17 @@ function computeAutoPositions(
     }
 
     // Recursively compute positions for children
+    // Children with 'auto' mode are positioned relative to parent
+    // Children with 'absolute' mode use canvas-absolute coordinates
     const computedChildren =
       el.children.length > 0
         ? computeAutoPositions(
             el.children,
-            el.dimensions.width,
-            computedPosition.x,
-            computedPosition.y
+            canvasWidth, // Use canvas width for all elements
+            computedPosition.x, // Pass parent position for auto-positioning children
+            computedPosition.y,
+            lookupElements,
+            computedPosition // Pass parent position for context
           )
         : [];
 
@@ -195,6 +242,15 @@ function computeAutoPositions(
       children: computedChildren,
     };
   });
+}
+
+// Two-pass computation to handle relative references to elements that come later
+function computeAllPositions(elements: DesignElement[], canvasWidth: number): DesignElement[] {
+  // First pass: compute positions for non-relative elements
+  let result = computeAutoPositions(elements, canvasWidth, 0, 0, elements);
+  // Second pass: recompute to resolve any forward references
+  result = computeAutoPositions(result, canvasWidth, 0, 0, result);
+  return result;
 }
 
 // Reducer
@@ -220,10 +276,8 @@ function designReducer(state: DesignState, action: DesignAction): DesignState {
         newElements = [...state.elements, newElement];
       }
 
-      // Recompute positions if auto-position is enabled
-      if (state.canvas.autoPosition) {
-        newElements = computeAutoPositions(newElements, state.canvas.dimensions.width);
-      }
+      // Recompute positions
+      newElements = computeAllPositions(newElements, state.canvas.dimensions.width);
 
       return {
         ...state,
@@ -235,10 +289,8 @@ function designReducer(state: DesignState, action: DesignAction): DesignState {
     case 'UPDATE_ELEMENT': {
       let newElements = updateNestedElement(state.elements, action.payload.id, action.payload.updates);
       
-      // Recompute positions if auto-position is enabled
-      if (state.canvas.autoPosition) {
-        newElements = computeAutoPositions(newElements, state.canvas.dimensions.width);
-      }
+      // Recompute positions
+      newElements = computeAllPositions(newElements, state.canvas.dimensions.width);
 
       return {
         ...state,
@@ -249,10 +301,8 @@ function designReducer(state: DesignState, action: DesignAction): DesignState {
     case 'DELETE_ELEMENT': {
       let newElements = deleteNestedElement(state.elements, action.payload);
       
-      // Recompute positions if auto-position is enabled
-      if (state.canvas.autoPosition) {
-        newElements = computeAutoPositions(newElements, state.canvas.dimensions.width);
-      }
+      // Recompute positions
+      newElements = computeAllPositions(newElements, state.canvas.dimensions.width);
 
       return {
         ...state,
@@ -296,9 +346,7 @@ function designReducer(state: DesignState, action: DesignAction): DesignState {
 
     case 'REORDER_ELEMENTS': {
       let newElements = action.payload;
-      if (state.canvas.autoPosition) {
-        newElements = computeAutoPositions(newElements, state.canvas.dimensions.width);
-      }
+      newElements = computeAllPositions(newElements, state.canvas.dimensions.width);
       return {
         ...state,
         elements: newElements,

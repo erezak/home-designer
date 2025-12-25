@@ -282,12 +282,65 @@ export function ElementPanel() {
                     }
                   })}
                 >
-                  <option value="next-to">Next To</option>
+                  <option value="next-to">Next To (Right)</option>
                   <option value="below">Below</option>
                   <option value="above">Above</option>
                   <option value="inside">Inside</option>
                 </select>
               </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Offset X (cm)
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    className="input-field"
+                    key={`offset-x-${selectedElement.id}`}
+                    defaultValue={selectedElement.positioning.offset?.x || 0}
+                    onBlur={(e) => updateElement(selectedElement.id, {
+                      positioning: { 
+                        ...selectedElement.positioning,
+                        offset: {
+                          x: parseCm(e.target.value),
+                          y: selectedElement.positioning.offset?.y || 0,
+                        }
+                      }
+                    })}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') e.currentTarget.blur();
+                    }}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Offset Y (cm)
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    className="input-field"
+                    key={`offset-y-${selectedElement.id}`}
+                    defaultValue={selectedElement.positioning.offset?.y || 0}
+                    onBlur={(e) => updateElement(selectedElement.id, {
+                      positioning: { 
+                        ...selectedElement.positioning,
+                        offset: {
+                          x: selectedElement.positioning.offset?.x || 0,
+                          y: parseCm(e.target.value),
+                        }
+                      }
+                    })}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') e.currentTarget.blur();
+                    }}
+                  />
+                </div>
+              </div>
+              <p className="text-xs text-gray-500">
+                Offset is applied after anchor positioning
+              </p>
             </div>
           )}
           

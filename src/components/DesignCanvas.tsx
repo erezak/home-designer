@@ -1,10 +1,26 @@
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { useDesign } from '../context/DesignContext';
 import { ElementRenderer } from './ElementRenderer';
-import { formatCm } from '../types';
+import { formatCm, type DesignElement } from '../types';
 
 interface DesignCanvasProps {
   canvasRef?: React.RefObject<HTMLDivElement | null>;
+}
+
+// Flatten all elements (including nested children) for rendering
+// This ensures absolute positioning always works from canvas origin
+function flattenElements(elements: DesignElement[]): DesignElement[] {
+  const result: DesignElement[] = [];
+  const flatten = (els: DesignElement[]) => {
+    for (const el of els) {
+      result.push(el);
+      if (el.children.length > 0) {
+        flatten(el.children);
+      }
+    }
+  };
+  flatten(elements);
+  return result;
 }
 
 export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
@@ -21,6 +37,10 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
     : toPixels(state.canvas.dimensions.depth);
   
   const gridSizePixels = toPixels(state.canvas.gridSize);
+  
+  // Flatten all elements for rendering - this ensures absolute positioning
+  // always works from canvas origin, not relative to parent elements
+  const flattenedElements = useMemo(() => flattenElements(state.elements), [state.elements]);
   
   return (
     <div className="flex-1 overflow-auto bg-gray-200 p-8">
@@ -72,8 +92,8 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
               {/* Canvas border with measurements */}
               <div className="absolute inset-0 border-2 border-gray-400 pointer-events-none" style={{ zIndex: 500 }} />
               
-              {/* Render elements */}
-              {state.elements.map((element) => (
+              {/* Render all elements (flattened) */}
+              {flattenedElements.map((element) => (
                 <ElementRenderer
                   key={element.id}
                   element={element}
@@ -81,7 +101,7 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
                   isSelected={element.id === state.selectedElementId}
                   onSelect={selectElement}
                   viewType={state.activeView}
-                  siblingElements={state.elements}
+                  siblingElements={flattenedElements}
                   canvasDimensions={{
                     width: state.canvas.dimensions.width,
                     height: state.activeView === 'elevation' 

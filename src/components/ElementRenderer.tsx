@@ -4,7 +4,7 @@ import { type DesignElement, MATERIAL_COLORS, formatCm } from '../types';
 
 interface ElementRendererProps {
   element: DesignElement;
-  scale: number;
+  scale?: number; // Kept for API compatibility
   isSelected: boolean;
   onSelect: (id: string) => void;
   showMeasurements?: boolean;
@@ -15,7 +15,7 @@ interface ElementRendererProps {
 
 export function ElementRenderer({
   element,
-  scale,
+  scale: _scale,
   isSelected,
   onSelect,
   showMeasurements = true,
@@ -252,17 +252,17 @@ export function ElementRenderer({
       {/* Measurements */}
       {showMeasurements && isSelected && (
         <>
-          {/* Width measurement - positioned at bottom inside element */}
-          <div className="absolute bottom-1 left-0 right-0 flex justify-center pointer-events-none">
+          {/* Width measurement - positioned at bottom-left corner */}
+          <div className="absolute pointer-events-none" style={{ bottom: 4, left: 4 }}>
             <span className="bg-blue-500 text-white text-xs px-1 rounded">
-              ↔ {formatCm(element.dimensions.width)}
+              W: {formatCm(element.dimensions.width)}
             </span>
           </div>
           
-          {/* Height measurement - positioned on right side inside element */}
-          <div className="absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none">
-            <span className="bg-blue-500 text-white text-xs px-1 rounded whitespace-nowrap" style={{ writingMode: 'vertical-rl' }}>
-              ↕ {formatCm(viewType === 'elevation' ? element.dimensions.height : element.depth || 0)}
+          {/* Height measurement - positioned at bottom-left, below width */}
+          <div className="absolute pointer-events-none" style={{ bottom: 20, left: 4 }}>
+            <span className="bg-blue-500 text-white text-xs px-1 rounded whitespace-nowrap">
+              H: {formatCm(viewType === 'elevation' ? element.dimensions.height : element.depth || 0)}
             </span>
           </div>
           
@@ -277,50 +277,38 @@ export function ElementRenderer({
         </>
       )}
 
-      {/* Distance indicators - shown when selected, positioned inside element */}
+      {/* Distance indicators - shown when selected, positioned in corners */}
       {isSelected && showMeasurements && (
         <>
-          {/* Distance to left edge or nearest element - shown as compact indicator */}
+          {/* Distance to left - top-left area */}
           {(distances.left > 0 || distances.nearestLeft) && (
             <div 
               className="absolute pointer-events-none"
-              style={{
-                left: 4,
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
+              style={{ top: 4, left: 4 }}
             >
-              <span className="bg-orange-500 text-white text-xs px-1 rounded whitespace-nowrap flex items-center gap-0.5">
+              <span className="bg-orange-500 text-white text-xs px-1 rounded whitespace-nowrap">
                 ← {formatCm(distances.nearestLeft?.distance ?? distances.left)}
               </span>
             </div>
           )}
 
-          {/* Distance to right edge or nearest element */}
+          {/* Distance to right - top-right area */}
           {(distances.right > 0 || distances.nearestRight) && (
             <div 
               className="absolute pointer-events-none"
-              style={{
-                right: 4,
-                top: '50%',
-                transform: 'translateY(-50%)',
-              }}
+              style={{ top: 4, right: 4 }}
             >
-              <span className="bg-orange-500 text-white text-xs px-1 rounded whitespace-nowrap flex items-center gap-0.5">
+              <span className="bg-orange-500 text-white text-xs px-1 rounded whitespace-nowrap">
                 {formatCm(distances.nearestRight?.distance ?? distances.right)} →
               </span>
             </div>
           )}
 
-          {/* Distance to top edge or nearest element */}
+          {/* Distance to top - below element name on left */}
           {(distances.top > 0 || distances.nearestTop) && (
             <div 
               className="absolute pointer-events-none"
-              style={{
-                top: 18,
-                left: '50%',
-                transform: 'translateX(-50%)',
-              }}
+              style={{ top: 20, left: 4 }}
             >
               <span className="bg-orange-500 text-white text-xs px-1 rounded whitespace-nowrap">
                 ↑ {formatCm(distances.nearestTop?.distance ?? distances.top)}
@@ -328,15 +316,11 @@ export function ElementRenderer({
             </div>
           )}
 
-          {/* Distance to bottom edge or nearest element */}
+          {/* Distance to bottom - bottom-right corner */}
           {(distances.bottom > 0 || distances.nearestBottom) && (
             <div 
               className="absolute pointer-events-none"
-              style={{
-                bottom: 4,
-                left: '50%',
-                transform: 'translateX(-50%)',
-              }}
+              style={{ bottom: 4, right: 4 }}
             >
               <span className="bg-orange-500 text-white text-xs px-1 rounded whitespace-nowrap">
                 ↓ {formatCm(distances.nearestBottom?.distance ?? distances.bottom)}
@@ -345,21 +329,6 @@ export function ElementRenderer({
           )}
         </>
       )}
-      
-      {/* Render children */}
-      {element.children.map((child) => (
-        <ElementRenderer
-          key={child.id}
-          element={child}
-          scale={scale}
-          isSelected={child.id === state.selectedElementId}
-          onSelect={onSelect}
-          showMeasurements={showMeasurements}
-          viewType={viewType}
-          siblingElements={element.children}
-          canvasDimensions={{ width: element.dimensions.width, height: elHeight }}
-        />
-      ))}
     </div>
   );
 }

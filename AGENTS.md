@@ -78,3 +78,5 @@ When working on this codebase, if you discover helpful insights about the codeâ€
 - **Overflow handling**: The canvas uses `overflow: hidden` to clip elements. Any measurement labels or distance indicators must be positioned inside their parent element bounds, not outside (e.g., no `right: '100%'` positioning for labels that extend beyond the canvas edge).
 
 - **Element positioning modes**: Elements support `auto` (computed top-to-bottom, left-to-right) and `absolute` (manual x/y). Dragging an element automatically switches it to `absolute` mode via `moveElement()`.
+
+- **Distance markers feature**: The `showAllDistances` flag in CanvasConfig controls global visibility of distance markers. When enabled, ElementRenderer shows orange distance indicators for all elements (not just selected ones). Distance calculation uses `siblingElements` to find nearest neighbors in each direction, considering both overlap and proximity.

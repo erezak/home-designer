@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="wallGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="nicheGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Wall background -->
+  <rect x="4" y="8" width="56" height="48" rx="3" fill="url(#wallGrad)"/>
+  
+  <!-- Grid lines -->
+  <g stroke="#60A5FA" stroke-width="0.5" opacity="0.4">
+    <line x1="4" y1="22" x2="60" y2="22"/>
+    <line x1="4" y1="36" x2="60" y2="36"/>
+    <line x1="24" y1="8" x2="24" y2="56"/>
+    <line x1="44" y1="8" x2="44" y2="56"/>
+  </g>
+  
+  <!-- Niche 1 (top-left) -->
+  <rect x="8" y="12" width="12" height="16" rx="1" fill="url(#nicheGrad)"/>
+  <rect x="9" y="13" width="10" height="14" rx="1" fill="#FEF3C7" opacity="0.3"/>
+  
+  <!-- TV Recess (center) -->
+  <rect x="26" y="14" width="16" height="12" rx="1" fill="#1F2937"/>
+  <rect x="28" y="16" width="12" height="8" rx="0.5" fill="#374151"/>
+  <circle cx="34" cy="20" r="2" fill="#4B5563"/>
+  
+  <!-- Niche 2 (top-right) -->
+  <rect x="48" y="12" width="8" height="10" rx="1" fill="url(#nicheGrad)"/>
+  <rect x="49" y="13" width="6" height="8" rx="1" fill="#FEF3C7" opacity="0.3"/>
+  
+  <!-- Shelf (middle) -->
+  <rect x="8" y="32" width="20" height="3" rx="0.5" fill="#92400E"/>
+  <rect x="8" y="32" width="20" height="1" fill="#B45309"/>
+  
+  <!-- Fireplace (bottom-right) -->
+  <rect x="36" y="38" width="20" height="14" rx="1" fill="#374151"/>
+  <rect x="38" y="40" width="16" height="10" rx="1" fill="#1F2937"/>
+  <ellipse cx="46" cy="47" rx="5" ry="3" fill="#F97316" opacity="0.8"/>
+  <ellipse cx="46" cy="46" rx="3" ry="2" fill="#FBBF24"/>
+  
+  <!-- Measurement arrows -->
+  <g stroke="#EF4444" stroke-width="1.5" fill="none">
+    <line x1="8" y1="4" x2="20" y2="4" marker-end="url(#arrow)"/>
+    <line x1="2" y1="12" x2="2" y2="28"/>
+  </g>
+  
+  <!-- Dimension tick marks -->
+  <g stroke="#EF4444" stroke-width="1">
+    <line x1="8" y1="3" x2="8" y2="5"/>
+    <line x1="20" y1="3" x2="20" y2="5"/>
+    <line x1="1" y1="12" x2="3" y2="12"/>
+    <line x1="1" y1="28" x2="3" y2="28"/>
+  </g>
+  
+  <!-- Pencil/ruler accent -->
+  <g transform="translate(52, 2) rotate(45)">
+    <rect x="0" y="0" width="3" height="12" rx="0.5" fill="#FCD34D"/>
+    <polygon points="1.5,12 0,15 3,15" fill="#1F2937"/>
+    <rect x="0" y="0" width="3" height="2" fill="#F59E0B"/>
+  </g>
+</svg>

@@ -353,8 +353,18 @@ function designReducer(state: DesignState, action: DesignAction): DesignState {
       };
     }
 
-    case 'LOAD_STATE':
-      return action.payload;
+    case 'LOAD_STATE': {
+      // Recompute positions after loading state
+      const loadedState = action.payload;
+      const recomputedElements = computeAllPositions(
+        loadedState.elements,
+        loadedState.canvas.dimensions.width
+      );
+      return {
+        ...loadedState,
+        elements: recomputedElements,
+      };
+    }
 
     default:
       return state;

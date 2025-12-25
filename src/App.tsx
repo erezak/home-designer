@@ -6,6 +6,7 @@ import {
   ElementPanel,
   Toolbar,
   ExportPanel,
+  AreaSummary,
 } from './components';
 
 function AppContent() {
@@ -21,6 +22,7 @@ function AppContent() {
         {/* Left Sidebar - Canvas Settings */}
         <aside className="w-72 bg-gray-50 border-r border-gray-200 overflow-y-auto p-4 space-y-4 no-print">
           <CanvasSettings />
+          <AreaSummary />
           <ExportPanel canvasRef={canvasRef} />
         </aside>
 

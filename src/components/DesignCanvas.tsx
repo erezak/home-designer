@@ -32,6 +32,10 @@ interface Gap {
   direction: 'horizontal' | 'vertical';
 }
 
+// Gap calculation constants
+const MAX_PROXIMITY_GAP = 100; // cm - maximum distance to consider elements as neighbors
+const MIN_GAP_SIZE = 0.5; // cm - minimum gap size to display
+
 function calculateGaps(
   elements: DesignElement[],
   _canvasWidth: number,
@@ -66,16 +70,15 @@ function calculateGaps(
         
         // Check for vertical proximity (elements should be somewhat aligned vertically)
         const verticalGap = Math.max(0, Math.max(pos.y - otherBottom, otherPos.y - bottom));
-        const maxVerticalGap = 100; // cm - allow gaps between elements up to 100cm apart vertically
         
-        if (verticalGap < maxVerticalGap && (!nearestRight || gap < nearestRight.gap)) {
+        if (verticalGap < MAX_PROXIMITY_GAP && (!nearestRight || gap < nearestRight.gap)) {
           nearestRight = { element: other, gap };
         }
       }
     }
     
     // Add horizontal gap if found
-    if (nearestRight && nearestRight.gap > 0.5) { // Minimum 0.5cm gap
+    if (nearestRight && nearestRight.gap > MIN_GAP_SIZE) {
       const pairKey = `h-${element.id}-${nearestRight.element.id}`;
       const reversePairKey = `h-${nearestRight.element.id}-${element.id}`;
       
@@ -114,16 +117,15 @@ function calculateGaps(
         
         // Check for horizontal proximity (elements should be somewhat aligned horizontally)
         const horizontalGap = Math.max(0, Math.max(pos.x - otherRight, otherPos.x - right));
-        const maxHorizontalGap = 100; // cm - allow gaps between elements up to 100cm apart horizontally
         
-        if (horizontalGap < maxHorizontalGap && (!nearestBelow || gap < nearestBelow.gap)) {
+        if (horizontalGap < MAX_PROXIMITY_GAP && (!nearestBelow || gap < nearestBelow.gap)) {
           nearestBelow = { element: other, gap };
         }
       }
     }
     
     // Add vertical gap if found
-    if (nearestBelow && nearestBelow.gap > 0.5) { // Minimum 0.5cm gap
+    if (nearestBelow && nearestBelow.gap > MIN_GAP_SIZE) {
       const pairKey = `v-${element.id}-${nearestBelow.element.id}`;
       const reversePairKey = `v-${nearestBelow.element.id}-${element.id}`;
       

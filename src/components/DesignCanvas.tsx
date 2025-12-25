@@ -23,6 +23,138 @@ function flattenElements(elements: DesignElement[]): DesignElement[] {
   return result;
 }
 
+// Calculate horizontal and vertical gaps between elements
+interface Gap {
+  start: number; // cm
+  end: number; // cm
+  size: number; // cm
+  position: number; // cm (perpendicular axis position)
+  direction: 'horizontal' | 'vertical';
+}
+
+function calculateGaps(
+  elements: DesignElement[],
+  _canvasWidth: number,
+  _canvasHeight: number,
+  viewType: 'elevation' | 'plan'
+): Gap[] {
+  if (elements.length === 0) return [];
+
+  const gaps: Gap[] = [];
+  
+  console.log('[calculateGaps] Called with', elements.length, 'elements');
+
+  // Sort elements by position for gap detection
+  const sortedByX = [...elements].sort((a, b) => {
+    const posA = a.computedPosition || { x: 0, y: 0 };
+    const posB = b.computedPosition || { x: 0, y: 0 };
+    return posA.x - posB.x;
+  });
+
+  const sortedByY = [...elements].sort((a, b) => {
+    const posA = a.computedPosition || { x: 0, y: 0 };
+    const posB = b.computedPosition || { x: 0, y: 0 };
+    return posA.y - posB.y;
+  });
+  
+  console.log('[calculateGaps] Sorted by X:', sortedByX.map(e => ({ 
+    name: e.name, 
+    pos: e.computedPosition 
+  })));
+
+  // Find horizontal gaps (between elements in X direction)
+  for (let i = 0; i < sortedByX.length - 1; i++) {
+    const current = sortedByX[i];
+    const next = sortedByX[i + 1];
+    
+    const currentPos = current.computedPosition || { x: 0, y: 0 };
+    const nextPos = next.computedPosition || { x: 0, y: 0 };
+    
+    const currentRight = currentPos.x + current.dimensions.width;
+    const gapSize = nextPos.x - currentRight;
+    
+    console.log(`[calculateGaps] Checking gap between ${current.name} and ${next.name}:`, {
+      currentRight,
+      nextX: nextPos.x,
+      gapSize
+    });
+    
+    // Only add gap if there's actual space and elements have some vertical overlap
+    if (gapSize > 0) {
+      const currentHeight = viewType === 'elevation' ? current.dimensions.height : (current.depth || 10);
+      const nextHeight = viewType === 'elevation' ? next.dimensions.height : (next.depth || 10);
+      
+      const currentTop = currentPos.y;
+      const currentBottom = currentPos.y + currentHeight;
+      const nextTop = nextPos.y;
+      const nextBottom = nextPos.y + nextHeight;
+      
+      // Check for vertical overlap
+      const overlapTop = Math.max(currentTop, nextTop);
+      const overlapBottom = Math.min(currentBottom, nextBottom);
+      
+      console.log(`[calculateGaps] Overlap check:`, {
+        overlapTop,
+        overlapBottom,
+        hasOverlap: overlapTop < overlapBottom
+      });
+      
+      if (overlapTop < overlapBottom) {
+        // There's vertical overlap, add the gap
+        const gap = {
+          start: currentRight,
+          end: nextPos.x,
+          size: gapSize,
+          position: (overlapTop + overlapBottom) / 2, // Center of overlap
+          direction: 'horizontal' as const
+        };
+        gaps.push(gap);
+        console.log('[calculateGaps] Added horizontal gap:', gap);
+      }
+    }
+  }
+
+  // Find vertical gaps (between elements in Y direction)
+  for (let i = 0; i < sortedByY.length - 1; i++) {
+    const current = sortedByY[i];
+    const next = sortedByY[i + 1];
+    
+    const currentPos = current.computedPosition || { x: 0, y: 0 };
+    const nextPos = next.computedPosition || { x: 0, y: 0 };
+    
+    const currentHeight = viewType === 'elevation' ? current.dimensions.height : (current.depth || 10);
+    
+    const currentBottom = currentPos.y + currentHeight;
+    const gapSize = nextPos.y - currentBottom;
+    
+    // Only add gap if there's actual space and elements have some horizontal overlap
+    if (gapSize > 0) {
+      const currentLeft = currentPos.x;
+      const currentRight = currentPos.x + current.dimensions.width;
+      const nextLeft = nextPos.x;
+      const nextRight = nextPos.x + next.dimensions.width;
+      
+      // Check for horizontal overlap
+      const overlapLeft = Math.max(currentLeft, nextLeft);
+      const overlapRight = Math.min(currentRight, nextRight);
+      
+      if (overlapLeft < overlapRight) {
+        // There's horizontal overlap, add the gap
+        gaps.push({
+          start: currentBottom,
+          end: nextPos.y,
+          size: gapSize,
+          position: (overlapLeft + overlapRight) / 2, // Center of overlap
+          direction: 'vertical'
+        });
+      }
+    }
+  }
+
+  console.log('[calculateGaps] Total gaps found:', gaps.length, gaps);
+  return gaps;
+}
+
 export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
   const { state, selectElement } = useDesign();
   const internalRef = useRef<HTMLDivElement>(null);
@@ -41,6 +173,24 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
   // Flatten all elements for rendering - this ensures absolute positioning
   // always works from canvas origin, not relative to parent elements
   const flattenedElements = useMemo(() => flattenElements(state.elements), [state.elements]);
+  
+  // Calculate gaps between elements
+  const gaps = useMemo(() => {
+    if (!state.canvas.showAllDistances || flattenedElements.length === 0) return [];
+    
+    console.log('[DesignCanvas] flattenedElements for gap calculation:', flattenedElements.map(e => ({
+      name: e.name,
+      computedPosition: e.computedPosition,
+      positioning: e.positioning
+    })));
+    
+    return calculateGaps(
+      flattenedElements,
+      state.canvas.dimensions.width,
+      state.activeView === 'elevation' ? state.canvas.dimensions.height : state.canvas.dimensions.depth,
+      state.activeView
+    );
+  }, [flattenedElements, state.canvas.dimensions, state.activeView, state.canvas.showAllDistances]);
   
   return (
     <div className="flex-1 overflow-auto bg-gray-200 p-8">
@@ -111,6 +261,34 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
                   showAllDistances={state.canvas.showAllDistances}
                 />
               ))}
+              
+              {/* Render gap measurements (empty wall spaces) */}
+              {state.canvas.showAllDistances && gaps.map((gap, index) => {
+                const isHorizontal = gap.direction === 'horizontal';
+                const startPx = toPixels(gap.start);
+                const sizePx = toPixels(gap.size);
+                const positionPx = toPixels(gap.position);
+                
+                return (
+                  <div
+                    key={`gap-${index}`}
+                    className="absolute pointer-events-none"
+                    style={{
+                      [isHorizontal ? 'left' : 'top']: startPx,
+                      [isHorizontal ? 'width' : 'height']: sizePx,
+                      [isHorizontal ? 'top' : 'left']: positionPx - 10,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      zIndex: 50,
+                    }}
+                  >
+                    <span className="bg-green-600 text-white text-xs px-1 rounded whitespace-nowrap">
+                      {isHorizontal ? '↔' : '↕'} {formatCm(gap.size)}
+                    </span>
+                  </div>
+                );
+              })}
               
               {/* Empty state */}
               {state.elements.length === 0 && (

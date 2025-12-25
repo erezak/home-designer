@@ -41,117 +41,115 @@ function calculateGaps(
   if (elements.length === 0) return [];
 
   const gaps: Gap[] = [];
-  
-  console.log('[calculateGaps] Called with', elements.length, 'elements');
+  const processedPairs = new Set<string>();
 
-  // Sort elements by position for gap detection
-  const sortedByX = [...elements].sort((a, b) => {
-    const posA = a.computedPosition || { x: 0, y: 0 };
-    const posB = b.computedPosition || { x: 0, y: 0 };
-    return posA.x - posB.x;
-  });
-
-  const sortedByY = [...elements].sort((a, b) => {
-    const posA = a.computedPosition || { x: 0, y: 0 };
-    const posB = b.computedPosition || { x: 0, y: 0 };
-    return posA.y - posB.y;
-  });
-  
-  console.log('[calculateGaps] Sorted by X:', sortedByX.map(e => ({ 
-    name: e.name, 
-    pos: e.computedPosition 
-  })));
-
-  // Find horizontal gaps (between elements in X direction)
-  for (let i = 0; i < sortedByX.length - 1; i++) {
-    const current = sortedByX[i];
-    const next = sortedByX[i + 1];
+  // For each element, find gaps to its nearest neighbors in all directions
+  for (const element of elements) {
+    const pos = element.computedPosition || { x: 0, y: 0 };
+    const width = element.dimensions.width;
+    const height = viewType === 'elevation' ? element.dimensions.height : (element.depth || 10);
     
-    const currentPos = current.computedPosition || { x: 0, y: 0 };
-    const nextPos = next.computedPosition || { x: 0, y: 0 };
+    const right = pos.x + width;
+    const bottom = pos.y + height;
     
-    const currentRight = currentPos.x + current.dimensions.width;
-    const gapSize = nextPos.x - currentRight;
+    // Find nearest element to the right
+    let nearestRight: { element: DesignElement; gap: number } | null = null;
+    for (const other of elements) {
+      if (other.id === element.id) continue;
+      const otherPos = other.computedPosition || { x: 0, y: 0 };
+      
+      // Check if other is to the right
+      if (otherPos.x > right) {
+        const gap = otherPos.x - right;
+        const otherHeight = viewType === 'elevation' ? other.dimensions.height : (other.depth || 10);
+        const otherBottom = otherPos.y + otherHeight;
+        
+        // Check for vertical proximity (elements should be somewhat aligned vertically)
+        const verticalGap = Math.max(0, Math.max(pos.y - otherBottom, otherPos.y - bottom));
+        const maxVerticalGap = 100; // cm - allow gaps between elements up to 100cm apart vertically
+        
+        if (verticalGap < maxVerticalGap && (!nearestRight || gap < nearestRight.gap)) {
+          nearestRight = { element: other, gap };
+        }
+      }
+    }
     
-    console.log(`[calculateGaps] Checking gap between ${current.name} and ${next.name}:`, {
-      currentRight,
-      nextX: nextPos.x,
-      gapSize
-    });
-    
-    // Only add gap if there's actual space and elements have some vertical overlap
-    if (gapSize > 0) {
-      const currentHeight = viewType === 'elevation' ? current.dimensions.height : (current.depth || 10);
-      const nextHeight = viewType === 'elevation' ? next.dimensions.height : (next.depth || 10);
+    // Add horizontal gap if found
+    if (nearestRight && nearestRight.gap > 0.5) { // Minimum 0.5cm gap
+      const pairKey = `h-${element.id}-${nearestRight.element.id}`;
+      const reversePairKey = `h-${nearestRight.element.id}-${element.id}`;
       
-      const currentTop = currentPos.y;
-      const currentBottom = currentPos.y + currentHeight;
-      const nextTop = nextPos.y;
-      const nextBottom = nextPos.y + nextHeight;
-      
-      // Check for vertical overlap
-      const overlapTop = Math.max(currentTop, nextTop);
-      const overlapBottom = Math.min(currentBottom, nextBottom);
-      
-      console.log(`[calculateGaps] Overlap check:`, {
-        overlapTop,
-        overlapBottom,
-        hasOverlap: overlapTop < overlapBottom
-      });
-      
-      if (overlapTop < overlapBottom) {
-        // There's vertical overlap, add the gap
+      if (!processedPairs.has(pairKey) && !processedPairs.has(reversePairKey)) {
+        processedPairs.add(pairKey);
+        
+        // Calculate vertical center between the two elements
+        const otherPos = nearestRight.element.computedPosition || { x: 0, y: 0 };
+        const otherHeight = viewType === 'elevation' ? nearestRight.element.dimensions.height : (nearestRight.element.depth || 10);
+        
+        const minTop = Math.min(pos.y, otherPos.y);
+        const maxBottom = Math.max(bottom, otherPos.y + otherHeight);
+        const centerY = (minTop + maxBottom) / 2;
+        
         const gap = {
-          start: currentRight,
-          end: nextPos.x,
-          size: gapSize,
-          position: (overlapTop + overlapBottom) / 2, // Center of overlap
+          start: right,
+          end: otherPos.x,
+          size: nearestRight.gap,
+          position: centerY,
           direction: 'horizontal' as const
         };
         gaps.push(gap);
-        console.log('[calculateGaps] Added horizontal gap:', gap);
+      }
+    }
+    
+    // Find nearest element below
+    let nearestBelow: { element: DesignElement; gap: number } | null = null;
+    for (const other of elements) {
+      if (other.id === element.id) continue;
+      const otherPos = other.computedPosition || { x: 0, y: 0 };
+      
+      // Check if other is below
+      if (otherPos.y > bottom) {
+        const gap = otherPos.y - bottom;
+        const otherRight = otherPos.x + other.dimensions.width;
+        
+        // Check for horizontal proximity (elements should be somewhat aligned horizontally)
+        const horizontalGap = Math.max(0, Math.max(pos.x - otherRight, otherPos.x - right));
+        const maxHorizontalGap = 100; // cm - allow gaps between elements up to 100cm apart horizontally
+        
+        if (horizontalGap < maxHorizontalGap && (!nearestBelow || gap < nearestBelow.gap)) {
+          nearestBelow = { element: other, gap };
+        }
+      }
+    }
+    
+    // Add vertical gap if found
+    if (nearestBelow && nearestBelow.gap > 0.5) { // Minimum 0.5cm gap
+      const pairKey = `v-${element.id}-${nearestBelow.element.id}`;
+      const reversePairKey = `v-${nearestBelow.element.id}-${element.id}`;
+      
+      if (!processedPairs.has(pairKey) && !processedPairs.has(reversePairKey)) {
+        processedPairs.add(pairKey);
+        
+        // Calculate horizontal center between the two elements
+        const otherPos = nearestBelow.element.computedPosition || { x: 0, y: 0 };
+        const otherWidth = nearestBelow.element.dimensions.width;
+        
+        const minLeft = Math.min(pos.x, otherPos.x);
+        const maxRight = Math.max(right, otherPos.x + otherWidth);
+        const centerX = (minLeft + maxRight) / 2;
+        
+        const gap = {
+          start: bottom,
+          end: otherPos.y,
+          size: nearestBelow.gap,
+          position: centerX,
+          direction: 'vertical' as const
+        };
+        gaps.push(gap);
       }
     }
   }
 
-  // Find vertical gaps (between elements in Y direction)
-  for (let i = 0; i < sortedByY.length - 1; i++) {
-    const current = sortedByY[i];
-    const next = sortedByY[i + 1];
-    
-    const currentPos = current.computedPosition || { x: 0, y: 0 };
-    const nextPos = next.computedPosition || { x: 0, y: 0 };
-    
-    const currentHeight = viewType === 'elevation' ? current.dimensions.height : (current.depth || 10);
-    
-    const currentBottom = currentPos.y + currentHeight;
-    const gapSize = nextPos.y - currentBottom;
-    
-    // Only add gap if there's actual space and elements have some horizontal overlap
-    if (gapSize > 0) {
-      const currentLeft = currentPos.x;
-      const currentRight = currentPos.x + current.dimensions.width;
-      const nextLeft = nextPos.x;
-      const nextRight = nextPos.x + next.dimensions.width;
-      
-      // Check for horizontal overlap
-      const overlapLeft = Math.max(currentLeft, nextLeft);
-      const overlapRight = Math.min(currentRight, nextRight);
-      
-      if (overlapLeft < overlapRight) {
-        // There's horizontal overlap, add the gap
-        gaps.push({
-          start: currentBottom,
-          end: nextPos.y,
-          size: gapSize,
-          position: (overlapLeft + overlapRight) / 2, // Center of overlap
-          direction: 'vertical'
-        });
-      }
-    }
-  }
-
-  console.log('[calculateGaps] Total gaps found:', gaps.length, gaps);
   return gaps;
 }
 
@@ -177,12 +175,6 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
   // Calculate gaps between elements
   const gaps = useMemo(() => {
     if (!state.canvas.showAllDistances || flattenedElements.length === 0) return [];
-    
-    console.log('[DesignCanvas] flattenedElements for gap calculation:', flattenedElements.map(e => ({
-      name: e.name,
-      computedPosition: e.computedPosition,
-      positioning: e.positioning
-    })));
     
     return calculateGaps(
       flattenedElements,

@@ -63,7 +63,16 @@ function loadFromLocalStorage(): DesignState | null {
   try {
     const saved = localStorage.getItem(LOCALSTORAGE_KEY);
     if (saved) {
-      return JSON.parse(saved) as DesignState;
+      const loadedState = JSON.parse(saved) as DesignState;
+      // Recompute positions after loading
+      const recomputedElements = computeAllPositions(
+        loadedState.elements,
+        loadedState.canvas.dimensions.width
+      );
+      return {
+        ...loadedState,
+        elements: recomputedElements,
+      };
     }
   } catch (e) {
     console.error('Failed to load from localStorage:', e);

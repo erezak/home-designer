@@ -80,3 +80,5 @@ When working on this codebase, if you discover helpful insights about the codeâ€
 - **Element positioning modes**: Elements support `auto` (computed top-to-bottom, left-to-right) and `absolute` (manual x/y). Dragging an element automatically switches it to `absolute` mode via `moveElement()`.
 
 - **Distance markers feature**: The `showAllDistances` flag in CanvasConfig controls global visibility of distance markers. When enabled, ElementRenderer shows orange distance indicators for all elements (not just selected ones). Distance calculation uses `siblingElements` to find nearest neighbors in each direction, considering both overlap and proximity.
+
+- **Critical: computedPosition must be set on load**: When loading state from localStorage, `loadFromLocalStorage()` MUST call `computeAllPositions()` to set `computedPosition` on all elements. Without this, elements render correctly (ElementRenderer uses `positioning.position` as fallback) but gap calculations fail because they depend on `computedPosition`. This was a bug that caused 0 gaps to be found until fixed.

@@ -11,6 +11,7 @@ interface ElementRendererProps {
   viewType: 'elevation' | 'plan';
   siblingElements?: DesignElement[]; // Other elements at the same level
   canvasDimensions?: { width: number; height: number }; // Canvas size for edge distances
+  showAllDistances?: boolean; // Show distance markers for all elements
 }
 
 export function ElementRenderer({
@@ -22,6 +23,7 @@ export function ElementRenderer({
   viewType,
   siblingElements = [],
   canvasDimensions,
+  showAllDistances = false,
 }: ElementRendererProps) {
   const { state, moveElement } = useDesign();
   const position = useMemo(() => element.computedPosition || { x: 0, y: 0 }, [element.computedPosition]);
@@ -277,8 +279,8 @@ export function ElementRenderer({
         </>
       )}
 
-      {/* Distance indicators - shown when selected, positioned in corners */}
-      {isSelected && showMeasurements && (
+      {/* Distance indicators - shown when selected OR when showAllDistances is enabled */}
+      {(isSelected || showAllDistances) && showMeasurements && (
         <>
           {/* Distance to left - top-left area */}
           {(distances.left > 0 || distances.nearestLeft) && (

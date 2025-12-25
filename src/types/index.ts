@@ -94,6 +94,7 @@ export interface CanvasConfig {
   snapToGrid: boolean;
   snapToElements: boolean;
   autoPosition: boolean; // Auto-stack elements
+  showAllDistances: boolean; // Show distance markers for all elements
 }
 
 // View type

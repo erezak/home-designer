@@ -44,32 +44,44 @@ export function ElementPanel() {
     <div className="space-y-4">
       {/* Add Element Section */}
       <div className="panel">
-        <h3 className="font-semibold text-gray-800 border-b pb-2 mb-3">Add Element</h3>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-xl font-black uppercase tracking-tight">Element Forge</h3>
+          <span className="px-2 py-0.5 text-xs font-black bg-[#ffde34] border-2 border-black rounded-md">
+            Build
+          </span>
+        </div>
         <div className="grid grid-cols-2 gap-2">
           {elementTypes.map((type) => (
             <button
               key={type}
               onClick={() => addElement(type, selectedElement?.id)}
-              className="btn-secondary text-sm py-2"
+              className="btn-secondary text-sm py-3"
             >
               + {ELEMENT_TYPE_NAMES[type]}
             </button>
           ))}
         </div>
         {selectedElement && (
-          <p className="text-xs text-gray-500 mt-2">
-            Will be added inside: {selectedElement.name}
+          <p className="text-xs text-[#475569] mt-2 uppercase tracking-[0.12em]">
+            Target: {selectedElement.name}
           </p>
         )}
       </div>
       
       {/* Element List */}
       <div className="panel">
-        <h3 className="font-semibold text-gray-800 border-b pb-2 mb-3">Elements</h3>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-xl font-black uppercase tracking-tight">Hierarchy</h3>
+          <span className="px-2 py-0.5 text-xs font-black bg-[#7cf0ff] border-2 border-black rounded-md">
+            Stack
+          </span>
+        </div>
         {state.elements.length === 0 ? (
-          <p className="text-sm text-gray-500">No elements added yet</p>
+          <p className="text-sm font-semibold text-[#475569] uppercase tracking-[0.08em]">
+            No elements added yet
+          </p>
         ) : (
-          <div className="space-y-1 max-h-48 overflow-y-auto">
+          <div className="space-y-1 max-h-56 overflow-y-auto scrollbar-thin pr-1">
             {state.elements.map((el) => (
               <ElementListItem
                 key={el.id}
@@ -87,10 +99,10 @@ export function ElementPanel() {
       {selectedElement && (
         <div className="panel">
           <div className="flex justify-between items-center border-b pb-2 mb-3">
-            <h3 className="font-semibold text-gray-800">Edit Element</h3>
+            <h3 className="text-xl font-black uppercase tracking-tight">Edit Element</h3>
             <button
               onClick={() => deleteElement(selectedElement.id)}
-              className="text-red-600 hover:text-red-800 text-sm"
+              className="btn-danger text-xs py-1 px-2"
             >
               Delete
             </button>
@@ -98,7 +110,7 @@ export function ElementPanel() {
           
           {/* Name */}
           <div className="mb-3">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
               Name
             </label>
             <input
@@ -111,7 +123,7 @@ export function ElementPanel() {
           
           {/* Type */}
           <div className="mb-3">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
               Type
             </label>
             <select
@@ -132,7 +144,7 @@ export function ElementPanel() {
           {/* Dimensions */}
           <div className="grid grid-cols-3 gap-2 mb-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
                 Width (cm)
               </label>
               <input
@@ -153,7 +165,7 @@ export function ElementPanel() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
                 Height (cm)
               </label>
               <input
@@ -175,7 +187,7 @@ export function ElementPanel() {
             </div>
             {(selectedElement.type === 'niche' || selectedElement.depth !== undefined) && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
                   Depth (cm)
                 </label>
                 <input
@@ -197,7 +209,7 @@ export function ElementPanel() {
           
           {/* Material */}
           <div className="mb-3">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
               Material
             </label>
             <select
@@ -220,7 +232,7 @@ export function ElementPanel() {
           
           {/* Positioning */}
           <div className="mb-3">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
               Position Mode
             </label>
             <select
@@ -245,7 +257,7 @@ export function ElementPanel() {
           {selectedElement.positioning.mode === 'relative' && (
             <div className="space-y-2 mb-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
                   Relative To
                 </label>
                 <select
@@ -269,7 +281,7 @@ export function ElementPanel() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
                   Anchor
                 </label>
                 <select
@@ -290,7 +302,7 @@ export function ElementPanel() {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
                     Offset X (cm)
                   </label>
                   <input
@@ -314,7 +326,7 @@ export function ElementPanel() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
                     Offset Y (cm)
                   </label>
                   <input
@@ -338,7 +350,7 @@ export function ElementPanel() {
                   />
                 </div>
               </div>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-[#475569] uppercase tracking-[0.1em]">
                 Offset is applied after anchor positioning
               </p>
             </div>
@@ -348,7 +360,7 @@ export function ElementPanel() {
           {selectedElement.positioning.mode === 'absolute' && (
             <div className="grid grid-cols-2 gap-2 mb-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
                   X (cm)
                 </label>
                 <input
@@ -372,7 +384,7 @@ export function ElementPanel() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
                   Y (cm)
                 </label>
                 <input
@@ -421,15 +433,15 @@ function ElementListItem({
     <div>
       <button
         onClick={() => onSelect(element.id)}
-        className={`w-full text-left px-2 py-1.5 rounded text-sm transition-colors ${
+        className={`w-full text-left px-2 py-2 rounded-md text-sm font-semibold transition-colors border-2 border-black ${
           isSelected 
-            ? 'bg-blue-100 text-blue-800' 
-            : 'hover:bg-gray-100 text-gray-700'
+            ? 'bg-[#ffde34] text-black shadow-[6px_6px_0_#0f172a]' 
+            : 'bg-white hover:bg-[#fef3c7] text-[#0f172a]'
         }`}
         style={{ paddingLeft: `${8 + depth * 16}px` }}
       >
         <span className="font-medium">{element.name}</span>
-        <span className="text-gray-400 ml-2 text-xs">
+        <span className="text-[#475569] ml-2 text-xs uppercase tracking-[0.08em]">
           {formatCm(element.dimensions.width)} × {formatCm(element.dimensions.height)}
         </span>
       </button>

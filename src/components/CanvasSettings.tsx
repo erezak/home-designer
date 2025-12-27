@@ -9,11 +9,16 @@ export function CanvasSettings() {
 
   return (
     <div className="panel space-y-4">
-      <h3 className="font-semibold text-gray-800 border-b pb-2">Canvas Settings</h3>
+      <h3 className="text-xl font-black uppercase tracking-tight flex items-center gap-2">
+        Canvas Lab
+        <span className="px-2 py-0.5 text-xs font-black bg-[#ffde34] border-2 border-black rounded-md">
+          Base
+        </span>
+      </h3>
       
       {/* Name */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
           Design Name
         </label>
         <input
@@ -27,7 +32,7 @@ export function CanvasSettings() {
       {/* Dimensions */}
       <div className="grid grid-cols-3 gap-2">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
             Width (cm)
           </label>
           <input
@@ -46,7 +51,7 @@ export function CanvasSettings() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
             Height (cm)
           </label>
           <input
@@ -65,7 +70,7 @@ export function CanvasSettings() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
             Depth (cm)
           </label>
           <input
@@ -87,7 +92,7 @@ export function CanvasSettings() {
       
       {/* Material */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
           Material
         </label>
         <select
@@ -110,7 +115,7 @@ export function CanvasSettings() {
       
       {/* Scale */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
           Scale (1:X)
         </label>
         <select
@@ -133,14 +138,14 @@ export function CanvasSettings() {
             type="checkbox"
             checked={canvas.showGrid}
             onChange={(e) => setCanvas({ showGrid: e.target.checked })}
-            className="rounded border-gray-300"
+            className="rounded border-2 border-black"
           />
-          <span className="text-sm text-gray-700">Show Grid</span>
+          <span className="text-sm font-semibold text-[#0f172a]">Show Grid</span>
         </label>
         
         {canvas.showGrid && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
               Grid Size (cm)
             </label>
             <input
@@ -163,9 +168,9 @@ export function CanvasSettings() {
             type="checkbox"
             checked={canvas.snapToGrid}
             onChange={(e) => setCanvas({ snapToGrid: e.target.checked })}
-            className="rounded border-gray-300"
+            className="rounded border-2 border-black"
           />
-          <span className="text-sm text-gray-700">Snap to Grid</span>
+          <span className="text-sm font-semibold text-[#0f172a]">Snap to Grid</span>
         </label>
         
         <label className="flex items-center gap-2">
@@ -173,9 +178,9 @@ export function CanvasSettings() {
             type="checkbox"
             checked={canvas.snapToElements}
             onChange={(e) => setCanvas({ snapToElements: e.target.checked })}
-            className="rounded border-gray-300"
+            className="rounded border-2 border-black"
           />
-          <span className="text-sm text-gray-700">Snap to Elements</span>
+          <span className="text-sm font-semibold text-[#0f172a]">Snap to Elements</span>
         </label>
         
         <label className="flex items-center gap-2">
@@ -183,9 +188,9 @@ export function CanvasSettings() {
             type="checkbox"
             checked={canvas.autoPosition}
             onChange={(e) => setCanvas({ autoPosition: e.target.checked })}
-            className="rounded border-gray-300"
+            className="rounded border-2 border-black"
           />
-          <span className="text-sm text-gray-700">Auto-position Elements</span>
+          <span className="text-sm font-semibold text-[#0f172a]">Auto-position Elements</span>
         </label>
         
         <label className="flex items-center gap-2">
@@ -193,9 +198,9 @@ export function CanvasSettings() {
             type="checkbox"
             checked={canvas.showAllDistances}
             onChange={(e) => setCanvas({ showAllDistances: e.target.checked })}
-            className="rounded border-gray-300"
+            className="rounded border-2 border-black"
           />
-          <span className="text-sm text-gray-700">Show All Distances</span>
+          <span className="text-sm font-semibold text-[#0f172a]">Show All Distances</span>
         </label>
       </div>
     </div>

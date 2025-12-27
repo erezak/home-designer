@@ -1,15 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Archivo+Black&display=swap');
 @import "tailwindcss";
 
 :root {
-  --color-wall: #e5e5e5;
-  --color-niche: #f5f5f5;
-  --color-shelf-wood: #8b6914;
-  --color-shelf-glass: rgba(200, 230, 255, 0.5);
-  --color-shelf-metal: #71717a;
-  --color-tv-recess: #1f2937;
-  --color-fireplace: #374151;
-  --color-grid: #d1d5db;
-  --color-measurement: #3b82f6;
+  --color-wall: #0f172a;
+  --color-niche: #fefae0;
+  --color-shelf-wood: #f97316;
+  --color-shelf-glass: rgba(152, 237, 255, 0.6);
+  --color-shelf-metal: #94a3b8;
+  --color-tv-recess: #0b0b0f;
+  --color-fireplace: #111827;
+  --color-grid: #1f2937;
+  --color-measurement: #fb7185;
+  --ink: #0b0b0b;
+  --paper: #f9f7f1;
+  --accent: #ffde34;
+  --accent-2: #7cf0ff;
 }
 
 * {
@@ -17,86 +22,113 @@
 }
 
 body {
-  @apply bg-gray-100 text-gray-900 font-sans antialiased m-0;
+  @apply m-0 antialiased;
+  background: radial-gradient(circle at 10% 10%, rgba(255, 222, 52, 0.1), transparent 35%),
+    radial-gradient(circle at 90% 20%, rgba(124, 240, 255, 0.12), transparent 30%),
+    #0c0e12;
+  color: #f8f7f3;
+  font-family: 'Space Grotesk', 'Inter', system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--ink);
 }
 
 .canvas-grid {
-  background-image: 
-    linear-gradient(to right, var(--color-grid) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--color-grid) 1px, transparent 1px);
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
 }
 
 .measurement-line {
-  @apply stroke-blue-500;
+  stroke: var(--color-measurement);
   stroke-dasharray: 4 2;
 }
 
 .measurement-text {
-  @apply fill-blue-600 text-xs font-medium;
+  @apply text-xs font-semibold;
+  fill: var(--color-measurement);
 }
 
 .input-field {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm;
+  @apply w-full px-3 py-2 text-sm font-medium;
+  background: var(--paper);
+  border: 2px solid #0f172a;
+  border-radius: 8px;
+  box-shadow: 6px 6px 0 #0f172a;
+  color: var(--ink);
 }
 
 .input-field:focus {
-  @apply outline-none ring-2 ring-blue-500 border-blue-500;
+  outline: 3px solid var(--accent);
+  border-color: var(--ink);
+  box-shadow: 8px 8px 0 #0f172a;
 }
 
-.btn {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer;
-  transition: background-color 0.2s, border-color 0.2s;
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+  @apply px-4 py-2 font-bold uppercase tracking-tight cursor-pointer;
+  border: 3px solid #0f172a;
+  border-radius: 10px;
+  box-shadow: 6px 6px 0 #0f172a;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
-.btn:disabled {
+.btn:disabled,
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.btn-danger:disabled {
   @apply opacity-50 cursor-not-allowed;
+  box-shadow: 0 0 0 transparent;
+}
+
+.btn:active,
+.btn-primary:active,
+.btn-secondary:active,
+.btn-danger:active {
+  transform: translate(2px, 2px);
+  box-shadow: 4px 4px 0 #0f172a;
 }
 
 .btn-primary {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer bg-blue-600 text-white;
-  transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-  @apply bg-blue-700;
-}
-
-.btn-primary:disabled {
-  @apply opacity-50 cursor-not-allowed;
+  background: var(--accent);
+  color: var(--ink);
 }
 
 .btn-secondary {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer bg-gray-200 text-gray-800;
-  transition: background-color 0.2s;
-}
-
-.btn-secondary:hover {
-  @apply bg-gray-300;
-}
-
-.btn-secondary:disabled {
-  @apply opacity-50 cursor-not-allowed;
+  background: var(--accent-2);
+  color: #062128;
 }
 
 .btn-danger {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer bg-red-600 text-white;
-  transition: background-color 0.2s;
-}
-
-.btn-danger:hover {
-  @apply bg-red-700;
-}
-
-.btn-danger:disabled {
-  @apply opacity-50 cursor-not-allowed;
+  background: #ef4444;
+  color: #fff;
+  border-color: #111;
 }
 
 .panel {
-  @apply bg-white rounded-lg shadow-md p-4;
+  background: var(--paper);
+  border: 3px solid #0f172a;
+  border-radius: 14px;
+  box-shadow: 10px 10px 0 #0f172a;
+  padding: 1.25rem;
+  color: var(--ink);
 }
 
 .scrollbar-thin {
   scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #0f172a;
 }
 
 /* Print styles */

@@ -226,7 +226,12 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
 
   return (
     <div className="panel space-y-3">
-      <h3 className="font-semibold text-gray-800 border-b pb-2">Export & Save</h3>
+      <h3 className="text-xl font-black uppercase tracking-tight flex items-center gap-2">
+        Export & Save
+        <span className="px-2 py-0.5 text-xs font-black bg-[#0b0b0b] text-[#fefae0] border-2 border-black rounded-md">
+          Delivery
+        </span>
+      </h3>
 
       <div className="space-y-2">
         <button onClick={generatePDF} className="btn-primary w-full text-sm">
@@ -246,7 +251,7 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
 
       <div className="space-y-2">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-xs uppercase font-black text-[#0f172a] mb-1 tracking-[0.12em]">
             Project Format
           </label>
           <select
@@ -277,7 +282,7 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
           className="hidden"
         />
 
-        <p className="text-xs text-gray-500 text-center">
+        <p className="text-xs text-[#475569] text-center uppercase tracking-[0.12em]">
           Auto-saved to browser storage
         </p>
       </div>

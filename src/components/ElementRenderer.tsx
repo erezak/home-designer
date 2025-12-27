@@ -25,6 +25,7 @@ export function ElementRenderer({
   canvasDimensions,
   showAllDistances = false,
 }: ElementRendererProps) {
+  void _scale;
   const { state, moveElement } = useDesign();
   const position = useMemo(() => element.computedPosition || { x: 0, y: 0 }, [element.computedPosition]);
   
@@ -187,12 +188,13 @@ export function ElementRenderer({
       width,
       height,
       backgroundColor: materialColor,
-      border: isSelected ? '2px solid #3b82f6' : '1px solid #9ca3af',
+      border: isSelected ? '3px solid #111' : '2px solid #0b0b0b',
       boxSizing: 'border-box',
       cursor: isDragging ? 'grabbing' : 'grab',
-      transition: isDragging ? 'none' : 'border-color 0.2s',
+      transition: isDragging ? 'none' : 'border-color 0.15s, box-shadow 0.15s',
       userSelect: 'none',
-      zIndex: isDragging ? 1000 : isSelected ? 100 : 1,
+      boxShadow: isSelected ? '8px 8px 0 #ffde34' : '4px 4px 0 rgba(0,0,0,0.35)',
+      zIndex: isDragging ? 1000 : isSelected ? 200 : 1,
     };
     
     switch (element.type) {
@@ -200,35 +202,35 @@ export function ElementRenderer({
         return {
           ...baseStyle,
           boxShadow: isDragging 
-            ? '0 8px 16px rgba(0,0,0,0.2)' 
-            : 'inset 0 2px 8px rgba(0,0,0,0.15)',
+            ? '0 8px 16px rgba(0,0,0,0.35)' 
+            : 'inset 0 4px 10px rgba(0,0,0,0.25)',
         };
       case 'shelf':
         return {
           ...baseStyle,
           borderRadius: '2px',
           boxShadow: isDragging 
-            ? '0 8px 16px rgba(0,0,0,0.2)' 
-            : '0 2px 4px rgba(0,0,0,0.1)',
+            ? '0 8px 16px rgba(0,0,0,0.35)' 
+            : '0 4px 8px rgba(0,0,0,0.25)',
         };
       case 'tv-recess':
         return {
           ...baseStyle,
           backgroundColor: '#1f2937',
-          border: isSelected ? '2px solid #3b82f6' : '2px solid #374151',
-          boxShadow: isDragging ? '0 8px 16px rgba(0,0,0,0.3)' : undefined,
+          border: isSelected ? '3px solid #ffde34' : '2px solid #374151',
+          boxShadow: isDragging ? '0 10px 18px rgba(0,0,0,0.45)' : baseStyle.boxShadow,
         };
       case 'fireplace':
         return {
           ...baseStyle,
           backgroundColor: '#1f2937',
           backgroundImage: 'linear-gradient(to bottom, #374151, #1f2937)',
-          boxShadow: isDragging ? '0 8px 16px rgba(0,0,0,0.3)' : undefined,
+          boxShadow: isDragging ? '0 10px 18px rgba(0,0,0,0.45)' : baseStyle.boxShadow,
         };
       default:
         return {
           ...baseStyle,
-          boxShadow: isDragging ? '0 8px 16px rgba(0,0,0,0.2)' : undefined,
+          boxShadow: isDragging ? '0 8px 16px rgba(0,0,0,0.35)' : baseStyle.boxShadow,
         };
     }
   };
@@ -247,7 +249,7 @@ export function ElementRenderer({
       title={`${element.name} (${formatCm(element.dimensions.width)} × ${formatCm(element.dimensions.height)} cm) - Drag to move`}
     >
       {/* Element label */}
-      <div className="absolute top-1 left-1 text-xs text-gray-600 font-medium truncate max-w-full pr-2 pointer-events-none select-none">
+      <div className="absolute top-1 left-1 text-xs text-black font-black truncate max-w-full pr-2 pointer-events-none select-none bg-[#ffde34] border-2 border-black px-1 rounded">
         {element.name}
       </div>
       
@@ -256,14 +258,14 @@ export function ElementRenderer({
         <>
           {/* Width measurement - positioned at bottom-left corner */}
           <div className="absolute pointer-events-none" style={{ bottom: 4, left: 4 }}>
-            <span className="bg-blue-500 text-white text-xs px-1 rounded">
+            <span className="bg-[#7cf0ff] text-black text-xs font-black px-2 py-1 rounded border-2 border-black shadow-[3px_3px_0_#0f172a]">
               W: {formatCm(element.dimensions.width)}
             </span>
           </div>
           
           {/* Height measurement - positioned at bottom-left, below width */}
           <div className="absolute pointer-events-none" style={{ bottom: 20, left: 4 }}>
-            <span className="bg-blue-500 text-white text-xs px-1 rounded whitespace-nowrap">
+            <span className="bg-[#7cf0ff] text-black text-xs font-black px-2 py-1 rounded whitespace-nowrap border-2 border-black shadow-[3px_3px_0_#0f172a]">
               H: {formatCm(viewType === 'elevation' ? element.dimensions.height : element.depth || 0)}
             </span>
           </div>
@@ -271,7 +273,7 @@ export function ElementRenderer({
           {/* Position indicator when dragging */}
           {isDragging && (
             <div className="absolute top-1 left-1/2 -translate-x-1/2 pointer-events-none">
-              <span className="bg-gray-800 text-white text-xs px-1 rounded whitespace-nowrap">
+              <span className="bg-[#0b0b0b] text-[#fefae0] text-xs font-black px-2 py-1 rounded whitespace-nowrap border-2 border-[#ffde34] shadow-[3px_3px_0_#ffde34]">
                 X: {formatCm(position.x)}, Y: {formatCm(position.y)}
               </span>
             </div>
@@ -288,7 +290,7 @@ export function ElementRenderer({
               className="absolute pointer-events-none"
               style={{ top: 4, left: 4 }}
             >
-              <span className="bg-orange-500 text-white text-xs px-1 rounded whitespace-nowrap">
+              <span className="bg-[#ff9233] text-black text-xs font-black px-2 py-1 rounded whitespace-nowrap border-2 border-black shadow-[2px_2px_0_#0f172a]">
                 ← {formatCm(distances.nearestLeft?.distance ?? distances.left)}
               </span>
             </div>
@@ -300,7 +302,7 @@ export function ElementRenderer({
               className="absolute pointer-events-none"
               style={{ top: 4, right: 4 }}
             >
-              <span className="bg-orange-500 text-white text-xs px-1 rounded whitespace-nowrap">
+              <span className="bg-[#ff9233] text-black text-xs font-black px-2 py-1 rounded whitespace-nowrap border-2 border-black shadow-[2px_2px_0_#0f172a]">
                 {formatCm(distances.nearestRight?.distance ?? distances.right)} →
               </span>
             </div>
@@ -312,7 +314,7 @@ export function ElementRenderer({
               className="absolute pointer-events-none"
               style={{ top: 20, left: 4 }}
             >
-              <span className="bg-orange-500 text-white text-xs px-1 rounded whitespace-nowrap">
+              <span className="bg-[#ff9233] text-black text-xs font-black px-2 py-1 rounded whitespace-nowrap border-2 border-black shadow-[2px_2px_0_#0f172a]">
                 ↑ {formatCm(distances.nearestTop?.distance ?? distances.top)}
               </span>
             </div>
@@ -324,7 +326,7 @@ export function ElementRenderer({
               className="absolute pointer-events-none"
               style={{ bottom: 4, right: 4 }}
             >
-              <span className="bg-orange-500 text-white text-xs px-1 rounded whitespace-nowrap">
+              <span className="bg-[#ff9233] text-black text-xs font-black px-2 py-1 rounded whitespace-nowrap border-2 border-black shadow-[2px_2px_0_#0f172a]">
                 ↓ {formatCm(distances.nearestBottom?.distance ?? distances.bottom)}
               </span>
             </div>

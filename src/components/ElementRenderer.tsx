@@ -4,7 +4,6 @@ import { type DesignElement, MATERIAL_COLORS, formatCm } from '../types';
 
 interface ElementRendererProps {
   element: DesignElement;
-  scale?: number; // Kept for API compatibility
   isSelected: boolean;
   onSelect: (id: string) => void;
   showMeasurements?: boolean;
@@ -16,7 +15,6 @@ interface ElementRendererProps {
 
 export function ElementRenderer({
   element,
-  scale: _scale,
   isSelected,
   onSelect,
   showMeasurements = true,

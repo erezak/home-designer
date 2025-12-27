@@ -1,15 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700;800&display=swap");
 @import "tailwindcss";
 
 :root {
-  --color-wall: #e5e5e5;
-  --color-niche: #f5f5f5;
-  --color-shelf-wood: #8b6914;
-  --color-shelf-glass: rgba(200, 230, 255, 0.5);
-  --color-shelf-metal: #71717a;
+  --color-wall: #e8e3da;
+  --color-niche: #f4f0e7;
+  --color-shelf-wood: #9a6b2f;
+  --color-shelf-glass: rgba(214, 232, 255, 0.6);
+  --color-shelf-metal: #6b7280;
   --color-tv-recess: #1f2937;
-  --color-fireplace: #374151;
-  --color-grid: #d1d5db;
-  --color-measurement: #3b82f6;
+  --color-fireplace: #2f2a25;
+  --color-grid: #d6d3d1;
+  --color-measurement: #b45309;
 }
 
 * {
@@ -17,35 +18,44 @@
 }
 
 body {
-  @apply bg-gray-100 text-gray-900 font-sans antialiased m-0;
+  @apply bg-stone-50 text-stone-900 antialiased m-0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  letter-spacing: -0.02em;
 }
 
 .canvas-grid {
-  background-image: 
+  background-image:
     linear-gradient(to right, var(--color-grid) 1px, transparent 1px),
     linear-gradient(to bottom, var(--color-grid) 1px, transparent 1px);
 }
 
 .measurement-line {
-  @apply stroke-blue-500;
+  @apply stroke-amber-700;
   stroke-dasharray: 4 2;
 }
 
 .measurement-text {
-  @apply fill-blue-600 text-xs font-medium;
+  @apply fill-amber-700 text-xs font-semibold;
 }
 
 .input-field {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm;
+  @apply w-full px-3 py-2 border border-stone-200 rounded-md bg-white text-sm;
 }
 
 .input-field:focus {
-  @apply outline-none ring-2 ring-blue-500 border-blue-500;
+  @apply outline-none ring-2 ring-amber-600/40 border-amber-600/60;
 }
 
 .btn {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer;
-  transition: background-color 0.2s, border-color 0.2s;
+  @apply px-4 py-2 rounded-full font-medium cursor-pointer transition-colors border border-stone-200 bg-white text-stone-900 shadow-sm;
 }
 
 .btn:disabled {
@@ -53,12 +63,12 @@ body {
 }
 
 .btn-primary {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer bg-blue-600 text-white;
-  transition: background-color 0.2s;
+  @apply px-4 py-2 rounded-full font-semibold cursor-pointer bg-stone-900 text-stone-50 border-stone-900;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
 .btn-primary:hover {
-  @apply bg-blue-700;
+  @apply bg-black;
 }
 
 .btn-primary:disabled {
@@ -66,12 +76,12 @@ body {
 }
 
 .btn-secondary {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer bg-gray-200 text-gray-800;
+  @apply px-4 py-2 rounded-full font-medium cursor-pointer bg-stone-100 text-stone-800 border border-stone-200;
   transition: background-color 0.2s;
 }
 
 .btn-secondary:hover {
-  @apply bg-gray-300;
+  @apply bg-stone-200;
 }
 
 .btn-secondary:disabled {
@@ -79,12 +89,12 @@ body {
 }
 
 .btn-danger {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer bg-red-600 text-white;
+  @apply px-4 py-2 rounded-full font-medium cursor-pointer bg-amber-900 text-amber-50 border border-amber-900;
   transition: background-color 0.2s;
 }
 
 .btn-danger:hover {
-  @apply bg-red-700;
+  @apply bg-amber-800;
 }
 
 .btn-danger:disabled {
@@ -92,7 +102,7 @@ body {
 }
 
 .panel {
-  @apply bg-white rounded-lg shadow-md p-4;
+  @apply bg-white/90 backdrop-blur rounded-3xl shadow-sm p-5 border border-stone-200;
 }
 
 .scrollbar-thin {
@@ -104,11 +114,11 @@ body {
   body {
     @apply bg-white;
   }
-  
+
   .no-print {
     display: none !important;
   }
-  
+
   .print-only {
     display: block !important;
   }

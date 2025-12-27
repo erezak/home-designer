@@ -118,7 +118,6 @@ body {
   .btn-danger {
     transition: none;
     transform: none;
-    box-shadow: none;
   }
 }
 

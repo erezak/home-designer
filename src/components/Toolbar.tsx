@@ -35,9 +35,15 @@ export function Toolbar() {
           onClick={() => setView('elevation')}
           className={`px-3 py-1.5 rounded-lg text-sm font-semibold border transition-all ${
             state.activeView === 'elevation'
-              ? 'bg-[var(--accent)] text-white border-[var(--accent)] shadow-[0_10px_30px_rgba(124,109,246,0.45)]'
+              ? 'bg-[var(--accent)] text-white border-[var(--accent)]'
               : 'bg-white/5 border-white/10 text-gray-200 hover:border-white/20'
           }`}
+          style={{
+            boxShadow:
+              state.activeView === 'elevation'
+                ? '0 10px 30px rgba(var(--accent-rgb), 0.45)'
+                : undefined,
+          }}
         >
           Elevation
         </button>
@@ -45,9 +51,15 @@ export function Toolbar() {
           onClick={() => setView('plan')}
           className={`px-3 py-1.5 rounded-lg text-sm font-semibold border transition-all ${
             state.activeView === 'plan'
-              ? 'bg-[var(--accent)] text-white border-[var(--accent)] shadow-[0_10px_30px_rgba(124,109,246,0.45)]'
+              ? 'bg-[var(--accent)] text-white border-[var(--accent)]'
               : 'bg-white/5 border-white/10 text-gray-200 hover:border-white/20'
           }`}
+          style={{
+            boxShadow:
+              state.activeView === 'plan'
+                ? '0 10px 30px rgba(var(--accent-rgb), 0.45)'
+                : undefined,
+          }}
         >
           Plan
         </button>

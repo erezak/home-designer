@@ -221,7 +221,7 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
                     height: canvasHeight,
                     minWidth: canvasWidth,
                     minHeight: canvasHeight,
-                    backgroundColor: state.canvas.material.color || '#e5e5e5',
+                    backgroundColor: state.canvas.material.color || 'rgba(255,255,255,0.08)',
                     overflow: 'hidden', // Clip elements to canvas bounds
                     ...(state.canvas.showGrid && {
                       backgroundImage: `

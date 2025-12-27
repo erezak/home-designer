@@ -270,10 +270,11 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
                     style={{
                       [isHorizontal ? 'left' : 'top']: startPx,
                       [isHorizontal ? 'width' : 'height']: sizePx,
-                      [isHorizontal ? 'top' : 'left']: positionPx - 10,
+                      [isHorizontal ? 'top' : 'left']: positionPx,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
+                      transform: isHorizontal ? 'translateY(-50%)' : 'translateX(-50%)',
                       zIndex: 50,
                     }}
                   >

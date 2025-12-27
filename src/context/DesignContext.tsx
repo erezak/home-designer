@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useReducer, useCallback, useEffect, type ReactNode } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -161,7 +162,6 @@ function computeAutoPositions(
   startX: number = 0,
   startY: number = 0,
   allElements?: DesignElement[], // Pass all elements for relative lookup
-  _parentPosition?: Position // Parent position for context (unused but available)
 ): DesignElement[] {
   let currentX = startX;
   let currentY = startY;
@@ -241,8 +241,7 @@ function computeAutoPositions(
             canvasWidth, // Use canvas width for all elements
             computedPosition.x, // Pass parent position for auto-positioning children
             computedPosition.y,
-            lookupElements,
-            computedPosition // Pass parent position for context
+            lookupElements
           )
         : [];
 

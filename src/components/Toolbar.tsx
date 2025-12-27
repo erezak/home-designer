@@ -1,5 +1,11 @@
 import { useDesign } from '../context/DesignContext';
 
+const DEFAULT_INITIALS = 'HD';
+
+/**
+ * Derive up to two-letter initials from a name string.
+ * Returns a fallback when no alphanumeric characters are present.
+ */
 function getInitials(name: string): string {
   const letters = name
     .split(' ')
@@ -8,7 +14,7 @@ function getInitials(name: string): string {
     .map((word) => word[0]?.toUpperCase() || '')
     .filter(Boolean)
     .join('');
-  return letters || 'HD';
+  return letters || DEFAULT_INITIALS;
 }
 
 export function Toolbar() {

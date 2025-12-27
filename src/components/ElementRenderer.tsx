@@ -205,18 +205,33 @@ export function ElementRenderer({
     // For 3D view, add isometric depth visualization
     if (viewType === '3d') {
       const depthOffset = toPixels(elDepth * 0.5); // Isometric depth offset
-      return {
-        ...baseStyle,
-        boxShadow: isDragging 
-          ? '0 8px 16px rgba(0,0,0,0.3)' 
-          : `${depthOffset}px ${depthOffset}px 0 rgba(0,0,0,0.2), inset ${element.type === 'niche' ? '-2px -2px 8px rgba(0,0,0,0.3)' : '0 0 0 transparent'}`,
-        // Add a pseudo-3D effect hint with a gradient for niches
-        backgroundImage: element.type === 'niche' 
-          ? `linear-gradient(135deg, ${materialColor} 0%, rgba(0,0,0,0.1) 100%)`
-          : element.type === 'fireplace'
-          ? 'linear-gradient(to bottom, #374151, #1f2937)'
-          : undefined,
-      };
+      const isRecessed = element.type === 'niche' || element.type === 'tv-recess' || element.type === 'fireplace';
+      
+      if (isRecessed) {
+        // Recessed elements (niches, TV recesses, fireplaces) go INTO the wall
+        return {
+          ...baseStyle,
+          boxShadow: isDragging 
+            ? '0 8px 16px rgba(0,0,0,0.3)' 
+            : `inset ${depthOffset}px ${depthOffset}px ${depthOffset * 0.5}px rgba(0,0,0,0.5)`,
+          // Darker gradient for recessed elements to show they go into the wall
+          backgroundImage: element.type === 'niche' 
+            ? `linear-gradient(135deg, rgba(0,0,0,0.15) 0%, ${materialColor} 100%)`
+            : element.type === 'fireplace'
+            ? 'linear-gradient(135deg, #1f2937, #374151)'
+            : element.type === 'tv-recess'
+            ? 'linear-gradient(135deg, #111827, #1f2937)'
+            : undefined,
+        };
+      } else {
+        // Protruding elements (shelves, etc.) come OUT of the wall
+        return {
+          ...baseStyle,
+          boxShadow: isDragging 
+            ? '0 8px 16px rgba(0,0,0,0.3)' 
+            : `${depthOffset}px ${depthOffset}px 0 rgba(0,0,0,0.2)`,
+        };
+      }
     }
     
     switch (element.type) {
@@ -368,40 +383,84 @@ export function ElementRenderer({
       {/* 3D depth visualization - side and top faces for isometric effect */}
       {viewType === '3d' && element.depth && element.depth > 0 && (
         <>
-          {/* Right side face (depth visualization) */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              right: -toPixels(element.depth * 0.5),
-              top: -toPixels(element.depth * 0.5),
-              width: toPixels(element.depth * 0.5),
-              height: height,
-              backgroundColor: materialColor,
-              filter: 'brightness(0.7)',
-              border: isSelected ? '1px solid #3b82f6' : '1px solid #9ca3af',
-              borderLeft: 'none',
-              transform: 'skewY(-30deg)',
-              transformOrigin: 'left top',
-              zIndex: -1,
-            }}
-          />
-          {/* Top face (depth visualization) */}
-          <div
-            className="absolute pointer-events-none"
-            style={{
-              left: 0,
-              top: -toPixels(element.depth * 0.5),
-              width: width,
-              height: toPixels(element.depth * 0.5),
-              backgroundColor: materialColor,
-              filter: 'brightness(0.85)',
-              border: isSelected ? '1px solid #3b82f6' : '1px solid #9ca3af',
-              borderBottom: 'none',
-              transform: 'skewX(-30deg)',
-              transformOrigin: 'left bottom',
-              zIndex: -1,
-            }}
-          />
+          {/* For recessed elements (niches, TV recesses, fireplaces), show inner walls */}
+          {(element.type === 'niche' || element.type === 'tv-recess' || element.type === 'fireplace') ? (
+            <>
+              {/* Right inner wall - shows depth going INTO the wall */}
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  right: 0,
+                  bottom: 0,
+                  width: toPixels(element.depth * 0.5),
+                  height: height,
+                  backgroundColor: materialColor,
+                  filter: 'brightness(0.5)',
+                  border: isSelected ? '1px solid #3b82f6' : '1px solid #6b7280',
+                  borderRight: 'none',
+                  borderTop: 'none',
+                  transform: 'skewY(30deg)',
+                  transformOrigin: 'right bottom',
+                  zIndex: -1,
+                }}
+              />
+              {/* Bottom inner wall - shows depth going INTO the wall */}
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  right: 0,
+                  bottom: 0,
+                  width: width,
+                  height: toPixels(element.depth * 0.5),
+                  backgroundColor: materialColor,
+                  filter: 'brightness(0.4)',
+                  border: isSelected ? '1px solid #3b82f6' : '1px solid #6b7280',
+                  borderBottom: 'none',
+                  borderLeft: 'none',
+                  transform: 'skewX(30deg)',
+                  transformOrigin: 'right bottom',
+                  zIndex: -2,
+                }}
+              />
+            </>
+          ) : (
+            <>
+              {/* Right side face for protruding elements (shelves) */}
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  right: -toPixels(element.depth * 0.5),
+                  top: -toPixels(element.depth * 0.5),
+                  width: toPixels(element.depth * 0.5),
+                  height: height,
+                  backgroundColor: materialColor,
+                  filter: 'brightness(0.7)',
+                  border: isSelected ? '1px solid #3b82f6' : '1px solid #9ca3af',
+                  borderLeft: 'none',
+                  transform: 'skewY(-30deg)',
+                  transformOrigin: 'left top',
+                  zIndex: -1,
+                }}
+              />
+              {/* Top face for protruding elements (shelves) */}
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  left: 0,
+                  top: -toPixels(element.depth * 0.5),
+                  width: width,
+                  height: toPixels(element.depth * 0.5),
+                  backgroundColor: materialColor,
+                  filter: 'brightness(0.85)',
+                  border: isSelected ? '1px solid #3b82f6' : '1px solid #9ca3af',
+                  borderBottom: 'none',
+                  transform: 'skewX(-30deg)',
+                  transformOrigin: 'left bottom',
+                  zIndex: -1,
+                }}
+              />
+            </>
+          )}
         </>
       )}
     </div>

@@ -423,8 +423,8 @@ function ElementListItem({
         onClick={() => onSelect(element.id)}
         className={`w-full text-left px-2 py-1.5 rounded text-sm transition-colors ${
           isSelected 
-            ? 'bg-blue-100 text-blue-800' 
-            : 'hover:bg-gray-100 text-gray-700'
+            ? 'bg-emerald-50 text-emerald-800 ring-1 ring-emerald-100' 
+            : 'hover:bg-slate-50 text-slate-700'
         }`}
         style={{ paddingLeft: `${8 + depth * 16}px` }}
       >

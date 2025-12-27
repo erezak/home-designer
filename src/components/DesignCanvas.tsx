@@ -187,18 +187,21 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
   }, [flattenedElements, state.canvas.dimensions, state.activeView, state.canvas.showAllDistances]);
   
   return (
-    <div className="flex-1 overflow-auto bg-gray-200 p-8">
+    <div className="flex-1 overflow-auto p-8">
       {/* View Title */}
-      <div className="mb-4 text-center">
-        <h2 className="text-lg font-semibold text-gray-700">
-          {state.activeView === 'elevation' ? 'Front Elevation View' : 'Top-Down Plan View'}
-        </h2>
-        <p className="text-sm text-gray-500">
-          Scale 1:{state.canvas.scale} | Canvas: {formatCm(state.canvas.dimensions.width)} × {' '}
-          {state.activeView === 'elevation' 
-            ? formatCm(state.canvas.dimensions.height)
-            : formatCm(state.canvas.dimensions.depth)} cm
-        </p>
+      <div className="mb-4">
+        <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Canvas</p>
+        <div className="flex flex-wrap items-baseline gap-2">
+          <h2 className="text-xl font-semibold text-slate-900">
+            {state.activeView === 'elevation' ? 'Front elevation' : 'Top-down plan'}
+          </h2>
+          <span className="text-sm text-slate-500">
+            Scale 1:{state.canvas.scale} · {formatCm(state.canvas.dimensions.width)} ×{' '}
+            {state.activeView === 'elevation' 
+              ? formatCm(state.canvas.dimensions.height)
+              : formatCm(state.canvas.dimensions.depth)} cm
+          </span>
+        </div>
       </div>
       
       {/* Wrapper to ensure canvas is scrollable with proper padding for measurements */}
@@ -234,7 +237,7 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
               onClick={() => selectElement(null)}
             >
               {/* Canvas border with measurements */}
-              <div className="absolute inset-0 border-2 border-gray-400 pointer-events-none" style={{ zIndex: 500 }} />
+               <div className="absolute inset-0 border border-slate-300 pointer-events-none" style={{ zIndex: 500 }} />
               
               {/* Render all elements (flattened) */}
               {flattenedElements.map((element) => (
@@ -278,10 +281,10 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
                       zIndex: 50,
                     }}
                   >
-                    <span className="bg-green-600 text-white text-xs px-1 rounded whitespace-nowrap">
-                      {isHorizontal ? '↔' : '↕'} {formatCm(gap.size)}
-                    </span>
-                  </div>
+                     <span className="bg-emerald-700 text-white text-xs px-2 py-0.5 rounded-full whitespace-nowrap shadow-sm">
+                       {isHorizontal ? '↔' : '↕'} {formatCm(gap.size)}
+                     </span>
+                   </div>
                 );
               })}
               
@@ -297,20 +300,20 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
             </div>
             
             {/* Width measurement at top - positioned outside canvas */}
-            <div className="absolute top-2 left-0 right-0 flex justify-center pointer-events-none" style={{ paddingLeft: 70, paddingRight: 60 }}>
-              <span className="bg-gray-600 text-white text-xs px-2 py-0.5 rounded">
-                {formatCm(state.canvas.dimensions.width)} cm
-              </span>
-            </div>
-            
-            {/* Height measurement at left - positioned outside canvas */}
-            <div className="absolute left-2 top-0 bottom-0 flex items-center pointer-events-none" style={{ paddingTop: 40, paddingBottom: 40 }}>
-              <span className="bg-gray-600 text-white text-xs px-2 py-0.5 rounded whitespace-nowrap -rotate-90">
-                {formatCm(state.activeView === 'elevation' 
-                  ? state.canvas.dimensions.height 
-                  : state.canvas.dimensions.depth)} cm
-              </span>
-            </div>
+             <div className="absolute top-2 left-0 right-0 flex justify-center pointer-events-none" style={{ paddingLeft: 70, paddingRight: 60 }}>
+               <span className="bg-slate-800 text-white text-xs px-3 py-1 rounded-full shadow-sm">
+                 {formatCm(state.canvas.dimensions.width)} cm
+               </span>
+             </div>
+             
+             {/* Height measurement at left - positioned outside canvas */}
+             <div className="absolute left-2 top-0 bottom-0 flex items-center pointer-events-none" style={{ paddingTop: 40, paddingBottom: 40 }}>
+               <span className="bg-slate-800 text-white text-xs px-3 py-1 rounded-full whitespace-nowrap -rotate-90 shadow-sm">
+                 {formatCm(state.activeView === 'elevation' 
+                   ? state.canvas.dimensions.height 
+                   : state.canvas.dimensions.depth)} cm
+               </span>
+             </div>
           </div>
         </div>
       </div>

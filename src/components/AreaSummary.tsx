@@ -81,7 +81,7 @@ export function AreaSummary() {
         {/* Net Wall Area (Wall - Niches) */}
         <div className="flex justify-between items-center pt-2 border-t">
           <span className="text-sm text-gray-600 font-medium">Net Wall Area:</span>
-          <span className="text-sm font-semibold text-blue-600">
+          <span className="text-sm font-semibold text-emerald-700">
             {formatArea(wallArea - nichesArea)}
           </span>
         </div>

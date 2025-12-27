@@ -1,15 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --color-wall: #e5e5e5;
-  --color-niche: #f5f5f5;
-  --color-shelf-wood: #8b6914;
-  --color-shelf-glass: rgba(200, 230, 255, 0.5);
-  --color-shelf-metal: #71717a;
-  --color-tv-recess: #1f2937;
-  --color-fireplace: #374151;
-  --color-grid: #d1d5db;
-  --color-measurement: #3b82f6;
+  --color-wall: #f4f1eb;
+  --color-niche: #f9f7f4;
+  --color-shelf-wood: #b38850;
+  --color-shelf-glass: rgba(164, 202, 228, 0.4);
+  --color-shelf-metal: #4b5563;
+  --color-tv-recess: #0f172a;
+  --color-fireplace: #1f2937;
+  --color-grid: #e4ded4;
+  --color-measurement: #0f766e;
+  --surface: #f7f4ef;
+  --ink: #0f172a;
 }
 
 * {
@@ -17,7 +20,10 @@
 }
 
 body {
-  @apply bg-gray-100 text-gray-900 font-sans antialiased m-0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: radial-gradient(circle at 20% 20%, #fdfbf7 0, #f2eee7 35%, #e9e5de 100%);
+  color: var(--ink);
+  @apply antialiased m-0;
 }
 
 .canvas-grid {
@@ -27,25 +33,25 @@ body {
 }
 
 .measurement-line {
-  @apply stroke-blue-500;
+  stroke: var(--color-measurement);
   stroke-dasharray: 4 2;
 }
 
 .measurement-text {
-  @apply fill-blue-600 text-xs font-medium;
+  @apply text-xs font-medium;
+  fill: var(--color-measurement);
 }
 
 .input-field {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm;
+  @apply w-full px-3 py-2.5 rounded-xl text-sm text-slate-900 border border-slate-200 bg-white/80 shadow-sm transition;
 }
 
 .input-field:focus {
-  @apply outline-none ring-2 ring-blue-500 border-blue-500;
+  @apply outline-none ring-2 ring-emerald-200 border-emerald-300 bg-white;
 }
 
 .btn {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer;
-  transition: background-color 0.2s, border-color 0.2s;
+  @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-medium cursor-pointer transition-colors duration-200;
 }
 
 .btn:disabled {
@@ -53,46 +59,19 @@ body {
 }
 
 .btn-primary {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer bg-blue-600 text-white;
-  transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-  @apply bg-blue-700;
-}
-
-.btn-primary:disabled {
-  @apply opacity-50 cursor-not-allowed;
+  @apply bg-emerald-600 text-white shadow-sm hover:bg-emerald-700 active:bg-emerald-800;
 }
 
 .btn-secondary {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer bg-gray-200 text-gray-800;
-  transition: background-color 0.2s;
-}
-
-.btn-secondary:hover {
-  @apply bg-gray-300;
-}
-
-.btn-secondary:disabled {
-  @apply opacity-50 cursor-not-allowed;
+  @apply bg-white/80 text-slate-800 border border-slate-200 hover:border-emerald-200 hover:text-emerald-800;
 }
 
 .btn-danger {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer bg-red-600 text-white;
-  transition: background-color 0.2s;
-}
-
-.btn-danger:hover {
-  @apply bg-red-700;
-}
-
-.btn-danger:disabled {
-  @apply opacity-50 cursor-not-allowed;
+  @apply bg-rose-600 text-white shadow-sm hover:bg-rose-700;
 }
 
 .panel {
-  @apply bg-white rounded-lg shadow-md p-4;
+  @apply bg-white/80 backdrop-blur-sm border border-slate-200/80 rounded-2xl p-5 shadow-[0_12px_40px_-24px_rgba(15,23,42,0.35)];
 }
 
 .scrollbar-thin {

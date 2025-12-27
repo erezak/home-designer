@@ -12,6 +12,7 @@ export function Toolbar() {
           <div className="inline-flex rounded-full bg-white/10 border border-white/20 p-1">
             <button
               onClick={() => setView('elevation')}
+              aria-pressed={state.activeView === 'elevation'}
               className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${
                 state.activeView === 'elevation'
                   ? 'bg-white text-slate-900 shadow-md shadow-white/30'
@@ -22,6 +23,7 @@ export function Toolbar() {
             </button>
             <button
               onClick={() => setView('plan')}
+              aria-pressed={state.activeView === 'plan'}
               className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${
                 state.activeView === 'plan'
                   ? 'bg-white text-slate-900 shadow-md shadow-white/30'

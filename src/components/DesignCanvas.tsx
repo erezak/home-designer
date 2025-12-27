@@ -201,7 +201,7 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
             cm
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2" role="status" aria-live="polite">
           <span className="badge bg-slate-200 text-slate-800 border-slate-300">Grid {state.canvas.showGrid ? 'on' : 'off'}</span>
           {state.canvas.showAllDistances && (
             <span className="badge bg-emerald-50 text-emerald-800 border-emerald-200">All distances shown</span>

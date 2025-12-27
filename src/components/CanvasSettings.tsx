@@ -9,11 +9,17 @@ export function CanvasSettings() {
 
   return (
     <div className="panel space-y-4">
-      <h3 className="font-semibold text-gray-800 border-b pb-2">Canvas Settings</h3>
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="font-semibold text-slate-800">Canvas settings</h3>
+          <p className="section-hint">Name, dimensions, material, and measurement defaults.</p>
+        </div>
+        <span className="badge">Step 1</span>
+      </div>
       
       {/* Name */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-semibold text-slate-800 mb-1">
           Design Name
         </label>
         <input
@@ -27,7 +33,7 @@ export function CanvasSettings() {
       {/* Dimensions */}
       <div className="grid grid-cols-3 gap-2">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-semibold text-slate-800 mb-1">
             Width (cm)
           </label>
           <input
@@ -46,7 +52,7 @@ export function CanvasSettings() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-semibold text-slate-800 mb-1">
             Height (cm)
           </label>
           <input
@@ -65,7 +71,7 @@ export function CanvasSettings() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-semibold text-slate-800 mb-1">
             Depth (cm)
           </label>
           <input
@@ -87,7 +93,7 @@ export function CanvasSettings() {
       
       {/* Material */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-semibold text-slate-800 mb-1">
           Material
         </label>
         <select
@@ -110,7 +116,7 @@ export function CanvasSettings() {
       
       {/* Scale */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-semibold text-slate-800 mb-1">
           Scale (1:X)
         </label>
         <select
@@ -127,20 +133,23 @@ export function CanvasSettings() {
       </div>
       
       {/* Grid Settings */}
-      <div className="space-y-2">
-        <label className="flex items-center gap-2">
+      <div className="space-y-3 bg-slate-50 border border-slate-200 rounded-xl p-3">
+        <label className="flex items-center gap-3">
           <input
             type="checkbox"
             checked={canvas.showGrid}
             onChange={(e) => setCanvas({ showGrid: e.target.checked })}
-            className="rounded border-gray-300"
+            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-indigo-300"
           />
-          <span className="text-sm text-gray-700">Show Grid</span>
+          <div>
+            <p className="text-sm font-semibold text-slate-800">Show grid</p>
+            <p className="section-hint">Keeps spacing aligned for quick visual checks.</p>
+          </div>
         </label>
         
         {canvas.showGrid && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-semibold text-slate-800 mb-1">
               Grid Size (cm)
             </label>
             <input
@@ -158,44 +167,44 @@ export function CanvasSettings() {
           </div>
         )}
         
-        <label className="flex items-center gap-2">
+        <label className="flex items-center gap-3">
           <input
             type="checkbox"
             checked={canvas.snapToGrid}
             onChange={(e) => setCanvas({ snapToGrid: e.target.checked })}
-            className="rounded border-gray-300"
+            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-indigo-300"
           />
-          <span className="text-sm text-gray-700">Snap to Grid</span>
+          <span className="text-sm font-semibold text-slate-800">Snap to grid</span>
         </label>
         
-        <label className="flex items-center gap-2">
+        <label className="flex items-center gap-3">
           <input
             type="checkbox"
             checked={canvas.snapToElements}
             onChange={(e) => setCanvas({ snapToElements: e.target.checked })}
-            className="rounded border-gray-300"
+            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-indigo-300"
           />
-          <span className="text-sm text-gray-700">Snap to Elements</span>
+          <span className="text-sm font-semibold text-slate-800">Snap to elements</span>
         </label>
         
-        <label className="flex items-center gap-2">
+        <label className="flex items-center gap-3">
           <input
             type="checkbox"
             checked={canvas.autoPosition}
             onChange={(e) => setCanvas({ autoPosition: e.target.checked })}
-            className="rounded border-gray-300"
+            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-indigo-300"
           />
-          <span className="text-sm text-gray-700">Auto-position Elements</span>
+          <span className="text-sm font-semibold text-slate-800">Auto-position elements</span>
         </label>
         
-        <label className="flex items-center gap-2">
+        <label className="flex items-center gap-3">
           <input
             type="checkbox"
             checked={canvas.showAllDistances}
             onChange={(e) => setCanvas({ showAllDistances: e.target.checked })}
-            className="rounded border-gray-300"
+            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-indigo-300"
           />
-          <span className="text-sm text-gray-700">Show All Distances</span>
+          <span className="text-sm font-semibold text-slate-800">Show all distances</span>
         </label>
       </div>
     </div>

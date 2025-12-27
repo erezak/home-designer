@@ -187,35 +187,44 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
   }, [flattenedElements, state.canvas.dimensions, state.activeView, state.canvas.showAllDistances]);
   
   return (
-    <div className="flex-1 overflow-auto bg-gray-200 p-8">
-      {/* View Title */}
-      <div className="mb-4 text-center">
-        <h2 className="text-lg font-semibold text-gray-700">
-          {state.activeView === 'elevation' ? 'Front Elevation View' : 'Top-Down Plan View'}
-        </h2>
-        <p className="text-sm text-gray-500">
-          Scale 1:{state.canvas.scale} | Canvas: {formatCm(state.canvas.dimensions.width)} × {' '}
-          {state.activeView === 'elevation' 
-            ? formatCm(state.canvas.dimensions.height)
-            : formatCm(state.canvas.dimensions.depth)} cm
-        </p>
+    <div className="flex-1 overflow-auto bg-slate-100 p-6">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-semibold text-slate-800">
+            {state.activeView === 'elevation' ? 'Front elevation' : 'Top-down plan'}
+          </h2>
+          <p className="text-sm text-slate-600">
+            Scale 1:{state.canvas.scale} • Canvas {formatCm(state.canvas.dimensions.width)} ×{' '}
+            {state.activeView === 'elevation'
+              ? formatCm(state.canvas.dimensions.height)
+              : formatCm(state.canvas.dimensions.depth)}{' '}
+            cm
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <span className="badge bg-slate-200 text-slate-800 border-slate-300">Grid {state.canvas.showGrid ? 'on' : 'off'}</span>
+          {state.canvas.showAllDistances && (
+            <span className="badge bg-emerald-50 text-emerald-800 border-emerald-200">All distances shown</span>
+          )}
+          <span className="badge bg-indigo-50 text-indigo-800 border-indigo-200">Zoom {Math.round(state.zoom * 100)}%</span>
+        </div>
       </div>
-      
+
       {/* Wrapper to ensure canvas is scrollable with proper padding for measurements */}
-      <div 
+      <div
         className="inline-block min-w-full"
-        style={{ 
-          transform: `scale(${state.zoom})`, 
+        style={{
+          transform: `scale(${state.zoom})`,
           transformOrigin: 'top center',
         }}
       >
         <div className="flex justify-center">
           {/* Padding wrapper for measurement labels */}
-          <div className="relative" style={{ padding: '40px 60px 40px 70px' }}>
+          <div className="relative" style={{ padding: '48px 72px 48px 82px' }}>
             {/* Canvas container */}
             <div
               ref={ref}
-              className="relative bg-white shadow-lg"
+              className="relative bg-white shadow-2xl shadow-slate-900/10"
               style={{
                 width: canvasWidth,
                 height: canvasHeight,
@@ -234,8 +243,11 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
               onClick={() => selectElement(null)}
             >
               {/* Canvas border with measurements */}
-              <div className="absolute inset-0 border-2 border-gray-400 pointer-events-none" style={{ zIndex: 500 }} />
-              
+              <div
+                className="absolute inset-0 border-2 border-slate-400/70 pointer-events-none"
+                style={{ zIndex: 500 }}
+              />
+
               {/* Render all elements (flattened) */}
               {flattenedElements.map((element) => (
                 <ElementRenderer
@@ -248,67 +260,78 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
                   siblingElements={flattenedElements}
                   canvasDimensions={{
                     width: state.canvas.dimensions.width,
-                    height: state.activeView === 'elevation' 
-                      ? state.canvas.dimensions.height 
-                      : state.canvas.dimensions.depth
+                    height:
+                      state.activeView === 'elevation'
+                        ? state.canvas.dimensions.height
+                        : state.canvas.dimensions.depth,
                   }}
                   showAllDistances={state.canvas.showAllDistances}
                 />
               ))}
-              
+
               {/* Render gap measurements (empty wall spaces) */}
-              {state.canvas.showAllDistances && gaps.map((gap, index) => {
-                const isHorizontal = gap.direction === 'horizontal';
-                const startPx = toPixels(gap.start);
-                const sizePx = toPixels(gap.size);
-                const positionPx = toPixels(gap.position);
-                
-                return (
-                  <div
-                    key={`gap-${index}`}
-                    className="absolute pointer-events-none"
-                    style={{
-                      [isHorizontal ? 'left' : 'top']: startPx,
-                      [isHorizontal ? 'width' : 'height']: sizePx,
-                      [isHorizontal ? 'top' : 'left']: positionPx,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      transform: isHorizontal ? 'translateY(-50%)' : 'translateX(-50%)',
-                      zIndex: 50,
-                    }}
-                  >
-                    <span className="bg-green-600 text-white text-xs px-1 rounded whitespace-nowrap">
-                      {isHorizontal ? '↔' : '↕'} {formatCm(gap.size)}
-                    </span>
-                  </div>
-                );
-              })}
-              
+              {state.canvas.showAllDistances &&
+                gaps.map((gap, index) => {
+                  const isHorizontal = gap.direction === 'horizontal';
+                  const startPx = toPixels(gap.start);
+                  const sizePx = toPixels(gap.size);
+                  const positionPx = toPixels(gap.position);
+
+                  return (
+                    <div
+                      key={`gap-${index}`}
+                      className="absolute pointer-events-none"
+                      style={{
+                        [isHorizontal ? 'left' : 'top']: startPx,
+                        [isHorizontal ? 'width' : 'height']: sizePx,
+                        [isHorizontal ? 'top' : 'left']: positionPx,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transform: isHorizontal ? 'translateY(-50%)' : 'translateX(-50%)',
+                        zIndex: 50,
+                      }}
+                    >
+                      <span className="bg-emerald-600 text-white text-xs px-2 py-0.5 rounded-full whitespace-nowrap shadow-sm shadow-emerald-600/30">
+                        {isHorizontal ? '↔' : '↕'} {formatCm(gap.size)}
+                      </span>
+                    </div>
+                  );
+                })}
+
               {/* Empty state */}
               {state.elements.length === 0 && (
-                <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                  <div className="text-center">
-                    <p className="text-lg">No elements yet</p>
-                    <p className="text-sm">Add elements from the sidebar</p>
+                <div className="absolute inset-0 flex items-center justify-center text-slate-400">
+                  <div className="text-center bg-white/80 rounded-xl px-6 py-4 shadow">
+                    <p className="text-lg font-semibold text-slate-700">No elements yet</p>
+                    <p className="text-sm text-slate-600">Add elements from the sidebar to start measuring.</p>
                   </div>
                 </div>
               )}
             </div>
-            
+
             {/* Width measurement at top - positioned outside canvas */}
-            <div className="absolute top-2 left-0 right-0 flex justify-center pointer-events-none" style={{ paddingLeft: 70, paddingRight: 60 }}>
-              <span className="bg-gray-600 text-white text-xs px-2 py-0.5 rounded">
+            <div
+              className="absolute top-2 left-0 right-0 flex justify-center pointer-events-none"
+              style={{ paddingLeft: 82, paddingRight: 72 }}
+            >
+              <span className="bg-slate-900 text-white text-xs px-3 py-1 rounded-full shadow shadow-slate-900/40">
                 {formatCm(state.canvas.dimensions.width)} cm
               </span>
             </div>
-            
+
             {/* Height measurement at left - positioned outside canvas */}
-            <div className="absolute left-2 top-0 bottom-0 flex items-center pointer-events-none" style={{ paddingTop: 40, paddingBottom: 40 }}>
-              <span className="bg-gray-600 text-white text-xs px-2 py-0.5 rounded whitespace-nowrap -rotate-90">
-                {formatCm(state.activeView === 'elevation' 
-                  ? state.canvas.dimensions.height 
-                  : state.canvas.dimensions.depth)} cm
+            <div
+              className="absolute left-2 top-0 bottom-0 flex items-center pointer-events-none"
+              style={{ paddingTop: 48, paddingBottom: 48 }}
+            >
+              <span className="bg-slate-900 text-white text-xs px-3 py-1 rounded-full whitespace-nowrap -rotate-90 shadow shadow-slate-900/40">
+                {formatCm(
+                  state.activeView === 'elevation'
+                    ? state.canvas.dimensions.height
+                    : state.canvas.dimensions.depth
+                )}{' '}
+                cm
               </span>
             </div>
           </div>

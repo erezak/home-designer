@@ -16,7 +16,7 @@ interface ElementRendererProps {
 
 export function ElementRenderer({
   element,
-  scale: _scale,
+  scale: providedScale,
   isSelected,
   onSelect,
   showMeasurements = true,
@@ -39,7 +39,7 @@ export function ElementRenderer({
   const elementRef = useRef<HTMLDivElement>(null);
   
   // Scale factor for conversions
-  const scaleFactor = state.canvas.scale;
+  const scaleFactor = providedScale ?? state.canvas.scale;
   const gridSize = state.canvas.gridSize;
   const snapEnabled = state.canvas.snapToGrid;
   
@@ -187,12 +187,13 @@ export function ElementRenderer({
       width,
       height,
       backgroundColor: materialColor,
-      border: isSelected ? '2px solid #3b82f6' : '1px solid #9ca3af',
+      border: isSelected ? '2px solid #2563eb' : '1px solid #cbd5e1',
       boxSizing: 'border-box',
       cursor: isDragging ? 'grabbing' : 'grab',
-      transition: isDragging ? 'none' : 'border-color 0.2s',
+      transition: isDragging ? 'none' : 'border-color 0.2s, box-shadow 0.2s',
       userSelect: 'none',
       zIndex: isDragging ? 1000 : isSelected ? 100 : 1,
+      boxShadow: isSelected ? '0 8px 24px rgba(37, 99, 235, 0.20)' : undefined,
     };
     
     switch (element.type) {
@@ -247,7 +248,7 @@ export function ElementRenderer({
       title={`${element.name} (${formatCm(element.dimensions.width)} × ${formatCm(element.dimensions.height)} cm) - Drag to move`}
     >
       {/* Element label */}
-      <div className="absolute top-1 left-1 text-xs text-gray-600 font-medium truncate max-w-full pr-2 pointer-events-none select-none">
+      <div className="absolute top-2 left-2 text-xs text-slate-800 font-semibold truncate max-w-full pr-2 pointer-events-none select-none bg-white/85 px-2 py-0.5 rounded-lg shadow-sm">
         {element.name}
       </div>
       
@@ -256,14 +257,14 @@ export function ElementRenderer({
         <>
           {/* Width measurement - positioned at bottom-left corner */}
           <div className="absolute pointer-events-none" style={{ bottom: 4, left: 4 }}>
-            <span className="bg-blue-500 text-white text-xs px-1 rounded">
+            <span className="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded-full shadow-sm shadow-indigo-600/30">
               W: {formatCm(element.dimensions.width)}
             </span>
           </div>
           
           {/* Height measurement - positioned at bottom-left, below width */}
           <div className="absolute pointer-events-none" style={{ bottom: 20, left: 4 }}>
-            <span className="bg-blue-500 text-white text-xs px-1 rounded whitespace-nowrap">
+            <span className="bg-sky-600 text-white text-xs px-2 py-0.5 rounded-full whitespace-nowrap shadow-sm shadow-sky-600/30">
               H: {formatCm(viewType === 'elevation' ? element.dimensions.height : element.depth || 0)}
             </span>
           </div>
@@ -271,7 +272,7 @@ export function ElementRenderer({
           {/* Position indicator when dragging */}
           {isDragging && (
             <div className="absolute top-1 left-1/2 -translate-x-1/2 pointer-events-none">
-              <span className="bg-gray-800 text-white text-xs px-1 rounded whitespace-nowrap">
+              <span className="bg-slate-900 text-white text-xs px-2 py-0.5 rounded-full whitespace-nowrap shadow-sm shadow-slate-900/30">
                 X: {formatCm(position.x)}, Y: {formatCm(position.y)}
               </span>
             </div>

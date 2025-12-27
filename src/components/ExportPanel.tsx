@@ -226,18 +226,24 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
 
   return (
     <div className="panel space-y-3">
-      <h3 className="font-semibold text-gray-800 border-b pb-2">Export & Save</h3>
+      <div className="flex items-center justify-between border-b pb-2">
+        <div>
+          <h3 className="font-semibold text-slate-800">Export & share</h3>
+          <p className="section-hint">Accessible outputs with clear naming.</p>
+        </div>
+        <span className="badge bg-slate-100 text-slate-800 border-slate-200">Step 3</span>
+      </div>
 
       <div className="space-y-2">
-        <button onClick={generatePDF} className="btn-primary w-full text-sm">
-          📄 Export PDF with Measurements
+        <button onClick={generatePDF} className="btn-primary w-full text-sm rounded-xl">
+          📄 Export PDF with measurements
         </button>
 
-        <button onClick={exportPNG} className="btn-secondary w-full text-sm">
+        <button onClick={exportPNG} className="btn-secondary w-full text-sm rounded-xl">
           🖼️ Export PNG
         </button>
 
-        <button onClick={handlePrint} className="btn-secondary w-full text-sm">
+        <button onClick={handlePrint} className="btn-secondary w-full text-sm rounded-xl">
           🖨️ Print
         </button>
       </div>
@@ -246,7 +252,7 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
 
       <div className="space-y-2">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-semibold text-slate-800 mb-1">
             Project Format
           </label>
           <select
@@ -259,13 +265,13 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
           </select>
         </div>
 
-        <button onClick={handleSaveProject} className="btn-secondary w-full text-sm">
+        <button onClick={handleSaveProject} className="btn-secondary w-full text-sm rounded-xl">
           💾 Save Project ({exportFormat.toUpperCase()})
         </button>
 
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="btn-secondary w-full text-sm"
+          className="btn-secondary w-full text-sm rounded-xl"
         >
           📂 Load Project (JSON/YAML)
         </button>
@@ -277,7 +283,7 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
           className="hidden"
         />
 
-        <p className="text-xs text-gray-500 text-center">
+        <p className="text-xs text-slate-500 text-center">
           Auto-saved to browser storage
         </p>
       </div>

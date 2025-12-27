@@ -1,27 +1,41 @@
 @import "tailwindcss";
 
 :root {
-  --color-wall: #e5e5e5;
-  --color-niche: #f5f5f5;
+  --color-wall: #e8edf7;
+  --color-niche: #f6f8fb;
   --color-shelf-wood: #8b6914;
   --color-shelf-glass: rgba(200, 230, 255, 0.5);
-  --color-shelf-metal: #71717a;
-  --color-tv-recess: #1f2937;
-  --color-fireplace: #374151;
-  --color-grid: #d1d5db;
-  --color-measurement: #3b82f6;
+  --color-shelf-metal: #475569;
+  --color-tv-recess: #0f172a;
+  --color-fireplace: #111827;
+  --color-grid: #cbd5e1;
+  --color-measurement: #2563eb;
+  --surface: #0b1220;
+  --surface-contrast: #ffffff;
+  --surface-muted: #0f172a;
+  --border-strong: #e2e8f0;
+  --accent: #2563eb;
+  --accent-2: #22d3ee;
+  --danger: #dc2626;
 }
 
 * {
   box-sizing: border-box;
 }
 
+::selection {
+  background: #1d4ed8;
+  color: #f8fafc;
+}
+
 body {
-  @apply bg-gray-100 text-gray-900 font-sans antialiased m-0;
+  @apply font-sans antialiased m-0 text-slate-900;
+  background: radial-gradient(circle at 20% 20%, #0f172a 0, #0b1220 35%, #0a0f1d 70%, #050b16 100%);
+  min-height: 100vh;
 }
 
 .canvas-grid {
-  background-image: 
+  background-image:
     linear-gradient(to right, var(--color-grid) 1px, transparent 1px),
     linear-gradient(to bottom, var(--color-grid) 1px, transparent 1px);
 }
@@ -32,77 +46,91 @@ body {
 }
 
 .measurement-text {
-  @apply fill-blue-600 text-xs font-medium;
+  @apply fill-blue-700 text-xs font-semibold;
 }
 
 .input-field {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm;
+  @apply w-full px-3 py-2.5 border border-slate-200 rounded-xl bg-white text-sm text-slate-900 shadow-sm;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
 }
 
-.input-field:focus {
-  @apply outline-none ring-2 ring-blue-500 border-blue-500;
+.input-field:focus-visible {
+  @apply outline-none border-indigo-500 ring-2 ring-indigo-200;
+  box-shadow: 0 15px 35px rgba(37, 99, 235, 0.08);
+}
+
+.input-field:disabled {
+  @apply bg-slate-100 text-slate-500 cursor-not-allowed;
 }
 
 .btn {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer;
-  transition: background-color 0.2s, border-color 0.2s;
+  @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full font-semibold cursor-pointer text-sm transition-all duration-150;
+}
+
+.btn:focus-visible,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.btn-danger:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.55);
+  outline-offset: 2px;
 }
 
 .btn:disabled {
-  @apply opacity-50 cursor-not-allowed;
+  @apply opacity-60 cursor-not-allowed;
 }
 
 .btn-primary {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer bg-blue-600 text-white;
-  transition: background-color 0.2s;
+  @apply bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-500;
 }
 
-.btn-primary:hover {
-  @apply bg-blue-700;
-}
-
-.btn-primary:disabled {
-  @apply opacity-50 cursor-not-allowed;
+.btn-primary:hover:not(:disabled) {
+  @apply bg-indigo-700 shadow-lg shadow-indigo-600/40;
 }
 
 .btn-secondary {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer bg-gray-200 text-gray-800;
-  transition: background-color 0.2s;
+  @apply bg-white text-slate-800 border border-slate-200 shadow-sm;
 }
 
-.btn-secondary:hover {
-  @apply bg-gray-300;
-}
-
-.btn-secondary:disabled {
-  @apply opacity-50 cursor-not-allowed;
+.btn-secondary:hover:not(:disabled) {
+  @apply border-slate-300 shadow-md;
 }
 
 .btn-danger {
-  @apply px-4 py-2 rounded-md font-medium cursor-pointer bg-red-600 text-white;
-  transition: background-color 0.2s;
+  @apply bg-red-600 text-white border border-red-500 shadow-sm shadow-red-500/30;
 }
 
-.btn-danger:hover {
-  @apply bg-red-700;
-}
-
-.btn-danger:disabled {
-  @apply opacity-50 cursor-not-allowed;
+.btn-danger:hover:not(:disabled) {
+  @apply bg-red-700 shadow-md shadow-red-500/40;
 }
 
 .panel {
-  @apply bg-white rounded-lg shadow-md p-4;
+  @apply bg-white/95 backdrop-blur rounded-2xl border border-slate-200 shadow-xl shadow-slate-900/5 p-5;
+}
+
+.panel h3 {
+  @apply text-sm font-semibold tracking-wide text-slate-700;
 }
 
 .scrollbar-thin {
   scrollbar-width: thin;
 }
 
+.badge {
+  @apply inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold border border-slate-200 bg-slate-50 text-slate-700;
+}
+
+.surface-card {
+  @apply bg-gradient-to-br from-white via-slate-50 to-white shadow-xl shadow-slate-900/5 border border-slate-200 rounded-2xl;
+}
+
+.section-hint {
+  @apply text-xs text-slate-500;
+}
+
 /* Print styles */
 @media print {
   body {
-    @apply bg-white;
+    @apply bg-white text-black;
   }
   
   .no-print {

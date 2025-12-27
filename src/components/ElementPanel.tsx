@@ -44,13 +44,19 @@ export function ElementPanel() {
     <div className="space-y-4">
       {/* Add Element Section */}
       <div className="panel">
-        <h3 className="font-semibold text-gray-800 border-b pb-2 mb-3">Add Element</h3>
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h3 className="font-semibold text-slate-800">Add element</h3>
+            <p className="section-hint">Accessible palette with clear labels.</p>
+          </div>
+          <span className="badge">Step 2</span>
+        </div>
         <div className="grid grid-cols-2 gap-2">
           {elementTypes.map((type) => (
             <button
               key={type}
               onClick={() => addElement(type, selectedElement?.id)}
-              className="btn-secondary text-sm py-2"
+              className="btn-secondary text-sm py-2 w-full rounded-xl bg-slate-50 hover:bg-slate-100"
             >
               + {ELEMENT_TYPE_NAMES[type]}
             </button>
@@ -65,11 +71,14 @@ export function ElementPanel() {
       
       {/* Element List */}
       <div className="panel">
-        <h3 className="font-semibold text-gray-800 border-b pb-2 mb-3">Elements</h3>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold text-slate-800">Elements</h3>
+          <span className="badge bg-slate-100 text-slate-800 border-slate-200">{state.elements.length} total</span>
+        </div>
         {state.elements.length === 0 ? (
-          <p className="text-sm text-gray-500">No elements added yet</p>
+          <p className="text-sm text-slate-600">No elements added yet</p>
         ) : (
-          <div className="space-y-1 max-h-48 overflow-y-auto">
+          <div className="space-y-1 max-h-48 overflow-y-auto pr-1">
             {state.elements.map((el) => (
               <ElementListItem
                 key={el.id}
@@ -87,10 +96,13 @@ export function ElementPanel() {
       {selectedElement && (
         <div className="panel">
           <div className="flex justify-between items-center border-b pb-2 mb-3">
-            <h3 className="font-semibold text-gray-800">Edit Element</h3>
+            <div>
+              <h3 className="font-semibold text-slate-800">Edit element</h3>
+              <p className="section-hint">Adjust dimensions, material, and positioning.</p>
+            </div>
             <button
               onClick={() => deleteElement(selectedElement.id)}
-              className="text-red-600 hover:text-red-800 text-sm"
+              className="btn-danger text-sm px-3 py-2 rounded-xl"
             >
               Delete
             </button>
@@ -98,7 +110,7 @@ export function ElementPanel() {
           
           {/* Name */}
           <div className="mb-3">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-semibold text-slate-800 mb-1">
               Name
             </label>
             <input
@@ -111,7 +123,7 @@ export function ElementPanel() {
           
           {/* Type */}
           <div className="mb-3">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-semibold text-slate-800 mb-1">
               Type
             </label>
             <select
@@ -132,7 +144,7 @@ export function ElementPanel() {
           {/* Dimensions */}
           <div className="grid grid-cols-3 gap-2 mb-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-semibold text-slate-800 mb-1">
                 Width (cm)
               </label>
               <input
@@ -153,7 +165,7 @@ export function ElementPanel() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-semibold text-slate-800 mb-1">
                 Height (cm)
               </label>
               <input
@@ -175,7 +187,7 @@ export function ElementPanel() {
             </div>
             {(selectedElement.type === 'niche' || selectedElement.depth !== undefined) && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-800 mb-1">
                   Depth (cm)
                 </label>
                 <input
@@ -197,7 +209,7 @@ export function ElementPanel() {
           
           {/* Material */}
           <div className="mb-3">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-semibold text-slate-800 mb-1">
               Material
             </label>
             <select
@@ -220,7 +232,7 @@ export function ElementPanel() {
           
           {/* Positioning */}
           <div className="mb-3">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-semibold text-slate-800 mb-1">
               Position Mode
             </label>
             <select
@@ -243,9 +255,9 @@ export function ElementPanel() {
           
           {/* Relative positioning options */}
           {selectedElement.positioning.mode === 'relative' && (
-            <div className="space-y-2 mb-3">
+            <div className="space-y-2 mb-3 bg-slate-50 border border-slate-200 rounded-xl p-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-800 mb-1">
                   Relative To
                 </label>
                 <select
@@ -269,7 +281,7 @@ export function ElementPanel() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-800 mb-1">
                   Anchor
                 </label>
                 <select
@@ -290,7 +302,7 @@ export function ElementPanel() {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-slate-800 mb-1">
                     Offset X (cm)
                   </label>
                   <input
@@ -314,7 +326,7 @@ export function ElementPanel() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-slate-800 mb-1">
                     Offset Y (cm)
                   </label>
                   <input
@@ -338,7 +350,7 @@ export function ElementPanel() {
                   />
                 </div>
               </div>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-slate-600">
                 Offset is applied after anchor positioning
               </p>
             </div>
@@ -348,7 +360,7 @@ export function ElementPanel() {
           {selectedElement.positioning.mode === 'absolute' && (
             <div className="grid grid-cols-2 gap-2 mb-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-800 mb-1">
                   X (cm)
                 </label>
                 <input
@@ -372,7 +384,7 @@ export function ElementPanel() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-800 mb-1">
                   Y (cm)
                 </label>
                 <input
@@ -421,15 +433,15 @@ function ElementListItem({
     <div>
       <button
         onClick={() => onSelect(element.id)}
-        className={`w-full text-left px-2 py-1.5 rounded text-sm transition-colors ${
+        className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors border ${
           isSelected 
-            ? 'bg-blue-100 text-blue-800' 
-            : 'hover:bg-gray-100 text-gray-700'
+            ? 'bg-indigo-50 text-indigo-800 border-indigo-200 shadow-sm' 
+            : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
         }`}
         style={{ paddingLeft: `${8 + depth * 16}px` }}
       >
         <span className="font-medium">{element.name}</span>
-        <span className="text-gray-400 ml-2 text-xs">
+        <span className="text-slate-400 ml-2 text-xs">
           {formatCm(element.dimensions.width)} × {formatCm(element.dimensions.height)}
         </span>
       </button>

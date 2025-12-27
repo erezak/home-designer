@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useReducer, useCallback, useEffect, type ReactNode } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -509,7 +510,6 @@ export function DesignProvider({ children }: { children: ReactNode }) {
 }
 
 // Hook to use the design context
-// eslint-disable-next-line react-refresh/only-export-components -- hook is exported alongside provider in same module
 export function useDesign() {
   const context = useContext(DesignContext);
   if (!context) {

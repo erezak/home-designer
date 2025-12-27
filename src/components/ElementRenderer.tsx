@@ -209,19 +209,25 @@ export function ElementRenderer({
       
       if (isRecessed) {
         // Recessed elements (niches, TV recesses, fireplaces) go INTO the wall
+        // Make the back wall much darker to show depth
+        const backWallColor = element.type === 'niche' 
+          ? 'rgba(0,0,0,0.6)' 
+          : element.type === 'fireplace'
+          ? '#0a0a0a'
+          : element.type === 'tv-recess'
+          ? '#050505'
+          : 'rgba(0,0,0,0.6)';
+        
         return {
           ...baseStyle,
+          // Very dark back wall of the recess
+          backgroundColor: backWallColor,
+          // Strong inset shadow from all sides to show it's a hole
           boxShadow: isDragging 
             ? '0 8px 16px rgba(0,0,0,0.3)' 
-            : `inset ${depthOffset}px ${depthOffset}px ${depthOffset * 0.5}px rgba(0,0,0,0.5)`,
-          // Darker gradient for recessed elements to show they go into the wall
-          backgroundImage: element.type === 'niche' 
-            ? `linear-gradient(135deg, rgba(0,0,0,0.15) 0%, ${materialColor} 100%)`
-            : element.type === 'fireplace'
-            ? 'linear-gradient(135deg, #1f2937, #374151)'
-            : element.type === 'tv-recess'
-            ? 'linear-gradient(135deg, #111827, #1f2937)'
-            : undefined,
+            : `inset 3px 3px 8px rgba(0,0,0,0.8), inset -3px -3px 8px rgba(0,0,0,0.8)`,
+          // No gradient - just dark back wall
+          backgroundImage: undefined,
         };
       } else {
         // Protruding elements (shelves, etc.) come OUT of the wall
@@ -386,7 +392,7 @@ export function ElementRenderer({
           {/* For recessed elements (niches, TV recesses, fireplaces), show inner walls */}
           {(element.type === 'niche' || element.type === 'tv-recess' || element.type === 'fireplace') ? (
             <>
-              {/* Right inner wall - shows depth going INTO the wall */}
+              {/* Right inner wall - lighter to show it's a side wall catching light */}
               <div
                 className="absolute pointer-events-none"
                 style={{
@@ -395,8 +401,8 @@ export function ElementRenderer({
                   width: toPixels(element.depth * 0.5),
                   height: height,
                   backgroundColor: materialColor,
-                  filter: 'brightness(0.5)',
-                  border: isSelected ? '1px solid #3b82f6' : '1px solid #6b7280',
+                  filter: 'brightness(0.7)', // Lighter than back wall
+                  border: isSelected ? '1px solid #3b82f6' : '1px solid #9ca3af',
                   borderRight: 'none',
                   borderTop: 'none',
                   transform: 'skewY(30deg)',
@@ -404,7 +410,7 @@ export function ElementRenderer({
                   zIndex: -1,
                 }}
               />
-              {/* Bottom inner wall - shows depth going INTO the wall */}
+              {/* Bottom inner wall - even lighter as it catches more light */}
               <div
                 className="absolute pointer-events-none"
                 style={{
@@ -413,8 +419,8 @@ export function ElementRenderer({
                   width: width,
                   height: toPixels(element.depth * 0.5),
                   backgroundColor: materialColor,
-                  filter: 'brightness(0.4)',
-                  border: isSelected ? '1px solid #3b82f6' : '1px solid #6b7280',
+                  filter: 'brightness(0.85)', // Lightest - top surface catches most light
+                  border: isSelected ? '1px solid #3b82f6' : '1px solid #9ca3af',
                   borderBottom: 'none',
                   borderLeft: 'none',
                   transform: 'skewX(30deg)',

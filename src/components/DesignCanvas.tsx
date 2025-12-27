@@ -187,18 +187,42 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
   }, [flattenedElements, state.canvas.dimensions, state.activeView, state.canvas.showAllDistances]);
   
   return (
-    <div className="flex-1 overflow-auto bg-gray-200 p-8">
-      {/* View Title */}
-      <div className="mb-4 text-center">
-        <h2 className="text-lg font-semibold text-gray-700">
+    <div 
+      className="flex-1 overflow-auto p-12"
+      style={{ backgroundColor: 'var(--color-bg-secondary)' }}
+    >
+      {/* Hero View Title */}
+      <div className="mb-8 text-center">
+        <h2 
+          className="text-4xl font-extrabold mb-2"
+          style={{ 
+            color: 'var(--color-text-primary)',
+            letterSpacing: '-0.02em'
+          }}
+        >
           {state.activeView === 'elevation' ? 'Front Elevation View' : 'Top-Down Plan View'}
         </h2>
-        <p className="text-sm text-gray-500">
-          Scale 1:{state.canvas.scale} | Canvas: {formatCm(state.canvas.dimensions.width)} × {' '}
-          {state.activeView === 'elevation' 
-            ? formatCm(state.canvas.dimensions.height)
-            : formatCm(state.canvas.dimensions.depth)} cm
-        </p>
+        <div 
+          className="flex items-center justify-center gap-4 text-sm font-semibold"
+          style={{ color: 'var(--color-text-secondary)' }}
+        >
+          <span 
+            className="px-4 py-2 rounded-lg"
+            style={{ 
+              backgroundColor: 'var(--color-primary)',
+              color: 'var(--color-text-inverse)'
+            }}
+          >
+            Scale 1:{state.canvas.scale}
+          </span>
+          <span>•</span>
+          <span>
+            Canvas: {formatCm(state.canvas.dimensions.width)} × {' '}
+            {state.activeView === 'elevation' 
+              ? formatCm(state.canvas.dimensions.height)
+              : formatCm(state.canvas.dimensions.depth)} cm
+          </span>
+        </div>
       </div>
       
       {/* Wrapper to ensure canvas is scrollable with proper padding for measurements */}
@@ -215,7 +239,7 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
             {/* Canvas container */}
             <div
               ref={ref}
-              className="relative bg-white shadow-lg"
+              className="relative"
               style={{
                 width: canvasWidth,
                 height: canvasHeight,
@@ -223,6 +247,9 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
                 minHeight: canvasHeight,
                 backgroundColor: state.canvas.material.color || '#e5e5e5',
                 overflow: 'hidden', // Clip elements to canvas bounds
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                borderRadius: '0.5rem',
+                border: '3px solid var(--color-border-strong)',
                 ...(state.canvas.showGrid && {
                   backgroundImage: `
                     linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
@@ -287,10 +314,32 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
               
               {/* Empty state */}
               {state.elements.length === 0 && (
-                <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                  <div className="text-center">
-                    <p className="text-lg">No elements yet</p>
-                    <p className="text-sm">Add elements from the sidebar</p>
+                <div 
+                  className="absolute inset-0 flex items-center justify-center"
+                  style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}
+                >
+                  <div className="text-center p-8">
+                    <svg 
+                      className="w-24 h-24 mx-auto mb-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      style={{ color: 'var(--color-text-tertiary)' }}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                    <h3 
+                      className="text-2xl font-bold mb-2"
+                      style={{ color: 'var(--color-text-primary)' }}
+                    >
+                      Start Designing
+                    </h3>
+                    <p 
+                      className="text-base font-semibold"
+                      style={{ color: 'var(--color-text-secondary)' }}
+                    >
+                      Add elements from the sidebar to begin
+                    </p>
                   </div>
                 </div>
               )}
@@ -298,14 +347,28 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
             
             {/* Width measurement at top - positioned outside canvas */}
             <div className="absolute top-2 left-0 right-0 flex justify-center pointer-events-none" style={{ paddingLeft: 70, paddingRight: 60 }}>
-              <span className="bg-gray-600 text-white text-xs px-2 py-0.5 rounded">
+              <span 
+                className="text-xs px-3 py-1.5 rounded-lg font-bold"
+                style={{
+                  backgroundColor: 'var(--color-primary)',
+                  color: 'var(--color-text-inverse)',
+                  boxShadow: '0 4px 6px -1px rgba(37, 99, 235, 0.3)'
+                }}
+              >
                 {formatCm(state.canvas.dimensions.width)} cm
               </span>
             </div>
             
             {/* Height measurement at left - positioned outside canvas */}
             <div className="absolute left-2 top-0 bottom-0 flex items-center pointer-events-none" style={{ paddingTop: 40, paddingBottom: 40 }}>
-              <span className="bg-gray-600 text-white text-xs px-2 py-0.5 rounded whitespace-nowrap -rotate-90">
+              <span 
+                className="text-xs px-3 py-1.5 rounded-lg whitespace-nowrap -rotate-90 font-bold"
+                style={{
+                  backgroundColor: 'var(--color-primary)',
+                  color: 'var(--color-text-inverse)',
+                  boxShadow: '0 4px 6px -1px rgba(37, 99, 235, 0.3)'
+                }}
+              >
                 {formatCm(state.activeView === 'elevation' 
                   ? state.canvas.dimensions.height 
                   : state.canvas.dimensions.depth)} cm

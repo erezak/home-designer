@@ -1,6 +1,7 @@
 import { useDesign } from '../context/DesignContext';
 
 export function Toolbar() {
+  const BRAND_MARK = 'HD';
   const { state, setView, setZoom } = useDesign();
 
   return (
@@ -9,7 +10,7 @@ export function Toolbar() {
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
           <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-lg font-semibold text-white shadow-inner shadow-black/40">
-            HD
+            {BRAND_MARK}
           </span>
           <div>
             <p className="text-xs uppercase tracking-[0.18em] text-slate-300">Glass & Blur</p>

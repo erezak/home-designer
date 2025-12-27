@@ -22,7 +22,10 @@ function AppContent() {
         <Toolbar />
 
         {/* Main Content */}
-        <div className="grid flex-1 min-h-0 grid-cols-[280px,1fr,340px] gap-4">
+        <div
+          className="grid flex-1 min-h-0 gap-4"
+          style={{ gridTemplateColumns: 'var(--sidebar-left, 280px) 1fr var(--sidebar-right, 340px)' }}
+        >
           {/* Left Sidebar - Canvas Settings */}
           <aside className="panel no-print overflow-hidden shadow-2xl">
             <div className="h-full overflow-y-auto pr-1 space-y-4">

@@ -54,6 +54,7 @@ export function ElementRenderer({
   const y = toPixels(position.y);
   
   const materialColor = element.material.color || MATERIAL_COLORS[element.material.type];
+  const accentColor = 'var(--accent-strong)';
 
   // Calculate distances to edges and nearest elements
   const distances = useMemo(() => {
@@ -185,7 +186,7 @@ export function ElementRenderer({
       width,
       height,
       backgroundColor: materialColor,
-      border: isSelected ? '2px solid #38bdf8' : '1px solid rgba(255,255,255,0.45)',
+      border: isSelected ? `2px solid ${accentColor}` : '1px solid rgba(255,255,255,0.45)',
       boxSizing: 'border-box',
       cursor: isDragging ? 'grabbing' : 'grab',
       transition: isDragging ? 'none' : 'border-color 0.2s, transform 0.2s',
@@ -214,7 +215,7 @@ export function ElementRenderer({
         return {
           ...baseStyle,
           backgroundColor: '#1f2937',
-          border: isSelected ? '2px solid #38bdf8' : '2px solid rgba(255,255,255,0.35)',
+          border: isSelected ? `2px solid ${accentColor}` : '2px solid rgba(255,255,255,0.35)',
           boxShadow: isDragging ? '0 12px 30px rgba(0,0,0,0.5)' : 'inset 0 2px 10px rgba(0,0,0,0.35)',
         };
       case 'fireplace':

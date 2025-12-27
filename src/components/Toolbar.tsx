@@ -2,13 +2,19 @@ import { useDesign } from '../context/DesignContext';
 
 export function Toolbar() {
   const { state, setView, setZoom } = useDesign();
+  const initials = state.canvas.name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0]?.toUpperCase())
+    .join('') || 'HD';
 
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 py-3 flex items-center justify-between shadow-lg shadow-black/30 no-print">
       {/* Left: Title */}
       <div className="flex items-center gap-3">
         <div className="h-10 w-10 rounded-xl bg-[var(--accent)]/25 border border-[var(--accent)]/40 flex items-center justify-center font-semibold text-white">
-          HD
+          {initials}
         </div>
         <div>
           <p className="text-[11px] uppercase tracking-[0.2em] text-gray-400">Monochrome Plus One</p>

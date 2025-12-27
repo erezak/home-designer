@@ -8,9 +8,10 @@ interface ElementRendererProps {
   isSelected: boolean;
   onSelect: (id: string) => void;
   showMeasurements?: boolean;
-  viewType: 'elevation' | 'plan';
+  viewType: 'elevation' | 'plan' | '3d';
   siblingElements?: DesignElement[]; // Other elements at the same level
   canvasDimensions?: { width: number; height: number }; // Canvas size for edge distances
+  canvasDepth?: number; // Canvas depth for 3D view
   showAllDistances?: boolean; // Show distance markers for all elements
 }
 
@@ -23,6 +24,7 @@ export function ElementRenderer({
   viewType,
   siblingElements = [],
   canvasDimensions,
+  canvasDepth: _canvasDepth = 30,
   showAllDistances = false,
 }: ElementRendererProps) {
   const { state, moveElement } = useDesign();
@@ -30,7 +32,7 @@ export function ElementRenderer({
   
   // Use canvas dimensions from props or from state
   const canvasWidth = canvasDimensions?.width ?? state.canvas.dimensions.width;
-  const canvasHeight = canvasDimensions?.height ?? (viewType === 'elevation' 
+  const canvasHeight = canvasDimensions?.height ?? (viewType === 'elevation' || viewType === '3d'
     ? state.canvas.dimensions.height 
     : state.canvas.dimensions.depth);
   
@@ -48,7 +50,10 @@ export function ElementRenderer({
   const toCm = useCallback((px: number) => (px / 50) * scaleFactor, [scaleFactor]);
   
   const elWidth = element.dimensions.width;
-  const elHeight = viewType === 'elevation' ? element.dimensions.height : (element.depth || 10);
+  const elHeight = viewType === 'elevation' || viewType === '3d'
+    ? element.dimensions.height 
+    : (element.depth || 10);
+  const elDepth = element.depth || 10; // Depth for 3D rendering
   
   const width = toPixels(elWidth);
   const height = toPixels(elHeight);
@@ -76,7 +81,9 @@ export function ElementRenderer({
       if (sibling.id === element.id) continue;
       const sibPos = sibling.computedPosition || { x: 0, y: 0 };
       const sibWidth = sibling.dimensions.width;
-      const sibHeight = viewType === 'elevation' ? sibling.dimensions.height : (sibling.depth || 10);
+      const sibHeight = viewType === 'elevation' || viewType === '3d'
+        ? sibling.dimensions.height 
+        : (sibling.depth || 10);
 
       // Check if horizontally overlapping (for vertical distance)
       const hOverlap = pos.x < sibPos.x + sibWidth && pos.x + elWidth > sibPos.x;
@@ -153,7 +160,7 @@ export function ElementRenderer({
       
       // Clamp to canvas bounds
       const maxX = toPixels(state.canvas.dimensions.width) - width;
-      const maxY = toPixels(viewType === 'elevation' 
+      const maxY = toPixels(viewType === 'elevation' || viewType === '3d'
         ? state.canvas.dimensions.height 
         : state.canvas.dimensions.depth) - height;
       
@@ -194,6 +201,23 @@ export function ElementRenderer({
       userSelect: 'none',
       zIndex: isDragging ? 1000 : isSelected ? 100 : 1,
     };
+
+    // For 3D view, add isometric depth visualization
+    if (viewType === '3d') {
+      const depthOffset = toPixels(elDepth * 0.5); // Isometric depth offset
+      return {
+        ...baseStyle,
+        boxShadow: isDragging 
+          ? '0 8px 16px rgba(0,0,0,0.3)' 
+          : `${depthOffset}px ${depthOffset}px 0 rgba(0,0,0,0.2), inset ${element.type === 'niche' ? '-2px -2px 8px rgba(0,0,0,0.3)' : '0 0 0 transparent'}`,
+        // Add a pseudo-3D effect hint with a gradient for niches
+        backgroundImage: element.type === 'niche' 
+          ? `linear-gradient(135deg, ${materialColor} 0%, rgba(0,0,0,0.1) 100%)`
+          : element.type === 'fireplace'
+          ? 'linear-gradient(to bottom, #374151, #1f2937)'
+          : undefined,
+      };
+    }
     
     switch (element.type) {
       case 'niche':
@@ -264,9 +288,18 @@ export function ElementRenderer({
           {/* Height measurement - positioned at bottom-left, below width */}
           <div className="absolute pointer-events-none" style={{ bottom: 20, left: 4 }}>
             <span className="bg-blue-500 text-white text-xs px-1 rounded whitespace-nowrap">
-              H: {formatCm(viewType === 'elevation' ? element.dimensions.height : element.depth || 0)}
+              H: {formatCm(viewType === 'elevation' || viewType === '3d' ? element.dimensions.height : element.depth || 0)}
             </span>
           </div>
+
+          {/* Depth measurement - only shown in 3D view, positioned below height */}
+          {viewType === '3d' && element.depth && (
+            <div className="absolute pointer-events-none" style={{ bottom: 36, left: 4 }}>
+              <span className="bg-purple-500 text-white text-xs px-1 rounded whitespace-nowrap">
+                D: {formatCm(element.depth)}
+              </span>
+            </div>
+          )}
           
           {/* Position indicator when dragging */}
           {isDragging && (
@@ -329,6 +362,46 @@ export function ElementRenderer({
               </span>
             </div>
           )}
+        </>
+      )}
+
+      {/* 3D depth visualization - side and top faces for isometric effect */}
+      {viewType === '3d' && element.depth && element.depth > 0 && (
+        <>
+          {/* Right side face (depth visualization) */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              right: -toPixels(element.depth * 0.5),
+              top: -toPixels(element.depth * 0.5),
+              width: toPixels(element.depth * 0.5),
+              height: height,
+              backgroundColor: materialColor,
+              filter: 'brightness(0.7)',
+              border: isSelected ? '1px solid #3b82f6' : '1px solid #9ca3af',
+              borderLeft: 'none',
+              transform: 'skewY(-30deg)',
+              transformOrigin: 'left top',
+              zIndex: -1,
+            }}
+          />
+          {/* Top face (depth visualization) */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              left: 0,
+              top: -toPixels(element.depth * 0.5),
+              width: width,
+              height: toPixels(element.depth * 0.5),
+              backgroundColor: materialColor,
+              filter: 'brightness(0.85)',
+              border: isSelected ? '1px solid #3b82f6' : '1px solid #9ca3af',
+              borderBottom: 'none',
+              transform: 'skewX(-30deg)',
+              transformOrigin: 'left bottom',
+              zIndex: -1,
+            }}
+          />
         </>
       )}
     </div>

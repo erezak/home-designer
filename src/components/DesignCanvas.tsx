@@ -187,13 +187,13 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
   }, [flattenedElements, state.canvas.dimensions, state.activeView, state.canvas.showAllDistances]);
   
   return (
-    <div className="flex-1 overflow-auto bg-gray-200 p-8">
+    <div className="flex-1 overflow-auto bg-gradient-to-br from-[#0b0d14] via-[#0f1220] to-[#0b0c12] p-6 rounded-2xl border border-white/10 shadow-inner shadow-black/30">
       {/* View Title */}
       <div className="mb-4 text-center">
-        <h2 className="text-lg font-semibold text-gray-700">
+        <h2 className="text-lg font-semibold text-white">
           {state.activeView === 'elevation' ? 'Front Elevation View' : 'Top-Down Plan View'}
         </h2>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-300">
           Scale 1:{state.canvas.scale} | Canvas: {formatCm(state.canvas.dimensions.width)} × {' '}
           {state.activeView === 'elevation' 
             ? formatCm(state.canvas.dimensions.height)
@@ -215,7 +215,7 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
             {/* Canvas container */}
             <div
               ref={ref}
-              className="relative bg-white shadow-lg"
+              className="relative bg-white shadow-2xl shadow-black/30 rounded-xl"
               style={{
                 width: canvasWidth,
                 height: canvasHeight,
@@ -234,7 +234,7 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
               onClick={() => selectElement(null)}
             >
               {/* Canvas border with measurements */}
-              <div className="absolute inset-0 border-2 border-gray-400 pointer-events-none" style={{ zIndex: 500 }} />
+              <div className="absolute inset-0 border border-white/30 pointer-events-none rounded-xl" style={{ zIndex: 500 }} />
               
               {/* Render all elements (flattened) */}
               {flattenedElements.map((element) => (
@@ -267,18 +267,18 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
                   <div
                     key={`gap-${index}`}
                     className="absolute pointer-events-none"
-                    style={{
-                      [isHorizontal ? 'left' : 'top']: startPx,
-                      [isHorizontal ? 'width' : 'height']: sizePx,
-                      [isHorizontal ? 'top' : 'left']: positionPx,
-                      display: 'flex',
+                  style={{
+                    [isHorizontal ? 'left' : 'top']: startPx,
+                    [isHorizontal ? 'width' : 'height']: sizePx,
+                    [isHorizontal ? 'top' : 'left']: positionPx,
+                    display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      transform: isHorizontal ? 'translateY(-50%)' : 'translateX(-50%)',
-                      zIndex: 50,
-                    }}
-                  >
-                    <span className="bg-green-600 text-white text-xs px-1 rounded whitespace-nowrap">
+                    transform: isHorizontal ? 'translateY(-50%)' : 'translateX(-50%)',
+                    zIndex: 50,
+                  }}
+                >
+                    <span className="bg-[var(--accent)] text-white text-xs px-1 rounded whitespace-nowrap shadow">
                       {isHorizontal ? '↔' : '↕'} {formatCm(gap.size)}
                     </span>
                   </div>
@@ -289,8 +289,8 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
               {state.elements.length === 0 && (
                 <div className="absolute inset-0 flex items-center justify-center text-gray-400">
                   <div className="text-center">
-                    <p className="text-lg">No elements yet</p>
-                    <p className="text-sm">Add elements from the sidebar</p>
+                    <p className="text-lg text-white/80">No elements yet</p>
+                    <p className="text-sm text-gray-400">Add elements from the sidebar</p>
                   </div>
                 </div>
               )}
@@ -298,14 +298,14 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
             
             {/* Width measurement at top - positioned outside canvas */}
             <div className="absolute top-2 left-0 right-0 flex justify-center pointer-events-none" style={{ paddingLeft: 70, paddingRight: 60 }}>
-              <span className="bg-gray-600 text-white text-xs px-2 py-0.5 rounded">
+              <span className="bg-white/10 border border-white/20 text-gray-100 text-xs px-2 py-0.5 rounded shadow">
                 {formatCm(state.canvas.dimensions.width)} cm
               </span>
             </div>
             
             {/* Height measurement at left - positioned outside canvas */}
             <div className="absolute left-2 top-0 bottom-0 flex items-center pointer-events-none" style={{ paddingTop: 40, paddingBottom: 40 }}>
-              <span className="bg-gray-600 text-white text-xs px-2 py-0.5 rounded whitespace-nowrap -rotate-90">
+              <span className="bg-white/10 border border-white/20 text-gray-100 text-xs px-2 py-0.5 rounded whitespace-nowrap -rotate-90 shadow">
                 {formatCm(state.activeView === 'elevation' 
                   ? state.canvas.dimensions.height 
                   : state.canvas.dimensions.depth)} cm

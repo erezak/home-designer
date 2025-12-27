@@ -187,10 +187,10 @@ export function ElementRenderer({
       width,
       height,
       backgroundColor: materialColor,
-      border: isSelected ? '2px solid #3b82f6' : '1px solid #9ca3af',
+      border: isSelected ? '2px solid var(--accent)' : '1px solid rgba(255, 255, 255, 0.25)',
       boxSizing: 'border-box',
       cursor: isDragging ? 'grabbing' : 'grab',
-      transition: isDragging ? 'none' : 'border-color 0.2s',
+      transition: isDragging ? 'none' : 'border-color 0.2s, box-shadow 0.2s',
       userSelect: 'none',
       zIndex: isDragging ? 1000 : isSelected ? 100 : 1,
     };
@@ -200,35 +200,35 @@ export function ElementRenderer({
         return {
           ...baseStyle,
           boxShadow: isDragging 
-            ? '0 8px 16px rgba(0,0,0,0.2)' 
-            : 'inset 0 2px 8px rgba(0,0,0,0.15)',
+            ? '0 12px 24px rgba(0,0,0,0.35)' 
+            : 'inset 0 2px 10px rgba(0,0,0,0.25)',
         };
       case 'shelf':
         return {
           ...baseStyle,
           borderRadius: '2px',
           boxShadow: isDragging 
-            ? '0 8px 16px rgba(0,0,0,0.2)' 
-            : '0 2px 4px rgba(0,0,0,0.1)',
+            ? '0 12px 24px rgba(0,0,0,0.35)' 
+            : '0 2px 6px rgba(0,0,0,0.2)',
         };
       case 'tv-recess':
         return {
           ...baseStyle,
           backgroundColor: '#1f2937',
-          border: isSelected ? '2px solid #3b82f6' : '2px solid #374151',
-          boxShadow: isDragging ? '0 8px 16px rgba(0,0,0,0.3)' : undefined,
+          border: isSelected ? '2px solid var(--accent)' : '2px solid #374151',
+          boxShadow: isDragging ? '0 14px 26px rgba(0,0,0,0.4)' : undefined,
         };
       case 'fireplace':
         return {
           ...baseStyle,
           backgroundColor: '#1f2937',
           backgroundImage: 'linear-gradient(to bottom, #374151, #1f2937)',
-          boxShadow: isDragging ? '0 8px 16px rgba(0,0,0,0.3)' : undefined,
+          boxShadow: isDragging ? '0 14px 26px rgba(0,0,0,0.4)' : undefined,
         };
       default:
         return {
           ...baseStyle,
-          boxShadow: isDragging ? '0 8px 16px rgba(0,0,0,0.2)' : undefined,
+          boxShadow: isDragging ? '0 12px 24px rgba(0,0,0,0.35)' : undefined,
         };
     }
   };
@@ -247,7 +247,7 @@ export function ElementRenderer({
       title={`${element.name} (${formatCm(element.dimensions.width)} × ${formatCm(element.dimensions.height)} cm) - Drag to move`}
     >
       {/* Element label */}
-      <div className="absolute top-1 left-1 text-xs text-gray-600 font-medium truncate max-w-full pr-2 pointer-events-none select-none">
+      <div className="absolute top-1 left-1 text-xs text-gray-200 font-medium truncate max-w-full pr-2 pointer-events-none select-none drop-shadow">
         {element.name}
       </div>
       
@@ -256,14 +256,14 @@ export function ElementRenderer({
         <>
           {/* Width measurement - positioned at bottom-left corner */}
           <div className="absolute pointer-events-none" style={{ bottom: 4, left: 4 }}>
-            <span className="bg-blue-500 text-white text-xs px-1 rounded">
+            <span className="bg-[var(--accent)] text-white text-xs px-1 rounded shadow">
               W: {formatCm(element.dimensions.width)}
             </span>
           </div>
           
           {/* Height measurement - positioned at bottom-left, below width */}
           <div className="absolute pointer-events-none" style={{ bottom: 20, left: 4 }}>
-            <span className="bg-blue-500 text-white text-xs px-1 rounded whitespace-nowrap">
+            <span className="bg-[var(--accent)] text-white text-xs px-1 rounded whitespace-nowrap shadow">
               H: {formatCm(viewType === 'elevation' ? element.dimensions.height : element.depth || 0)}
             </span>
           </div>
@@ -271,7 +271,7 @@ export function ElementRenderer({
           {/* Position indicator when dragging */}
           {isDragging && (
             <div className="absolute top-1 left-1/2 -translate-x-1/2 pointer-events-none">
-              <span className="bg-gray-800 text-white text-xs px-1 rounded whitespace-nowrap">
+              <span className="bg-white/10 border border-white/20 text-white text-xs px-1 rounded whitespace-nowrap shadow">
                 X: {formatCm(position.x)}, Y: {formatCm(position.y)}
               </span>
             </div>
@@ -288,7 +288,7 @@ export function ElementRenderer({
               className="absolute pointer-events-none"
               style={{ top: 4, left: 4 }}
             >
-              <span className="bg-orange-500 text-white text-xs px-1 rounded whitespace-nowrap">
+              <span className="bg-[var(--accent)] text-white text-xs px-1 rounded whitespace-nowrap shadow">
                 ← {formatCm(distances.nearestLeft?.distance ?? distances.left)}
               </span>
             </div>
@@ -300,7 +300,7 @@ export function ElementRenderer({
               className="absolute pointer-events-none"
               style={{ top: 4, right: 4 }}
             >
-              <span className="bg-orange-500 text-white text-xs px-1 rounded whitespace-nowrap">
+              <span className="bg-[var(--accent)] text-white text-xs px-1 rounded whitespace-nowrap shadow">
                 {formatCm(distances.nearestRight?.distance ?? distances.right)} →
               </span>
             </div>
@@ -312,7 +312,7 @@ export function ElementRenderer({
               className="absolute pointer-events-none"
               style={{ top: 20, left: 4 }}
             >
-              <span className="bg-orange-500 text-white text-xs px-1 rounded whitespace-nowrap">
+              <span className="bg-[var(--accent)] text-white text-xs px-1 rounded whitespace-nowrap shadow">
                 ↑ {formatCm(distances.nearestTop?.distance ?? distances.top)}
               </span>
             </div>
@@ -324,7 +324,7 @@ export function ElementRenderer({
               className="absolute pointer-events-none"
               style={{ bottom: 4, right: 4 }}
             >
-              <span className="bg-orange-500 text-white text-xs px-1 rounded whitespace-nowrap">
+              <span className="bg-[var(--accent)] text-white text-xs px-1 rounded whitespace-nowrap shadow">
                 ↓ {formatCm(distances.nearestBottom?.distance ?? distances.bottom)}
               </span>
             </div>

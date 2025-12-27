@@ -13,28 +13,30 @@ function AppContent() {
   const canvasRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
-      {/* Top Toolbar */}
-      <Toolbar />
+    <div className="min-h-screen text-gray-100">
+      <div className="max-w-7xl mx-auto h-screen flex flex-col gap-4 px-6 py-5">
+        {/* Top Toolbar */}
+        <Toolbar />
 
-      {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar - Canvas Settings */}
-        <aside className="w-72 bg-gray-50 border-r border-gray-200 overflow-y-auto p-4 space-y-4 no-print">
-          <CanvasSettings />
-          <AreaSummary />
-          <ExportPanel canvasRef={canvasRef} />
-        </aside>
+        {/* Main Content */}
+        <div className="flex-1 grid grid-cols-[320px_1fr_360px] gap-4 overflow-hidden">
+          {/* Left Sidebar - Canvas Settings */}
+          <aside className="space-y-4 overflow-y-auto pr-1 no-print">
+            <CanvasSettings />
+            <AreaSummary />
+            <ExportPanel canvasRef={canvasRef} />
+          </aside>
 
-        {/* Main Canvas Area */}
-        <main className="flex-1 overflow-auto">
-          <DesignCanvas canvasRef={canvasRef} />
-        </main>
+          {/* Main Canvas Area */}
+          <main className="flex-1 overflow-hidden">
+            <DesignCanvas canvasRef={canvasRef} />
+          </main>
 
-        {/* Right Sidebar - Element Panel */}
-        <aside className="w-80 bg-gray-50 border-l border-gray-200 overflow-y-auto p-4 no-print">
-          <ElementPanel />
-        </aside>
+          {/* Right Sidebar - Element Panel */}
+          <aside className="overflow-y-auto pl-1 no-print">
+            <ElementPanel />
+          </aside>
+        </div>
       </div>
     </div>
   );

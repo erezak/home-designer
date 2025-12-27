@@ -161,7 +161,6 @@ function computeAutoPositions(
   startX: number = 0,
   startY: number = 0,
   allElements?: DesignElement[], // Pass all elements for relative lookup
-  _parentPosition?: Position // Parent position for context (unused but available)
 ): DesignElement[] {
   let currentX = startX;
   let currentY = startY;
@@ -241,8 +240,7 @@ function computeAutoPositions(
             canvasWidth, // Use canvas width for all elements
             computedPosition.x, // Pass parent position for auto-positioning children
             computedPosition.y,
-            lookupElements,
-            computedPosition // Pass parent position for context
+            lookupElements
           )
         : [];
 
@@ -511,6 +509,7 @@ export function DesignProvider({ children }: { children: ReactNode }) {
 }
 
 // Hook to use the design context
+// eslint-disable-next-line react-refresh/only-export-components
 export function useDesign() {
   const context = useContext(DesignContext);
   if (!context) {

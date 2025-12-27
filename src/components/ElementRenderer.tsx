@@ -4,7 +4,6 @@ import { type DesignElement, MATERIAL_COLORS, formatCm } from '../types';
 
 interface ElementRendererProps {
   element: DesignElement;
-  scale?: number; // Kept for API compatibility
   isSelected: boolean;
   onSelect: (id: string) => void;
   showMeasurements?: boolean;
@@ -16,7 +15,6 @@ interface ElementRendererProps {
 
 export function ElementRenderer({
   element,
-  scale: _scale,
   isSelected,
   onSelect,
   showMeasurements = true,
@@ -187,12 +185,15 @@ export function ElementRenderer({
       width,
       height,
       backgroundColor: materialColor,
-      border: isSelected ? '2px solid #3b82f6' : '1px solid #9ca3af',
+      border: isSelected ? '2px solid #4f46e5' : '1px solid #cbd5e1',
       boxSizing: 'border-box',
       cursor: isDragging ? 'grabbing' : 'grab',
-      transition: isDragging ? 'none' : 'border-color 0.2s',
+      transition: isDragging ? 'none' : 'border-color 0.2s, box-shadow 0.2s',
       userSelect: 'none',
       zIndex: isDragging ? 1000 : isSelected ? 100 : 1,
+      boxShadow: isSelected
+        ? '0 12px 30px -18px rgba(79,70,229,0.5)'
+        : '0 10px 28px -22px rgba(15,23,42,0.25)',
     };
     
     switch (element.type) {

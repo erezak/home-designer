@@ -187,7 +187,7 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
   }, [flattenedElements, state.canvas.dimensions, state.activeView, state.canvas.showAllDistances]);
   
   return (
-    <div className="flex-1 overflow-auto bg-gray-200 p-8">
+    <div className="flex-1 content-scroll overflow-auto bg-gray-200 p-8">
       {/* View Title */}
       <div className="mb-4 text-center">
         <h2 className="text-lg font-semibold text-gray-700">
@@ -215,7 +215,7 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
             {/* Canvas container */}
             <div
               ref={ref}
-              className="relative bg-white shadow-lg"
+              className="relative bg-white"
               style={{
                 width: canvasWidth,
                 height: canvasHeight,
@@ -234,7 +234,7 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
               onClick={() => selectElement(null)}
             >
               {/* Canvas border with measurements */}
-              <div className="absolute inset-0 border-2 border-gray-400 pointer-events-none" style={{ zIndex: 500 }} />
+              <div className="absolute inset-0 border border-gray-200 pointer-events-none" style={{ zIndex: 500 }} />
               
               {/* Render all elements (flattened) */}
               {flattenedElements.map((element) => (

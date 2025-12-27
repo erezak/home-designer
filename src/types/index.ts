@@ -80,6 +80,8 @@ export interface DesignElement {
   parentId?: string; // Reference to parent element
   // Computed values (calculated at render time)
   computedPosition?: Position;
+  // Z-order index (higher values render on top)
+  zIndex?: number;
 }
 
 // Canvas/Structure configuration
@@ -107,6 +109,11 @@ export interface DesignState {
   selectedElementId: string | null;
   activeView: ViewType;
   zoom: number; // Viewport zoom level (1 = 100%)
+  // Sidebar visibility state (collapsible)
+  sidebars: {
+    leftCollapsed: boolean;
+    rightCollapsed: boolean;
+  };
 }
 
 // Material color mapping

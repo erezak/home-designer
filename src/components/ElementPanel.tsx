@@ -18,6 +18,11 @@ export function ElementPanel() {
     deleteElement, 
     getSelectedElement,
     selectElement,
+    // Layer helpers
+    bringForward,
+    sendBackward,
+    bringToFront,
+    sendToBack,
   } = useDesign();
   
   const selectedElement = getSelectedElement();
@@ -69,7 +74,7 @@ export function ElementPanel() {
         {state.elements.length === 0 ? (
           <p className="text-sm text-gray-500">No elements added yet</p>
         ) : (
-          <div className="space-y-1 max-h-48 overflow-y-auto">
+          <div className="space-y-1 max-h-48 content-scroll overflow-y-auto">
             {state.elements.map((el) => (
               <ElementListItem
                 key={el.id}
@@ -397,6 +402,38 @@ export function ElementPanel() {
               </div>
             </div>
           )}
+
+          {/* Layer / Z-order controls */}
+          <div className="mb-3">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Layer / Z-order</label>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => sendToBack(selectedElement.id)}
+                className="btn-secondary text-sm"
+              >
+                Send to back
+              </button>
+              <button
+                onClick={() => sendBackward(selectedElement.id)}
+                className="btn-secondary text-sm"
+              >
+                ↓
+              </button>
+              <div className="px-2 text-sm text-gray-700">z: {selectedElement.zIndex ?? 0}</div>
+              <button
+                onClick={() => bringForward(selectedElement.id)}
+                className="btn-secondary text-sm"
+              >
+                ↑
+              </button>
+              <button
+                onClick={() => bringToFront(selectedElement.id)}
+                className="btn-secondary text-sm"
+              >
+                Bring to front
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

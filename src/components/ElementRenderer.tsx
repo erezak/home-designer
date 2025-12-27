@@ -180,6 +180,7 @@ export function ElementRenderer({
   
   // Style based on element type
   const getElementStyle = () => {
+    const baseZ = typeof element.zIndex === 'number' ? element.zIndex : 0;
     const baseStyle: React.CSSProperties = {
       position: 'absolute',
       left: x,
@@ -192,7 +193,8 @@ export function ElementRenderer({
       cursor: isDragging ? 'grabbing' : 'grab',
       transition: isDragging ? 'none' : 'border-color 0.2s',
       userSelect: 'none',
-      zIndex: isDragging ? 1000 : isSelected ? 100 : 1,
+      // Base z-index comes from element.zIndex; selected/dragging get temporary offsets
+      zIndex: isDragging ? 10000 : (baseZ + (isSelected ? 1000 : 0)),
     };
     
     switch (element.type) {

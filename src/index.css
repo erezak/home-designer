@@ -10,6 +10,15 @@
   --color-fireplace: #374151;
   --color-grid: #d1d5db;
   --color-measurement: #3b82f6;
+
+  /* UI tokens for subtle Apple/Figma-like look */
+  --border-color: rgba(15, 23, 42, 0.06);
+  --border-color-strong: rgba(15, 23, 42, 0.12);
+  --panel-shadow: 0 1px 2px rgba(2,6,23,0.04);
+  --radius-md: 10px;
+  --scrollbar-thumb: rgba(15,23,42,0.10);
+  --scrollbar-thumb-hover: rgba(15,23,42,0.18);
+  --scrollbar-track: transparent;
 }
 
 * {
@@ -17,7 +26,17 @@
 }
 
 body {
-  @apply bg-gray-100 text-gray-900 font-sans antialiased m-0;
+  /* macOS-like system font stack */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, system-ui, sans-serif;
+  @apply bg-gray-100 text-gray-900 antialiased m-0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --mac-accent: 59,130,246; /* blue */
+  --mac-toolbar-bg: rgba(255,255,255,0.75);
+  --mac-toolbar-border: rgba(15,23,42,0.06);
 }
 
 .canvas-grid {
@@ -36,11 +55,17 @@ body {
 }
 
 .input-field {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm;
+  @apply w-full px-3 py-2 text-sm bg-white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
 }
 
 .input-field:focus {
-  @apply outline-none ring-2 ring-blue-500 border-blue-500;
+  @apply outline-none;
+  border-color: var(--color-measurement);
+  box-shadow: 0 0 0 6px rgba(59,130,246,0.12);
 }
 
 .btn {
@@ -92,11 +117,110 @@ body {
 }
 
 .panel {
-  @apply bg-white rounded-lg shadow-md p-4;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--panel-shadow);
+  padding: 1rem;
 }
 
 .scrollbar-thin {
   scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* Use on scrollable containers: add class `content-scroll` */
+.content-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.content-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.content-scroll::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+.content-scroll::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 999px;
+  min-height: 28px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.content-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* Polite focus styles similar to Figma/Apple */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 6px rgba(var(--mac-accent),0.12);
+  border-color: rgba(var(--mac-accent),1);
+  border-radius: var(--radius-md);
+}
+
+/* Top toolbar: macOS-like translucent bar */
+.top-toolbar {
+  background: var(--mac-toolbar-bg);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  border-bottom: 1px solid var(--mac-toolbar-border);
+}
+
+/* Auto-hide scrollbars for a mac-like feel */
+.content-scroll {
+  /* prefer overlay behavior */
+  scrollbar-width: none; /* Firefox: hide */
+}
+
+.content-scroll:hover {
+  scrollbar-width: thin; /* Firefox: show thin on hover */
+}
+
+/* Webkit scrollbars: hidden by default, reveal on hover */
+.content-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.content-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+  border: 4px solid transparent;
+  background-clip: padding-box;
+  transition: background 160ms ease;
+}
+.content-scroll:hover::-webkit-scrollbar-thumb {
+  background: rgba(15,23,42,0.12);
+}
+.content-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Sidebar toggle small buttons */
+.sidebar-toggle {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(15,23,42,0.06);
+  box-shadow: 0 1px 2px rgba(2,6,23,0.04);
+}
+
+.sidebar-toggle:hover {
+  background: #f8fafc;
 }
 
 /* Print styles */

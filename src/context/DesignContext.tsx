@@ -25,6 +25,11 @@ type DesignAction =
   | { type: 'SET_ZOOM'; payload: number }
   | { type: 'MOVE_ELEMENT'; payload: { id: string; position: Position } }
   | { type: 'REORDER_ELEMENTS'; payload: DesignElement[] }
+  | { type: 'SET_ELEMENT_ZINDEX'; payload: { id: string; zIndex: number } }
+  | { type: 'SWAP_ELEMENT_ZINDEX'; payload: { idA: string; idB: string } }
+  | { type: 'TOGGLE_LEFT_SIDEBAR' }
+  | { type: 'TOGGLE_RIGHT_SIDEBAR' }
+  | { type: 'SET_SIDEBARS'; payload: { leftCollapsed: boolean; rightCollapsed: boolean } }
   | { type: 'LOAD_STATE'; payload: DesignState };
 
 // Initial canvas configuration
@@ -56,6 +61,10 @@ const initialState: DesignState = {
   selectedElementId: null,
   activeView: 'elevation',
   zoom: 1,
+  sidebars: {
+    leftCollapsed: false,
+    rightCollapsed: false,
+  },
 };
 
 // Load state from localStorage
@@ -63,14 +72,27 @@ function loadFromLocalStorage(): DesignState | null {
   try {
     const saved = localStorage.getItem(LOCALSTORAGE_KEY);
     if (saved) {
-      const loadedState = JSON.parse(saved) as DesignState;
-      // Recompute positions after loading
+      const loadedState = JSON.parse(saved) as Partial<DesignState>;
+
+      // Ensure sidebar defaults exist for older saved states
+      const sidebars = {
+        leftCollapsed: false,
+        rightCollapsed: false,
+        ...(loadedState.sidebars || {}),
+      };
+
+      // Recompute positions after loading (use canvas from loaded state or initial)
+      const canvas = (loadedState.canvas as CanvasConfig) || initialCanvas;
+      const elements = (loadedState.elements as DesignElement[]) || [];
       const recomputedElements = computeAllPositions(
-        loadedState.elements,
-        loadedState.canvas.dimensions.width
+        elements,
+        canvas.dimensions.width
       );
+
       return {
-        ...loadedState,
+        ...initialState,
+        ...loadedState as DesignState,
+        sidebars,
         elements: recomputedElements,
       };
     }
@@ -152,6 +174,50 @@ function findElement(elements: DesignElement[], id: string): DesignElement | nul
     }
   }
   return null;
+}
+
+// Flatten elements (pre-order) - useful for global z-index calculations
+function flattenElements(elements: DesignElement[]): DesignElement[] {
+  const out: DesignElement[] = [];
+  const walk = (els: DesignElement[]) => {
+    for (const el of els) {
+      out.push(el);
+      if (el.children.length > 0) walk(el.children);
+    }
+  };
+  walk(elements);
+  return out;
+}
+
+// Get maximum zIndex (treat missing zIndex as -Infinity so any set will be larger)
+function getMaxZIndex(elements: DesignElement[]): number {
+  const flat = flattenElements(elements);
+  if (flat.length === 0) return -1;
+  return Math.max(...flat.map((e) => (typeof e.zIndex === 'number' ? e.zIndex : -1)));
+}
+
+// Normalize zIndex across all elements to sequential integers starting at 0
+function normalizeZIndices(elements: DesignElement[]): DesignElement[] {
+  const flat = flattenElements(elements).slice();
+  // Sort by current zIndex (missing treated as -1), preserve stable order for ties
+  flat.sort((a, b) => ( (typeof a.zIndex === 'number' ? a.zIndex : -1) - (typeof b.zIndex === 'number' ? b.zIndex : -1) ));
+
+  // Assign new sequential z-indices
+  const idToZ = new Map<string, number>();
+  for (let i = 0; i < flat.length; i++) {
+    idToZ.set(flat[i].id, i);
+  }
+
+  // Update tree with new zIndices
+  const updateZ = (els: DesignElement[]): DesignElement[] => {
+    return els.map((el) => ({
+      ...el,
+      zIndex: idToZ.get(el.id) ?? 0,
+      children: el.children.length > 0 ? updateZ(el.children) : [],
+    }));
+  };
+
+  return updateZ(elements);
 }
 
 // Compute positions for auto-positioned elements
@@ -277,6 +343,8 @@ function designReducer(state: DesignState, action: DesignAction): DesignState {
         ...action.payload.element,
         id: uuidv4(),
         children: action.payload.element.children || [],
+        // Place newly added elements above existing ones by default
+        zIndex: getMaxZIndex(state.elements) + 1,
       };
 
       let newElements: DesignElement[];
@@ -340,13 +408,40 @@ function designReducer(state: DesignState, action: DesignAction): DesignState {
         zoom: Math.max(0.1, Math.min(3, action.payload)),
       };
 
+    case 'TOGGLE_LEFT_SIDEBAR':
+      return {
+        ...state,
+        sidebars: {
+          ...state.sidebars,
+          leftCollapsed: !state.sidebars.leftCollapsed,
+        },
+      };
+
+    case 'TOGGLE_RIGHT_SIDEBAR':
+      return {
+        ...state,
+        sidebars: {
+          ...state.sidebars,
+          rightCollapsed: !state.sidebars.rightCollapsed,
+        },
+      };
+
+    case 'SET_SIDEBARS':
+      return {
+        ...state,
+        sidebars: { ...action.payload },
+      };
+
     case 'MOVE_ELEMENT': {
-      const newElements = updateNestedElement(state.elements, action.payload.id, {
+      let newElements = updateNestedElement(state.elements, action.payload.id, {
         positioning: {
           mode: 'absolute' as PositionMode,
           position: action.payload.position,
         },
       });
+
+      // Recompute positions so computedPosition is set for absolute-mode elements
+      newElements = computeAllPositions(newElements, state.canvas.dimensions.width);
 
       return {
         ...state,
@@ -361,6 +456,23 @@ function designReducer(state: DesignState, action: DesignAction): DesignState {
         ...state,
         elements: newElements,
       };
+    }
+
+    case 'SET_ELEMENT_ZINDEX': {
+      let newElements = updateNestedElement(state.elements, action.payload.id, { zIndex: action.payload.zIndex });
+      // Normalize to keep indices compact
+      newElements = normalizeZIndices(newElements);
+      return { ...state, elements: newElements };
+    }
+
+    case 'SWAP_ELEMENT_ZINDEX': {
+      const a = findElement(state.elements, action.payload.idA);
+      const b = findElement(state.elements, action.payload.idB);
+      if (!a || !b) return state;
+      let newElements = updateNestedElement(state.elements, action.payload.idA, { zIndex: b.zIndex });
+      newElements = updateNestedElement(newElements, action.payload.idB, { zIndex: a.zIndex });
+      newElements = normalizeZIndices(newElements);
+      return { ...state, elements: newElements };
     }
 
     case 'LOAD_STATE': {
@@ -398,6 +510,17 @@ interface DesignContextType {
   findElementById: (id: string) => DesignElement | null;
   exportState: () => string;
   importState: (json: string) => void;
+  // Z-index / layers helpers
+  setElementZIndex: (id: string, zIndex: number) => void;
+  swapElementZIndex: (idA: string, idB: string) => void;
+  bringForward: (id: string) => void;
+  sendBackward: (id: string) => void;
+  bringToFront: (id: string) => void;
+  sendToBack: (id: string) => void;
+  // Sidebar helpers
+  toggleLeftSidebar: () => void;
+  toggleRightSidebar: () => void;
+  setSidebars: (leftCollapsed: boolean, rightCollapsed: boolean) => void;
 }
 
 const DesignContext = createContext<DesignContextType | null>(null);
@@ -408,13 +531,55 @@ export function DesignProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(
     designReducer,
     initialState,
-    (initial) => loadFromLocalStorage() || initial
+    (initial) => {
+      const saved = loadFromLocalStorage();
+      if (saved) return saved;
+      // No saved state: set reasonable defaults for small screens so the main canvas has space
+      const width = typeof window !== 'undefined' ? window.innerWidth : 1200;
+      const leftCollapsed = width < 900; // very small screens hide left by default
+      const rightCollapsed = width < 1200; // smaller laptops hide right sidebar by default
+      return { ...initial, sidebars: { leftCollapsed, rightCollapsed } };
+    }
   );
 
   // Autosave to localStorage whenever state changes
   useEffect(() => {
     saveToLocalStorage(state);
   }, [state]);
+
+  // macOS-like keyboard shortcuts (using dispatch directly to avoid TDZ)
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      // Avoid when typing in inputs
+      const target = e.target as HTMLElement | null;
+      const isInput = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+      if (isInput) return;
+
+      const meta = e.metaKey || e.ctrlKey;
+      if (!meta) return;
+
+      // ⌘B -> toggle left sidebar
+      if (e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        dispatch({ type: 'TOGGLE_LEFT_SIDEBAR' });
+      }
+      // ⌘E -> toggle right sidebar
+      if (e.key.toLowerCase() === 'e') {
+        e.preventDefault();
+        dispatch({ type: 'TOGGLE_RIGHT_SIDEBAR' });
+      }
+      // ⌘K -> future: open command palette (placeholder)
+      if (e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        // For now, log; could open a command palette component later
+        // eslint-disable-next-line no-console
+        console.log('Command palette (⌘K) pressed');
+      }
+    };
+
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [dispatch]);
 
   const setCanvas = useCallback((config: Partial<CanvasConfig>) => {
     dispatch({ type: 'SET_CANVAS', payload: config });
@@ -460,6 +625,19 @@ export function DesignProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'SET_ZOOM', payload: zoom });
   }, []);
 
+  // Sidebar helpers
+  const toggleLeftSidebar = useCallback(() => {
+    dispatch({ type: 'TOGGLE_LEFT_SIDEBAR' });
+  }, []);
+
+  const toggleRightSidebar = useCallback(() => {
+    dispatch({ type: 'TOGGLE_RIGHT_SIDEBAR' });
+  }, []);
+
+  const setSidebars = useCallback((leftCollapsed: boolean, rightCollapsed: boolean) => {
+    dispatch({ type: 'SET_SIDEBARS', payload: { leftCollapsed, rightCollapsed } });
+  }, []);
+
   const moveElement = useCallback((id: string, position: Position) => {
     dispatch({ type: 'MOVE_ELEMENT', payload: { id, position } });
   }, []);
@@ -486,6 +664,43 @@ export function DesignProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  // Z-index / layers helpers
+  const setElementZIndex = useCallback((id: string, zIndex: number) => {
+    dispatch({ type: 'SET_ELEMENT_ZINDEX', payload: { id, zIndex } });
+  }, []);
+
+  const swapElementZIndex = useCallback((idA: string, idB: string) => {
+    dispatch({ type: 'SWAP_ELEMENT_ZINDEX', payload: { idA, idB } });
+  }, []);
+
+  const bringForward = useCallback((id: string) => {
+    const flat = flattenElements(state.elements).slice().sort((a, b) => ( (typeof a.zIndex === 'number' ? a.zIndex : -1) - (typeof b.zIndex === 'number' ? b.zIndex : -1) ));
+    const idx = flat.findIndex((e) => e.id === id);
+    if (idx === -1 || idx === flat.length - 1) return;
+    const next = flat[idx + 1];
+    dispatch({ type: 'SWAP_ELEMENT_ZINDEX', payload: { idA: id, idB: next.id } });
+  }, [state.elements]);
+
+  const sendBackward = useCallback((id: string) => {
+    const flat = flattenElements(state.elements).slice().sort((a, b) => ( (typeof a.zIndex === 'number' ? a.zIndex : -1) - (typeof b.zIndex === 'number' ? b.zIndex : -1) ));
+    const idx = flat.findIndex((e) => e.id === id);
+    if (idx <= 0) return;
+    const prev = flat[idx - 1];
+    dispatch({ type: 'SWAP_ELEMENT_ZINDEX', payload: { idA: id, idB: prev.id } });
+  }, [state.elements]);
+
+  const bringToFront = useCallback((id: string) => {
+    const max = getMaxZIndex(state.elements);
+    dispatch({ type: 'SET_ELEMENT_ZINDEX', payload: { id, zIndex: max + 1 } });
+  }, [state.elements]);
+
+  const sendToBack = useCallback((id: string) => {
+    const flat = flattenElements(state.elements);
+    if (flat.length === 0) return;
+    const min = Math.min(...flat.map((e) => (typeof e.zIndex === 'number' ? e.zIndex : 0)));
+    dispatch({ type: 'SET_ELEMENT_ZINDEX', payload: { id, zIndex: min - 1 } });
+  }, [state.elements]);
+
   return (
     <DesignContext.Provider
       value={{
@@ -503,6 +718,17 @@ export function DesignProvider({ children }: { children: ReactNode }) {
         findElementById,
         exportState,
         importState,
+        // Z-index / layers helpers
+        setElementZIndex,
+        swapElementZIndex,
+        bringForward,
+        sendBackward,
+        bringToFront,
+        sendToBack,
+        // Sidebar helpers
+        toggleLeftSidebar,
+        toggleRightSidebar,
+        setSidebars,
       }}
     >
       {children}

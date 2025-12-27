@@ -1,14 +1,19 @@
 import { useDesign } from '../context/DesignContext';
 
-export function Toolbar() {
-  const { state, setView, setZoom } = useDesign();
-  const initials = state.canvas.name
+function getInitials(name: string): string {
+  const letters = name
     .split(' ')
     .filter(Boolean)
     .slice(0, 2)
     .map((word) => word[0]?.toUpperCase() || '')
     .filter(Boolean)
-    .join('') || 'HD';
+    .join('');
+  return letters || 'HD';
+}
+
+export function Toolbar() {
+  const { state, setView, setZoom } = useDesign();
+  const initials = getInitials(state.canvas.name);
 
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 py-3 flex items-center justify-between shadow-lg shadow-black/30 no-print">

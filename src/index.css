@@ -2,6 +2,7 @@
 
 :root {
   --accent: #7c6df6;
+  --accent-rgb: 124, 109, 246;
   --ink: #f7f8fb;
   --muted: #9ca3af;
   --panel: rgba(255, 255, 255, 0.04);
@@ -52,7 +53,7 @@ body {
 .input-field:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(124, 109, 246, 0.3);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.3);
 }
 
 .btn {
@@ -67,7 +68,7 @@ body {
 .btn-primary {
   background: var(--accent);
   color: white;
-  box-shadow: 0 12px 30px rgba(124, 109, 246, 0.35);
+  box-shadow: 0 12px 30px rgba(var(--accent-rgb), 0.35);
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -110,6 +111,14 @@ body {
   .panel {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+  }
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-danger {
+    transition: none;
+    transform: none;
+    box-shadow: none;
   }
 }
 

@@ -139,7 +139,7 @@ export function CanvasSettings() {
             type="checkbox"
             checked={canvas.showGrid}
             onChange={(e) => setCanvas({ showGrid: e.target.checked })}
-            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-indigo-300"
+            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2 focus:ring-offset-white"
           />
           <div>
             <p className="text-sm font-semibold text-slate-800">Show grid</p>
@@ -172,7 +172,7 @@ export function CanvasSettings() {
             type="checkbox"
             checked={canvas.snapToGrid}
             onChange={(e) => setCanvas({ snapToGrid: e.target.checked })}
-            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-indigo-300"
+            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2 focus:ring-offset-white"
           />
           <span className="text-sm font-semibold text-slate-800">Snap to grid</span>
         </label>
@@ -182,7 +182,7 @@ export function CanvasSettings() {
             type="checkbox"
             checked={canvas.snapToElements}
             onChange={(e) => setCanvas({ snapToElements: e.target.checked })}
-            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-indigo-300"
+            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2 focus:ring-offset-white"
           />
           <span className="text-sm font-semibold text-slate-800">Snap to elements</span>
         </label>
@@ -192,7 +192,7 @@ export function CanvasSettings() {
             type="checkbox"
             checked={canvas.autoPosition}
             onChange={(e) => setCanvas({ autoPosition: e.target.checked })}
-            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-indigo-300"
+            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2 focus:ring-offset-white"
           />
           <span className="text-sm font-semibold text-slate-800">Auto-position elements</span>
         </label>
@@ -202,7 +202,7 @@ export function CanvasSettings() {
             type="checkbox"
             checked={canvas.showAllDistances}
             onChange={(e) => setCanvas({ showAllDistances: e.target.checked })}
-            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-indigo-300"
+            className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2 focus:ring-offset-white"
           />
           <span className="text-sm font-semibold text-slate-800">Show all distances</span>
         </label>

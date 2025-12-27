@@ -389,47 +389,9 @@ export function ElementRenderer({
       {/* 3D depth visualization - side and top faces for isometric effect */}
       {viewType === '3d' && element.depth && element.depth > 0 && (
         <>
-          {/* For recessed elements (niches, TV recesses, fireplaces), show inner walls */}
-          {(element.type === 'niche' || element.type === 'tv-recess' || element.type === 'fireplace') ? (
-            <>
-              {/* Right inner wall - lighter to show it's a side wall catching light */}
-              <div
-                className="absolute pointer-events-none"
-                style={{
-                  right: 0,
-                  bottom: 0,
-                  width: toPixels(element.depth * 0.5),
-                  height: height,
-                  backgroundColor: materialColor,
-                  filter: 'brightness(0.7)', // Lighter than back wall
-                  border: isSelected ? '1px solid #3b82f6' : '1px solid #9ca3af',
-                  borderRight: 'none',
-                  borderTop: 'none',
-                  transform: 'skewY(30deg)',
-                  transformOrigin: 'right bottom',
-                  zIndex: -1,
-                }}
-              />
-              {/* Bottom inner wall - even lighter as it catches more light */}
-              <div
-                className="absolute pointer-events-none"
-                style={{
-                  right: 0,
-                  bottom: 0,
-                  width: width,
-                  height: toPixels(element.depth * 0.5),
-                  backgroundColor: materialColor,
-                  filter: 'brightness(0.85)', // Lightest - top surface catches most light
-                  border: isSelected ? '1px solid #3b82f6' : '1px solid #9ca3af',
-                  borderBottom: 'none',
-                  borderLeft: 'none',
-                  transform: 'skewX(30deg)',
-                  transformOrigin: 'right bottom',
-                  zIndex: -2,
-                }}
-              />
-            </>
-          ) : (
+          {/* For recessed elements (niches, TV recesses, fireplaces), DON'T show 3D faces */}
+          {/* The dark back wall and inset shadows alone should convey the recess */}
+          {(element.type === 'niche' || element.type === 'tv-recess' || element.type === 'fireplace') ? null : (
             <>
               {/* Right side face for protruding elements (shelves) */}
               <div

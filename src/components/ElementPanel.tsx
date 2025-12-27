@@ -41,10 +41,20 @@ export function ElementPanel() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Add Element Section */}
-      <div className="panel">
-        <h3 className="font-semibold text-gray-800 border-b pb-2 mb-3">Add Element</h3>
+      <div>
+        <h3 
+          className="text-base font-medium mb-4" 
+          style={{ 
+            color: 'var(--color-text)', 
+            letterSpacing: '-0.022em',
+            paddingBottom: '0.75rem',
+            borderBottom: '1px solid var(--color-border)',
+          }}
+        >
+          Add Element
+        </h3>
         <div className="grid grid-cols-2 gap-2">
           {elementTypes.map((type) => (
             <button
@@ -52,24 +62,42 @@ export function ElementPanel() {
               onClick={() => addElement(type, selectedElement?.id)}
               className="btn-secondary text-sm py-2"
             >
-              + {ELEMENT_TYPE_NAMES[type]}
+              {ELEMENT_TYPE_NAMES[type]}
             </button>
           ))}
         </div>
         {selectedElement && (
-          <p className="text-xs text-gray-500 mt-2">
-            Will be added inside: {selectedElement.name}
+          <p 
+            className="text-xs mt-3" 
+            style={{ color: 'var(--color-text-muted)' }}
+          >
+            Adding inside: {selectedElement.name}
           </p>
         )}
       </div>
       
       {/* Element List */}
-      <div className="panel">
-        <h3 className="font-semibold text-gray-800 border-b pb-2 mb-3">Elements</h3>
+      <div>
+        <h3 
+          className="text-base font-medium mb-4" 
+          style={{ 
+            color: 'var(--color-text)', 
+            letterSpacing: '-0.022em',
+            paddingBottom: '0.75rem',
+            borderBottom: '1px solid var(--color-border)',
+          }}
+        >
+          Elements
+        </h3>
         {state.elements.length === 0 ? (
-          <p className="text-sm text-gray-500">No elements added yet</p>
+          <p 
+            className="text-sm" 
+            style={{ color: 'var(--color-text-muted)', letterSpacing: '-0.011em' }}
+          >
+            No elements yet
+          </p>
         ) : (
-          <div className="space-y-1 max-h-48 overflow-y-auto">
+          <div className="space-y-1 max-h-64 overflow-y-auto">
             {state.elements.map((el) => (
               <ElementListItem
                 key={el.id}
@@ -85,167 +113,197 @@ export function ElementPanel() {
       
       {/* Selected Element Editor */}
       {selectedElement && (
-        <div className="panel">
-          <div className="flex justify-between items-center border-b pb-2 mb-3">
-            <h3 className="font-semibold text-gray-800">Edit Element</h3>
+        <div>
+          <div 
+            className="flex justify-between items-center mb-4" 
+            style={{ 
+              paddingBottom: '0.75rem',
+              borderBottom: '1px solid var(--color-border)',
+            }}
+          >
+            <h3 
+              className="text-base font-medium" 
+              style={{ color: 'var(--color-text)', letterSpacing: '-0.022em' }}
+            >
+              Edit Element
+            </h3>
             <button
               onClick={() => deleteElement(selectedElement.id)}
-              className="text-red-600 hover:text-red-800 text-sm"
+              className="text-sm font-medium transition-colors"
+              style={{ 
+                color: '#dc2626',
+                letterSpacing: '-0.011em',
+              }}
             >
               Delete
             </button>
           </div>
           
-          {/* Name */}
-          <div className="mb-3">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Name
-            </label>
-            <input
-              type="text"
-              className="input-field"
-              value={selectedElement.name}
-              onChange={(e) => updateElement(selectedElement.id, { name: e.target.value })}
-            />
-          </div>
-          
-          {/* Type */}
-          <div className="mb-3">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Type
-            </label>
-            <select
-              className="input-field"
-              value={selectedElement.type}
-              onChange={(e) => updateElement(selectedElement.id, { 
-                type: e.target.value as ElementType 
-              })}
-            >
-              {elementTypes.map((type) => (
-                <option key={type} value={type}>
-                  {ELEMENT_TYPE_NAMES[type]}
-                </option>
-              ))}
-            </select>
-          </div>
-          
-          {/* Dimensions */}
-          <div className="grid grid-cols-3 gap-2 mb-3">
+          <div className="space-y-4">
+            {/* Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Width (cm)
+              <label 
+                className="block text-sm font-medium mb-2" 
+                style={{ color: 'var(--color-text-subtle)', letterSpacing: '-0.011em' }}
+              >
+                Name
               </label>
               <input
                 type="text"
-                inputMode="decimal"
                 className="input-field"
-                key={`width-${selectedElement.id}`}
-                defaultValue={selectedElement.dimensions.width}
-                onBlur={(e) => updateElement(selectedElement.id, {
-                  dimensions: { 
-                    ...selectedElement.dimensions, 
-                    width: parseCm(e.target.value) 
-                  }
-                })}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') e.currentTarget.blur();
-                }}
+                value={selectedElement.name}
+                onChange={(e) => updateElement(selectedElement.id, { name: e.target.value })}
               />
             </div>
+            
+            {/* Type */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Height (cm)
+              <label 
+                className="block text-sm font-medium mb-2" 
+                style={{ color: 'var(--color-text-subtle)', letterSpacing: '-0.011em' }}
+              >
+                Type
               </label>
-              <input
-                type="text"
-                inputMode="decimal"
+              <select
                 className="input-field"
-                key={`height-${selectedElement.id}`}
-                defaultValue={selectedElement.dimensions.height}
-                onBlur={(e) => updateElement(selectedElement.id, {
-                  dimensions: { 
-                    ...selectedElement.dimensions, 
-                    height: parseCm(e.target.value) 
-                  }
+                value={selectedElement.type}
+                onChange={(e) => updateElement(selectedElement.id, { 
+                  type: e.target.value as ElementType 
                 })}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') e.currentTarget.blur();
-                }}
-              />
+              >
+                {elementTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {ELEMENT_TYPE_NAMES[type]}
+                  </option>
+                ))}
+              </select>
             </div>
-            {(selectedElement.type === 'niche' || selectedElement.depth !== undefined) && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Depth (cm)
-                </label>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  className="input-field"
-                  key={`depth-${selectedElement.id}`}
-                  defaultValue={selectedElement.depth || 0}
-                  onBlur={(e) => updateElement(selectedElement.id, {
-                    depth: parseCm(e.target.value)
-                  })}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') e.currentTarget.blur();
-                  }}
-                />
+            
+            {/* Dimensions */}
+            <div>
+              <label 
+                className="block text-sm font-medium mb-2" 
+                style={{ color: 'var(--color-text-subtle)', letterSpacing: '-0.011em' }}
+              >
+                Dimensions (cm)
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                <div>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    className="input-field"
+                    placeholder="Width"
+                    key={`width-${selectedElement.id}`}
+                    defaultValue={selectedElement.dimensions.width}
+                    onBlur={(e) => updateElement(selectedElement.id, {
+                      dimensions: { 
+                        ...selectedElement.dimensions, 
+                        width: parseCm(e.target.value) 
+                      }
+                    })}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') e.currentTarget.blur();
+                    }}
+                  />
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    className="input-field"
+                    placeholder="Height"
+                    key={`height-${selectedElement.id}`}
+                    defaultValue={selectedElement.dimensions.height}
+                    onBlur={(e) => updateElement(selectedElement.id, {
+                      dimensions: { 
+                        ...selectedElement.dimensions, 
+                        height: parseCm(e.target.value) 
+                      }
+                    })}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') e.currentTarget.blur();
+                    }}
+                  />
+                </div>
+                {(selectedElement.type === 'niche' || selectedElement.depth !== undefined) && (
+                  <div>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      className="input-field"
+                      placeholder="Depth"
+                      key={`depth-${selectedElement.id}`}
+                      defaultValue={selectedElement.depth || 0}
+                      onBlur={(e) => updateElement(selectedElement.id, {
+                        depth: parseCm(e.target.value)
+                      })}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') e.currentTarget.blur();
+                      }}
+                    />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          
-          {/* Material */}
-          <div className="mb-3">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Material
-            </label>
-            <select
-              className="input-field"
-              value={selectedElement.material.type}
-              onChange={(e) => {
-                const type = e.target.value as MaterialType;
-                updateElement(selectedElement.id, {
-                  material: { type, color: MATERIAL_COLORS[type] }
-                });
-              }}
-            >
-              {materialOptions.map((mat) => (
-                <option key={mat} value={mat}>
-                  {mat.charAt(0).toUpperCase() + mat.slice(1)}
-                </option>
-              ))}
-            </select>
-          </div>
-          
-          {/* Positioning */}
-          <div className="mb-3">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Position Mode
-            </label>
-            <select
-              className="input-field"
-              value={selectedElement.positioning.mode}
-              onChange={(e) => updateElement(selectedElement.id, {
-                positioning: { 
-                  ...selectedElement.positioning, 
-                  mode: e.target.value as PositionMode 
-                }
-              })}
-            >
-              {positionModes.map((mode) => (
-                <option key={mode} value={mode}>
-                  {mode.charAt(0).toUpperCase() + mode.slice(1)}
-                </option>
-              ))}
-            </select>
-          </div>
+            </div>
+            
+            {/* Material */}
+            <div>
+              <label 
+                className="block text-sm font-medium mb-2" 
+                style={{ color: 'var(--color-text-subtle)', letterSpacing: '-0.011em' }}
+              >
+                Material
+              </label>
+              <select
+                className="input-field"
+                value={selectedElement.material.type}
+                onChange={(e) => {
+                  const type = e.target.value as MaterialType;
+                  updateElement(selectedElement.id, {
+                    material: { type, color: MATERIAL_COLORS[type] }
+                  });
+                }}
+              >
+                {materialOptions.map((mat) => (
+                  <option key={mat} value={mat}>
+                    {mat.charAt(0).toUpperCase() + mat.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            {/* Positioning */}
+            <div>
+              <label 
+                className="block text-sm font-medium mb-2" 
+                style={{ color: 'var(--color-text-subtle)', letterSpacing: '-0.011em' }}
+              >
+                Position Mode
+              </label>
+              <select
+                className="input-field"
+                value={selectedElement.positioning.mode}
+                onChange={(e) => updateElement(selectedElement.id, {
+                  positioning: { 
+                    ...selectedElement.positioning, 
+                    mode: e.target.value as PositionMode 
+                  }
+                })}
+              >
+                {positionModes.map((mode) => (
+                  <option key={mode} value={mode}>
+                    {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
           
           {/* Relative positioning options */}
           {selectedElement.positioning.mode === 'relative' && (
-            <div className="space-y-2 mb-3">
+            <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-subtle)', letterSpacing: '-0.011em' }}>
                   Relative To
                 </label>
                 <select
@@ -269,7 +327,7 @@ export function ElementPanel() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-subtle)', letterSpacing: '-0.011em' }}>
                   Anchor
                 </label>
                 <select
@@ -290,7 +348,7 @@ export function ElementPanel() {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-subtle)', letterSpacing: '-0.011em' }}>
                     Offset X (cm)
                   </label>
                   <input
@@ -314,7 +372,7 @@ export function ElementPanel() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-subtle)', letterSpacing: '-0.011em' }}>
                     Offset Y (cm)
                   </label>
                   <input
@@ -346,9 +404,9 @@ export function ElementPanel() {
           
           {/* Absolute positioning */}
           {selectedElement.positioning.mode === 'absolute' && (
-            <div className="grid grid-cols-2 gap-2 mb-3">
+            <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-subtle)', letterSpacing: '-0.011em' }}>
                   X (cm)
                 </label>
                 <input
@@ -372,7 +430,7 @@ export function ElementPanel() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-subtle)', letterSpacing: '-0.011em' }}>
                   Y (cm)
                 </label>
                 <input
@@ -398,6 +456,7 @@ export function ElementPanel() {
             </div>
           )}
         </div>
+      </div>
       )}
     </div>
   );
@@ -421,15 +480,16 @@ function ElementListItem({
     <div>
       <button
         onClick={() => onSelect(element.id)}
-        className={`w-full text-left px-2 py-1.5 rounded text-sm transition-colors ${
-          isSelected 
-            ? 'bg-blue-100 text-blue-800' 
-            : 'hover:bg-gray-100 text-gray-700'
-        }`}
-        style={{ paddingLeft: `${8 + depth * 16}px` }}
+        className="w-full text-left px-3 py-2 rounded-md text-sm transition-all"
+        style={{
+          paddingLeft: `${12 + depth * 16}px`,
+          backgroundColor: isSelected ? 'var(--color-accent-subtle)' : 'transparent',
+          color: isSelected ? 'var(--color-accent)' : 'var(--color-text)',
+          letterSpacing: '-0.011em',
+        }}
       >
         <span className="font-medium">{element.name}</span>
-        <span className="text-gray-400 ml-2 text-xs">
+        <span style={{ color: 'var(--color-text-muted)', marginLeft: '0.5rem', fontSize: '0.75rem' }}>
           {formatCm(element.dimensions.width)} × {formatCm(element.dimensions.height)}
         </span>
       </button>

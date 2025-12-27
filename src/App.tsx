@@ -13,26 +13,42 @@ function AppContent() {
   const canvasRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
+    <div className="h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
       {/* Top Toolbar */}
       <Toolbar />
 
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar - Canvas Settings */}
-        <aside className="w-72 bg-gray-50 border-r border-gray-200 overflow-y-auto p-4 space-y-4 no-print">
-          <CanvasSettings />
-          <AreaSummary />
-          <ExportPanel canvasRef={canvasRef} />
+        <aside 
+          className="w-80 overflow-y-auto no-print" 
+          style={{ 
+            backgroundColor: 'var(--color-surface)',
+            borderRight: '1px solid var(--color-border)',
+            padding: '2rem'
+          }}
+        >
+          <div className="space-y-6">
+            <CanvasSettings />
+            <AreaSummary />
+            <ExportPanel canvasRef={canvasRef} />
+          </div>
         </aside>
 
         {/* Main Canvas Area */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto" style={{ padding: '2rem' }}>
           <DesignCanvas canvasRef={canvasRef} />
         </main>
 
         {/* Right Sidebar - Element Panel */}
-        <aside className="w-80 bg-gray-50 border-l border-gray-200 overflow-y-auto p-4 no-print">
+        <aside 
+          className="w-80 overflow-y-auto no-print" 
+          style={{ 
+            backgroundColor: 'var(--color-surface)',
+            borderLeft: '1px solid var(--color-border)',
+            padding: '2rem'
+          }}
+        >
           <ElementPanel />
         </aside>
       </div>

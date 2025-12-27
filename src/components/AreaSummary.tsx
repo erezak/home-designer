@@ -51,47 +51,84 @@ export function AreaSummary() {
   }, [state.canvas.dimensions, state.elements]);
   
   return (
-    <div className="panel">
-      <h3 className="font-semibold text-gray-800 border-b pb-2 mb-3">Area Summary</h3>
-      
-      <div className="space-y-3">
-        {/* Wall Area */}
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Wall Area:</span>
-          <span className="text-sm font-medium text-gray-800">
-            {formatArea(wallArea)}
-          </span>
-        </div>
+    <div className="space-y-6">
+      <div>
+        <h3 
+          className="text-base font-medium mb-4" 
+          style={{ 
+            color: 'var(--color-text)', 
+            letterSpacing: '-0.022em',
+            paddingBottom: '0.75rem',
+            borderBottom: '1px solid var(--color-border)',
+          }}
+        >
+          Summary
+        </h3>
         
-        {/* Wall Dimensions */}
-        <div className="text-xs text-gray-500 -mt-2">
-          {formatCm(state.canvas.dimensions.width)} × {formatCm(state.canvas.dimensions.height)} cm
-        </div>
-        
-        {/* Niches Area */}
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">
-            Niches Area ({nicheCount}):
-          </span>
-          <span className="text-sm font-medium text-gray-800">
-            {formatArea(nichesArea)}
-          </span>
-        </div>
-        
-        {/* Net Wall Area (Wall - Niches) */}
-        <div className="flex justify-between items-center pt-2 border-t">
-          <span className="text-sm text-gray-600 font-medium">Net Wall Area:</span>
-          <span className="text-sm font-semibold text-blue-600">
-            {formatArea(wallArea - nichesArea)}
-          </span>
-        </div>
-        
-        {/* Niches percentage */}
-        {nichesArea > 0 && (
-          <div className="text-xs text-gray-500 -mt-1">
-            Niches: {((nichesArea / wallArea) * 100).toFixed(1)}% of wall
+        <div className="space-y-3.5">
+          {/* Wall Area */}
+          <div className="flex justify-between items-baseline">
+            <span 
+              className="text-sm" 
+              style={{ color: 'var(--color-text-subtle)', letterSpacing: '-0.011em' }}
+            >
+              Wall Area
+            </span>
+            <span 
+              className="text-sm font-medium" 
+              style={{ color: 'var(--color-text)', letterSpacing: '-0.011em' }}
+            >
+              {formatArea(wallArea)}
+            </span>
           </div>
-        )}
+          
+          {/* Wall Dimensions */}
+          <div className="text-xs" style={{ color: 'var(--color-text-muted)', marginTop: '-0.5rem' }}>
+            {formatCm(state.canvas.dimensions.width)} × {formatCm(state.canvas.dimensions.height)} cm
+          </div>
+          
+          {/* Niches Area */}
+          <div className="flex justify-between items-baseline">
+            <span 
+              className="text-sm" 
+              style={{ color: 'var(--color-text-subtle)', letterSpacing: '-0.011em' }}
+            >
+              Niches ({nicheCount})
+            </span>
+            <span 
+              className="text-sm font-medium" 
+              style={{ color: 'var(--color-text)', letterSpacing: '-0.011em' }}
+            >
+              {formatArea(nichesArea)}
+            </span>
+          </div>
+          
+          {/* Net Wall Area (Wall - Niches) */}
+          <div 
+            className="flex justify-between items-baseline pt-3" 
+            style={{ borderTop: '1px solid var(--color-border)' }}
+          >
+            <span 
+              className="text-sm font-medium" 
+              style={{ color: 'var(--color-text)', letterSpacing: '-0.011em' }}
+            >
+              Net Wall
+            </span>
+            <span 
+              className="text-sm font-semibold" 
+              style={{ color: 'var(--color-accent)', letterSpacing: '-0.011em' }}
+            >
+              {formatArea(wallArea - nichesArea)}
+            </span>
+          </div>
+          
+          {/* Niches percentage */}
+          {nichesArea > 0 && (
+            <div className="text-xs" style={{ color: 'var(--color-text-muted)', marginTop: '-0.25rem' }}>
+              {((nichesArea / wallArea) * 100).toFixed(1)}% of wall
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

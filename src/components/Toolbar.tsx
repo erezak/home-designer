@@ -80,6 +80,22 @@ export function Toolbar() {
         >
           Plan
         </button>
+        <button
+          onClick={() => setView('3d')}
+          className={`px-6 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wide transition-all ${
+            state.activeView === '3d'
+              ? 'shadow-lg'
+              : ''
+          }`}
+          style={{
+            backgroundColor: state.activeView === '3d' ? 'var(--color-primary)' : 'transparent',
+            color: state.activeView === '3d' ? 'var(--color-text-inverse)' : 'var(--color-text-tertiary)',
+            border: `2px solid ${state.activeView === '3d' ? 'var(--color-primary)' : 'var(--color-border)'}`,
+            transform: state.activeView === '3d' ? 'translateY(-2px)' : 'none'
+          }}
+        >
+          3D
+        </button>
       </div>
 
       {/* Right: Zoom Controls - Snappy Interactions */}

@@ -98,7 +98,7 @@ export interface CanvasConfig {
 }
 
 // View type
-export type ViewType = 'elevation' | 'plan';
+export type ViewType = 'elevation' | 'plan' | '3d';
 
 // Application state
 export interface DesignState {

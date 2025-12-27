@@ -40,7 +40,7 @@ function calculateGaps(
   elements: DesignElement[],
   _canvasWidth: number,
   _canvasHeight: number,
-  viewType: 'elevation' | 'plan'
+  viewType: 'elevation' | 'plan' | '3d'
 ): Gap[] {
   if (elements.length === 0) return [];
 
@@ -51,7 +51,9 @@ function calculateGaps(
   for (const element of elements) {
     const pos = element.computedPosition || { x: 0, y: 0 };
     const width = element.dimensions.width;
-    const height = viewType === 'elevation' ? element.dimensions.height : (element.depth || 10);
+    const height = viewType === 'elevation' || viewType === '3d' 
+      ? element.dimensions.height 
+      : (element.depth || 10);
     
     const right = pos.x + width;
     const bottom = pos.y + height;
@@ -65,7 +67,9 @@ function calculateGaps(
       // Check if other is to the right
       if (otherPos.x > right) {
         const gap = otherPos.x - right;
-        const otherHeight = viewType === 'elevation' ? other.dimensions.height : (other.depth || 10);
+        const otherHeight = viewType === 'elevation' || viewType === '3d'
+          ? other.dimensions.height 
+          : (other.depth || 10);
         const otherBottom = otherPos.y + otherHeight;
         
         // Check for vertical proximity (elements should be somewhat aligned vertically)
@@ -87,7 +91,9 @@ function calculateGaps(
         
         // Calculate vertical center between the two elements
         const otherPos = nearestRight.element.computedPosition || { x: 0, y: 0 };
-        const otherHeight = viewType === 'elevation' ? nearestRight.element.dimensions.height : (nearestRight.element.depth || 10);
+        const otherHeight = viewType === 'elevation' || viewType === '3d'
+          ? nearestRight.element.dimensions.height 
+          : (nearestRight.element.depth || 10);
         
         const minTop = Math.min(pos.y, otherPos.y);
         const maxBottom = Math.max(bottom, otherPos.y + otherHeight);
@@ -166,7 +172,9 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
   const canvasWidth = toPixels(state.canvas.dimensions.width);
   const canvasHeight = state.activeView === 'elevation'
     ? toPixels(state.canvas.dimensions.height)
-    : toPixels(state.canvas.dimensions.depth);
+    : state.activeView === 'plan'
+    ? toPixels(state.canvas.dimensions.depth)
+    : toPixels(state.canvas.dimensions.height); // For 3D view, use height as base
   
   const gridSizePixels = toPixels(state.canvas.gridSize);
   
@@ -181,7 +189,9 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
     return calculateGaps(
       flattenedElements,
       state.canvas.dimensions.width,
-      state.activeView === 'elevation' ? state.canvas.dimensions.height : state.canvas.dimensions.depth,
+      state.activeView === 'elevation' || state.activeView === '3d'
+        ? state.canvas.dimensions.height 
+        : state.canvas.dimensions.depth,
       state.activeView
     );
   }, [flattenedElements, state.canvas.dimensions, state.activeView, state.canvas.showAllDistances]);
@@ -200,7 +210,7 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
             letterSpacing: '-0.02em'
           }}
         >
-          {state.activeView === 'elevation' ? 'Front Elevation View' : 'Top-Down Plan View'}
+          {state.activeView === 'elevation' ? 'Front Elevation View' : state.activeView === 'plan' ? 'Top-Down Plan View' : '3D Isometric View'}
         </h2>
         <div 
           className="flex items-center justify-center gap-4 text-sm font-semibold"
@@ -220,7 +230,9 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
             Canvas: {formatCm(state.canvas.dimensions.width)} × {' '}
             {state.activeView === 'elevation' 
               ? formatCm(state.canvas.dimensions.height)
-              : formatCm(state.canvas.dimensions.depth)} cm
+              : state.activeView === 'plan'
+              ? formatCm(state.canvas.dimensions.depth)
+              : `${formatCm(state.canvas.dimensions.height)} × ${formatCm(state.canvas.dimensions.depth)}`} cm
           </span>
         </div>
       </div>
@@ -275,10 +287,11 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
                   siblingElements={flattenedElements}
                   canvasDimensions={{
                     width: state.canvas.dimensions.width,
-                    height: state.activeView === 'elevation' 
+                    height: state.activeView === 'elevation' || state.activeView === '3d'
                       ? state.canvas.dimensions.height 
                       : state.canvas.dimensions.depth
                   }}
+                  canvasDepth={state.canvas.dimensions.depth}
                   showAllDistances={state.canvas.showAllDistances}
                 />
               ))}
@@ -369,7 +382,7 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
                   boxShadow: '0 4px 6px -1px rgba(37, 99, 235, 0.3)'
                 }}
               >
-                {formatCm(state.activeView === 'elevation' 
+                {formatCm(state.activeView === 'elevation' || state.activeView === '3d'
                   ? state.canvas.dimensions.height 
                   : state.canvas.dimensions.depth)} cm
               </span>

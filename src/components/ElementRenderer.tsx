@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
-import { useDesign } from '../context/DesignContext';
+import { useDesign } from '../context/useDesign';
 import { type DesignElement, MATERIAL_COLORS, formatCm } from '../types';
 
 interface ElementRendererProps {

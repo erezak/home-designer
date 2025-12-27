@@ -1,4 +1,4 @@
-import { useDesign } from '../context/DesignContext';
+import { useDesign } from '../context/useDesign';
 
 export function Toolbar() {
   const { state, setView, setZoom } = useDesign();
@@ -36,9 +36,13 @@ export function Toolbar() {
         </div>
 
         {/* Title */}
-        <div className="text-center">
-          <p className="text-xs uppercase tracking-[0.2em] text-indigo-100">Project name</p>
-          <h1 className="text-lg font-semibold text-white">{state.canvas.name || 'Design'}</h1>
+        <div className="text-center" aria-labelledby="project-name-label project-name-value">
+          <p id="project-name-label" className="text-xs uppercase tracking-[0.2em] text-indigo-100">
+            Project name
+          </p>
+          <h1 id="project-name-value" className="text-lg font-semibold text-white">
+            {state.canvas.name || 'Design'}
+          </h1>
         </div>
 
         {/* Zoom Controls */}

@@ -1,4 +1,4 @@
-import { useDesign } from '../context/DesignContext';
+import { useDesign } from '../context/useDesign';
 import { 
   type ElementType, 
   ELEMENT_TYPE_NAMES, 

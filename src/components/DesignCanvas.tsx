@@ -1,5 +1,5 @@
 import { useRef, useMemo } from 'react';
-import { useDesign } from '../context/DesignContext';
+import { useDesign } from '../context/useDesign';
 import { ElementRenderer } from './ElementRenderer';
 import { formatCm, type DesignElement } from '../types';
 
@@ -201,12 +201,14 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
             cm
           </p>
         </div>
-        <div className="flex flex-wrap gap-2" role="status" aria-live="polite">
+        <div className="flex flex-wrap gap-2">
           <span className="badge bg-slate-200 text-slate-800 border-slate-300">Grid {state.canvas.showGrid ? 'on' : 'off'}</span>
           {state.canvas.showAllDistances && (
             <span className="badge bg-emerald-50 text-emerald-800 border-emerald-200">All distances shown</span>
           )}
-          <span className="badge bg-indigo-50 text-indigo-800 border-indigo-200">Zoom {Math.round(state.zoom * 100)}%</span>
+          <span className="badge bg-indigo-50 text-indigo-800 border-indigo-200" role="status" aria-live="polite">
+            Zoom {Math.round(state.zoom * 100)}%
+          </span>
         </div>
       </div>
 

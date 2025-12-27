@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useDesign } from '../context/DesignContext';
+import { useDesign } from '../context/useDesign';
 import { type DesignElement, formatCm } from '../types';
 
 // Format area in square centimeters or square meters

@@ -2,7 +2,7 @@ import { useRef, useCallback, useState } from 'react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import yaml from 'js-yaml';
-import { useDesign } from '../context/DesignContext';
+import { useDesign } from '../context/useDesign';
 import { formatCm } from '../types';
 
 type ExportFormat = 'json' | 'yaml';

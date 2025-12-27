@@ -1,4 +1,4 @@
-import { useDesign } from '../context/DesignContext';
+import { useDesign } from '../context/useDesign';
 import { parseCm, MATERIAL_COLORS, type MaterialType } from '../types';
 
 export function CanvasSettings() {

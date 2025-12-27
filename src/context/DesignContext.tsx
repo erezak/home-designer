@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useCallback, useEffect, type ReactNode } from 'react';
+import { useReducer, useCallback, useEffect, type ReactNode } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import {
   type DesignState,
@@ -11,21 +11,9 @@ import {
   DEFAULT_DIMENSIONS,
   MATERIAL_COLORS,
 } from '../types';
+import { DesignContext, type DesignAction } from './DesignContextBase';
 
 const LOCALSTORAGE_KEY = 'home_designer_autosave';
-
-// Action types
-type DesignAction =
-  | { type: 'SET_CANVAS'; payload: Partial<CanvasConfig> }
-  | { type: 'ADD_ELEMENT'; payload: { element: Omit<DesignElement, 'id' | 'computedPosition'>; parentId?: string } }
-  | { type: 'UPDATE_ELEMENT'; payload: { id: string; updates: Partial<DesignElement> } }
-  | { type: 'DELETE_ELEMENT'; payload: string }
-  | { type: 'SELECT_ELEMENT'; payload: string | null }
-  | { type: 'SET_VIEW'; payload: ViewType }
-  | { type: 'SET_ZOOM'; payload: number }
-  | { type: 'MOVE_ELEMENT'; payload: { id: string; position: Position } }
-  | { type: 'REORDER_ELEMENTS'; payload: DesignElement[] }
-  | { type: 'LOAD_STATE'; payload: DesignState };
 
 // Initial canvas configuration
 const initialCanvas: CanvasConfig = {
@@ -379,27 +367,6 @@ function designReducer(state: DesignState, action: DesignAction): DesignState {
   }
 }
 
-// Context type
-interface DesignContextType {
-  state: DesignState;
-  dispatch: React.Dispatch<DesignAction>;
-  // Helper functions
-  setCanvas: (config: Partial<CanvasConfig>) => void;
-  addElement: (type: ElementType, parentId?: string) => void;
-  updateElement: (id: string, updates: Partial<DesignElement>) => void;
-  deleteElement: (id: string) => void;
-  selectElement: (id: string | null) => void;
-  setView: (view: ViewType) => void;
-  setZoom: (zoom: number) => void;
-  moveElement: (id: string, position: Position) => void;
-  getSelectedElement: () => DesignElement | null;
-  findElementById: (id: string) => DesignElement | null;
-  exportState: () => string;
-  importState: (json: string) => void;
-}
-
-const DesignContext = createContext<DesignContextType | null>(null);
-
 // Provider component
 export function DesignProvider({ children }: { children: ReactNode }) {
   // Try to load from localStorage on initial render
@@ -506,14 +473,4 @@ export function DesignProvider({ children }: { children: ReactNode }) {
       {children}
     </DesignContext.Provider>
   );
-}
-
-// Hook to use the design context
-// eslint-disable-next-line react-refresh/only-export-components
-export function useDesign() {
-  const context = useContext(DesignContext);
-  if (!context) {
-    throw new Error('useDesign must be used within a DesignProvider');
-  }
-  return context;
 }

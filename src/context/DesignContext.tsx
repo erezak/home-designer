@@ -509,7 +509,7 @@ export function DesignProvider({ children }: { children: ReactNode }) {
 }
 
 // Hook to use the design context
-// eslint-disable-next-line react-refresh/only-export-components
+// eslint-disable-next-line react-refresh/only-export-components -- exported hook for consumers outside this provider file
 export function useDesign() {
   const context = useContext(DesignContext);
   if (!context) {

@@ -238,7 +238,7 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
               onClick={() => selectElement(null)}
             >
               {/* Canvas border with measurements */}
-               <div className="absolute inset-0 border-2 border-stone-300 pointer-events-none" style={{ zIndex: 500 }} />
+              <div className="absolute inset-0 border-2 border-stone-300 pointer-events-none" style={{ zIndex: 500 }} />
               
               {/* Render all elements (flattened) */}
               {flattenedElements.map((element) => (
@@ -282,21 +282,21 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
                     }}
                   >
                     <span className="bg-amber-800 text-amber-50 text-xs px-1.5 py-0.5 rounded whitespace-nowrap shadow-sm">
-                       {isHorizontal ? '↔' : '↕'} {formatCm(gap.size)}
-                     </span>
+                      {isHorizontal ? '↔' : '↕'} {formatCm(gap.size)}
+                    </span>
                   </div>
                 );
               })}
               
               {/* Empty state */}
-               {state.elements.length === 0 && (
-                 <div className="absolute inset-0 flex items-center justify-center text-stone-400">
-                   <div className="text-center">
-                     <p className="text-lg font-semibold">No elements yet</p>
-                     <p className="text-sm">Add elements from the library to begin.</p>
-                   </div>
-                 </div>
-               )}
+              {state.elements.length === 0 && (
+                <div className="absolute inset-0 flex items-center justify-center text-stone-400">
+                  <div className="text-center">
+                    <p className="text-lg font-semibold">No elements yet</p>
+                    <p className="text-sm">Add elements from the library to begin.</p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Width measurement at top - positioned outside canvas */}

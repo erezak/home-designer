@@ -41,7 +41,9 @@ function AppContent() {
                   Scale 1:{state.canvas.scale}
                 </span>
                 <span className="rounded-full bg-stone-100 text-stone-800 px-3 py-1 text-xs">
-                  {formatCm(state.canvas.dimensions.width)} × {formatCm(state.canvas.dimensions.height)} cm
+                  {formatCm(state.canvas.dimensions.width)} × {state.activeView === 'elevation'
+                    ? formatCm(state.canvas.dimensions.height)
+                    : formatCm(state.canvas.dimensions.depth)} cm
                 </span>
               </div>
             </div>

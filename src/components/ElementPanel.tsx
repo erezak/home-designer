@@ -41,10 +41,15 @@ export function ElementPanel() {
   };
 
   return (
-    <div className="space-y-4">
-      {/* Add Element Section */}
-      <div className="panel">
-        <h3 className="font-semibold text-gray-800 border-b pb-2 mb-3">Add Element</h3>
+    <div className="space-y-3">
+      <div className="panel soft">
+        <div className="flex items-center justify-between mb-2">
+          <div>
+            <p className="text-xs uppercase tracking-wide text-slate-500">Library</p>
+            <h3 className="text-base font-semibold text-slate-800">Elements</h3>
+          </div>
+          <span className="badge">{state.elements.length} total</span>
+        </div>
         <div className="grid grid-cols-2 gap-2">
           {elementTypes.map((type) => (
             <button
@@ -63,13 +68,12 @@ export function ElementPanel() {
         )}
       </div>
       
-      {/* Element List */}
-      <div className="panel">
-        <h3 className="font-semibold text-gray-800 border-b pb-2 mb-3">Elements</h3>
+      <div className="panel soft">
+        <h3 className="font-semibold text-gray-800 border-b pb-2 mb-3">Hierarchy</h3>
         {state.elements.length === 0 ? (
           <p className="text-sm text-gray-500">No elements added yet</p>
         ) : (
-          <div className="space-y-1 max-h-48 overflow-y-auto">
+          <div className="space-y-1 max-h-52 overflow-y-auto">
             {state.elements.map((el) => (
               <ElementListItem
                 key={el.id}
@@ -83,11 +87,13 @@ export function ElementPanel() {
         )}
       </div>
       
-      {/* Selected Element Editor */}
       {selectedElement && (
-        <div className="panel">
+        <div className="panel soft">
           <div className="flex justify-between items-center border-b pb-2 mb-3">
-            <h3 className="font-semibold text-gray-800">Edit Element</h3>
+            <div>
+              <p className="text-xs uppercase text-slate-500">Editing</p>
+              <h3 className="font-semibold text-gray-800">{selectedElement.name}</h3>
+            </div>
             <button
               onClick={() => deleteElement(selectedElement.id)}
               className="text-red-600 hover:text-red-800 text-sm"
@@ -421,10 +427,10 @@ function ElementListItem({
     <div>
       <button
         onClick={() => onSelect(element.id)}
-        className={`w-full text-left px-2 py-1.5 rounded text-sm transition-colors ${
+        className={`w-full text-left px-3 py-2 rounded-lg text-sm border transition-colors ${
           isSelected 
-            ? 'bg-blue-100 text-blue-800' 
-            : 'hover:bg-gray-100 text-gray-700'
+            ? 'bg-blue-50 text-blue-800 border-blue-200' 
+            : 'bg-white/60 hover:bg-slate-50 text-gray-700 border-slate-200'
         }`}
         style={{ paddingLeft: `${8 + depth * 16}px` }}
       >

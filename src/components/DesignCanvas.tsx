@@ -187,21 +187,26 @@ export function DesignCanvas({ canvasRef }: DesignCanvasProps) {
   }, [flattenedElements, state.canvas.dimensions, state.activeView, state.canvas.showAllDistances]);
   
   return (
-    <div className="flex-1 overflow-auto bg-gray-200 p-8">
-      {/* View Title */}
-      <div className="mb-4 text-center">
-        <h2 className="text-lg font-semibold text-gray-700">
-          {state.activeView === 'elevation' ? 'Front Elevation View' : 'Top-Down Plan View'}
-        </h2>
-        <p className="text-sm text-gray-500">
-          Scale 1:{state.canvas.scale} | Canvas: {formatCm(state.canvas.dimensions.width)} × {' '}
-          {state.activeView === 'elevation' 
-            ? formatCm(state.canvas.dimensions.height)
-            : formatCm(state.canvas.dimensions.depth)} cm
-        </p>
+    <div className="flex-1 overflow-auto bg-slate-100 p-4">
+      <div className="mb-3 flex items-center justify-between flex-wrap gap-2">
+        <div>
+          <p className="text-xs uppercase tracking-wide text-slate-500">Active view</p>
+          <h2 className="text-base font-semibold text-slate-800">
+            {state.activeView === 'elevation' ? 'Front elevation' : 'Top-down plan'}
+          </h2>
+        </div>
+        <div className="flex items-center gap-2 text-xs text-slate-500">
+          <span className="badge">Scale 1:{state.canvas.scale}</span>
+          <span className="badge">
+            {formatCm(state.canvas.dimensions.width)} ×{' '}
+            {state.activeView === 'elevation'
+              ? formatCm(state.canvas.dimensions.height)
+              : formatCm(state.canvas.dimensions.depth)}{' '}
+            cm
+          </span>
+        </div>
       </div>
       
-      {/* Wrapper to ensure canvas is scrollable with proper padding for measurements */}
       <div 
         className="inline-block min-w-full"
         style={{ 

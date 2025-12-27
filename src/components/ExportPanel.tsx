@@ -225,57 +225,63 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
   );
 
   return (
-    <div className="panel space-y-3">
-      <h3 className="font-semibold text-gray-800 border-b pb-2">Export & Save</h3>
+    <div className="panel soft space-y-3">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-xs uppercase tracking-wide text-slate-500">Output</p>
+          <h3 className="font-semibold text-gray-800">Export & Save</h3>
+        </div>
+        <span className="badge">Quick</span>
+      </div>
 
-      <div className="space-y-2">
+      <div className="grid grid-cols-2 gap-2">
         <button onClick={generatePDF} className="btn-primary w-full text-sm">
-          📄 Export PDF with Measurements
+          📄 PDF
         </button>
 
         <button onClick={exportPNG} className="btn-secondary w-full text-sm">
-          🖼️ Export PNG
+          🖼️ PNG
         </button>
 
         <button onClick={handlePrint} className="btn-secondary w-full text-sm">
           🖨️ Print
         </button>
-      </div>
-
-      <hr className="border-gray-200" />
-
-      <div className="space-y-2">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Project Format
-          </label>
-          <select
-            className="input-field"
-            value={exportFormat}
-            onChange={(e) => setExportFormat(e.target.value as ExportFormat)}
-          >
-            <option value="json">JSON</option>
-            <option value="yaml">YAML</option>
-          </select>
-        </div>
 
         <button onClick={handleSaveProject} className="btn-secondary w-full text-sm">
-          💾 Save Project ({exportFormat.toUpperCase()})
+          💾 Save {exportFormat.toUpperCase()}
         </button>
+      </div>
 
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          className="btn-secondary w-full text-sm"
-        >
-          📂 Load Project (JSON/YAML)
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".json,.yaml,.yml"
-          onChange={handleLoadProject}
-          className="hidden"
-        />
+      <div className="space-y-2">
+        <div className="grid grid-cols-2 gap-2 items-end">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Project Format
+            </label>
+            <select
+              className="input-field"
+              value={exportFormat}
+              onChange={(e) => setExportFormat(e.target.value as ExportFormat)}
+            >
+              <option value="json">JSON</option>
+              <option value="yaml">YAML</option>
+            </select>
+          </div>
+
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="btn-secondary w-full text-sm"
+          >
+            📂 Load (JSON/YAML)
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json,.yaml,.yml"
+            onChange={handleLoadProject}
+            className="hidden"
+          />
+        </div>
 
         <p className="text-xs text-gray-500 text-center">
           Auto-saved to browser storage

@@ -8,10 +8,18 @@ export function CanvasSettings() {
   const materialOptions: MaterialType[] = ['drywall', 'wood', 'mdf', 'stone', 'metal'];
 
   return (
-    <div className="panel space-y-4">
-      <h3 className="font-semibold text-gray-800 border-b pb-2">Canvas Settings</h3>
+    <div className="panel soft space-y-4">
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <p className="text-xs uppercase tracking-wide text-slate-500">Canvas</p>
+          <h3 className="text-base font-semibold text-slate-800">Structure & scale</h3>
+        </div>
+        <div className="flex flex-wrap gap-1">
+          <span className="badge">Auto {canvas.autoPosition ? 'on' : 'off'}</span>
+          <span className="badge">Snap {canvas.snapToGrid ? 'grid' : 'free'}</span>
+        </div>
+      </div>
       
-      {/* Name */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Design Name
@@ -126,9 +134,8 @@ export function CanvasSettings() {
         </select>
       </div>
       
-      {/* Grid Settings */}
-      <div className="space-y-2">
-        <label className="flex items-center gap-2">
+      <div className="grid grid-cols-2 gap-2">
+        <label className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-2 py-2">
           <input
             type="checkbox"
             checked={canvas.showGrid}
@@ -138,27 +145,7 @@ export function CanvasSettings() {
           <span className="text-sm text-gray-700">Show Grid</span>
         </label>
         
-        {canvas.showGrid && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Grid Size (cm)
-            </label>
-            <input
-              type="text"
-              inputMode="decimal"
-              className="input-field"
-              defaultValue={canvas.gridSize}
-              onBlur={(e) => setCanvas({ gridSize: parseCm(e.target.value) })}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.currentTarget.blur();
-                }
-              }}
-            />
-          </div>
-        )}
-        
-        <label className="flex items-center gap-2">
+        <label className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-2 py-2">
           <input
             type="checkbox"
             checked={canvas.snapToGrid}
@@ -168,7 +155,7 @@ export function CanvasSettings() {
           <span className="text-sm text-gray-700">Snap to Grid</span>
         </label>
         
-        <label className="flex items-center gap-2">
+        <label className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-2 py-2">
           <input
             type="checkbox"
             checked={canvas.snapToElements}
@@ -178,7 +165,7 @@ export function CanvasSettings() {
           <span className="text-sm text-gray-700">Snap to Elements</span>
         </label>
         
-        <label className="flex items-center gap-2">
+        <label className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-2 py-2">
           <input
             type="checkbox"
             checked={canvas.autoPosition}
@@ -188,7 +175,7 @@ export function CanvasSettings() {
           <span className="text-sm text-gray-700">Auto-position Elements</span>
         </label>
         
-        <label className="flex items-center gap-2">
+        <label className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 col-span-2">
           <input
             type="checkbox"
             checked={canvas.showAllDistances}
@@ -198,6 +185,26 @@ export function CanvasSettings() {
           <span className="text-sm text-gray-700">Show All Distances</span>
         </label>
       </div>
+      
+      {canvas.showGrid && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Grid Size (cm)
+          </label>
+          <input
+            type="text"
+            inputMode="decimal"
+            className="input-field"
+            defaultValue={canvas.gridSize}
+            onBlur={(e) => setCanvas({ gridSize: parseCm(e.target.value) })}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.currentTarget.blur();
+              }
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

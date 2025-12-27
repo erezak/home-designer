@@ -16,7 +16,7 @@ interface ElementRendererProps {
 
 export function ElementRenderer({
   element,
-  scale: _scale,
+  scale,
   isSelected,
   onSelect,
   showMeasurements = true,
@@ -39,7 +39,7 @@ export function ElementRenderer({
   const elementRef = useRef<HTMLDivElement>(null);
   
   // Scale factor for conversions
-  const scaleFactor = state.canvas.scale;
+  const scaleFactor = scale ?? state.canvas.scale;
   const gridSize = state.canvas.gridSize;
   const snapEnabled = state.canvas.snapToGrid;
   

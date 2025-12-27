@@ -26,7 +26,7 @@ function flattenElements(elements: DesignElement[]): DesignElement[] {
   return result;
 }
 
-export function AreaSummary() {
+export function AreaSummary({ variant = 'panel' }: { variant?: 'panel' | 'inline' } = {}) {
   const { state } = useDesign();
   
   // Calculate areas
@@ -50,45 +50,49 @@ export function AreaSummary() {
     };
   }, [state.canvas.dimensions, state.elements]);
   
+  const isInline = variant === 'inline';
+  const containerClass = isInline ? 'space-y-2' : 'panel';
+
   return (
-    <div className="panel">
-      <h3 className="font-semibold text-gray-800 border-b pb-2 mb-3">Area Summary</h3>
+    <div className={containerClass}>
+      <h3
+        className={`font-semibold ${
+          isInline ? 'text-slate-100' : 'text-gray-800 border-b pb-2 mb-3'
+        }`}
+      >
+        Area Summary
+      </h3>
       
       <div className="space-y-3">
-        {/* Wall Area */}
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">Wall Area:</span>
-          <span className="text-sm font-medium text-gray-800">
+          <span className={`text-sm ${isInline ? 'text-slate-300' : 'text-gray-600'}`}>Wall Area:</span>
+          <span className={`text-sm font-medium ${isInline ? 'text-slate-50' : 'text-gray-800'}`}>
             {formatArea(wallArea)}
           </span>
         </div>
         
-        {/* Wall Dimensions */}
-        <div className="text-xs text-gray-500 -mt-2">
+        <div className={`text-xs ${isInline ? 'text-slate-500' : 'text-gray-500'} -mt-2`}>
           {formatCm(state.canvas.dimensions.width)} × {formatCm(state.canvas.dimensions.height)} cm
         </div>
         
-        {/* Niches Area */}
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-600">
+          <span className={`text-sm ${isInline ? 'text-slate-300' : 'text-gray-600'}`}>
             Niches Area ({nicheCount}):
           </span>
-          <span className="text-sm font-medium text-gray-800">
+          <span className={`text-sm font-medium ${isInline ? 'text-slate-50' : 'text-gray-800'}`}>
             {formatArea(nichesArea)}
           </span>
         </div>
         
-        {/* Net Wall Area (Wall - Niches) */}
-        <div className="flex justify-between items-center pt-2 border-t">
-          <span className="text-sm text-gray-600 font-medium">Net Wall Area:</span>
-          <span className="text-sm font-semibold text-blue-600">
+        <div className={`flex justify-between items-center pt-2 ${isInline ? 'border-t border-slate-800' : 'border-t'}`}>
+          <span className={`text-sm font-medium ${isInline ? 'text-slate-200' : 'text-gray-600'}`}>Net Wall Area:</span>
+          <span className={`text-sm font-semibold ${isInline ? 'text-emerald-300' : 'text-blue-600'}`}>
             {formatArea(wallArea - nichesArea)}
           </span>
         </div>
         
-        {/* Niches percentage */}
         {nichesArea > 0 && (
-          <div className="text-xs text-gray-500 -mt-1">
+          <div className={`text-xs ${isInline ? 'text-slate-500' : 'text-gray-500'} -mt-1`}>
             Niches: {((nichesArea / wallArea) * 100).toFixed(1)}% of wall
           </div>
         )}

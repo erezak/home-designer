@@ -1,4 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable react-refresh/only-export-components -- shared context utilities live here with provider */
 import { createContext, useContext, useReducer, useCallback, useEffect, type ReactNode } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import {

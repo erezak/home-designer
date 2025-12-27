@@ -9,9 +9,7 @@ export function CanvasSettings() {
 
   return (
     <div className="panel space-y-4">
-      <h3 className="font-semibold text-white border-b border-white/10 pb-2">
-        Canvas Settings
-      </h3>
+      <h3 className="font-semibold text-white border-b border-white/10 pb-2">Canvas Settings</h3>
       
       {/* Name */}
       <div>

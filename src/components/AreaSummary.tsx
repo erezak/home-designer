@@ -52,9 +52,7 @@ export function AreaSummary() {
   
   return (
     <div className="panel">
-      <h3 className="font-semibold text-white border-b border-white/10 pb-2 mb-3">
-        Area Summary
-      </h3>
+      <h3 className="font-semibold text-white border-b border-white/10 pb-2 mb-3">Area Summary</h3>
       
       <div className="space-y-3">
         {/* Wall Area */}

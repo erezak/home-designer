@@ -36,7 +36,7 @@ export function Toolbar() {
         </div>
 
         {/* Title */}
-        <div className="text-center" aria-labelledby="project-name-label">
+        <div className="text-center" aria-labelledby="project-name-value">
           <p id="project-name-label" className="text-xs uppercase tracking-[0.2em] text-indigo-100">
             Project name
           </p>

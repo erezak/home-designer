@@ -185,7 +185,7 @@ export function ElementRenderer({
       width,
       height,
       backgroundColor: materialColor,
-      border: isSelected ? '2px solid #7c8cf1' : '1px solid #cbd5e1',
+      border: isSelected ? '2px solid var(--accent)' : '1px solid var(--card-border)',
       boxSizing: 'border-box',
       cursor: isDragging ? 'grabbing' : 'grab',
       transition: isDragging ? 'none' : 'border-color 0.2s, box-shadow 0.2s',
@@ -193,10 +193,10 @@ export function ElementRenderer({
       zIndex: isDragging ? 1000 : isSelected ? 100 : 1,
       borderRadius: 10,
       boxShadow: isDragging
-        ? '0 16px 40px rgba(124,140,241,0.25)'
+        ? 'var(--shadow-element-dragging)'
         : isSelected
-          ? '0 12px 30px rgba(124,140,241,0.18)'
-          : '0 6px 16px rgba(15,23,42,0.08)',
+          ? 'var(--shadow-element-selected)'
+          : 'var(--shadow-element)',
     };
     
     switch (element.type) {

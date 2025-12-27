@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -8,6 +9,9 @@
   --card: #ffffff;
   --card-border: rgba(148, 163, 184, 0.32);
   --card-shadow: 0 30px 80px rgba(148, 163, 184, 0.22);
+  --shadow-element: 0 6px 16px rgba(15, 23, 42, 0.08);
+  --shadow-element-selected: 0 12px 30px rgba(124, 140, 241, 0.18);
+  --shadow-element-dragging: 0 16px 40px rgba(124, 140, 241, 0.25);
   --text-strong: #1f2937;
   --text-muted: #6b7280;
   --accent: #7c8cf1;

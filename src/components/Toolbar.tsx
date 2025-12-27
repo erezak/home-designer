@@ -6,7 +6,8 @@ export function Toolbar() {
     .split(' ')
     .filter(Boolean)
     .slice(0, 2)
-    .map((word) => word[0]?.toUpperCase())
+    .map((word) => word[0]?.toUpperCase() || '')
+    .filter(Boolean)
     .join('') || 'HD';
 
   return (

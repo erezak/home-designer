@@ -34,7 +34,7 @@ body {
   border: 1px solid var(--glass-border);
   border-radius: var(--card-radius);
   box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
 }
 
 .panel {
@@ -43,7 +43,7 @@ body {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(140%);
 }
 
 .canvas-grid {

@@ -331,13 +331,23 @@ const TranslationContext = createContext<TranslationContextType | undefined>(und
 export function TranslationProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
     // Try to load from localStorage
-    const saved = localStorage.getItem('home_designer_language');
-    return (saved === 'he' ? 'he' : 'en') as Language;
+    try {
+      const saved = localStorage.getItem('home_designer_language');
+      return (saved === 'he' ? 'he' : 'en') as Language;
+    } catch {
+      // Fallback to English if localStorage is unavailable
+      return 'en';
+    }
   });
 
   const handleSetLanguage = (lang: Language) => {
     setLanguage(lang);
-    localStorage.setItem('home_designer_language', lang);
+    try {
+      localStorage.setItem('home_designer_language', lang);
+    } catch {
+      // Silently fail if localStorage is unavailable
+      console.warn('Failed to save language preference to localStorage');
+    }
   };
 
   // Set document direction when language changes

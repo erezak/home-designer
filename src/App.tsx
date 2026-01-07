@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { DesignProvider } from './context/DesignContext';
+import { TranslationProvider, useTranslation } from './context/TranslationContext';
 import {
   DesignCanvas,
   CanvasSettings,
@@ -14,6 +15,7 @@ type NavigationSection = 'canvas' | 'elements' | 'export';
 function AppContent() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const [activeSection, setActiveSection] = useState<NavigationSection>('canvas');
+  const { t } = useTranslation();
 
   return (
     <div className="h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg-secondary)' }}>
@@ -45,7 +47,7 @@ function AppContent() {
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z" />
             </svg>
-            <span className="text-xs font-semibold">Canvas</span>
+            <span className="text-xs font-semibold">{t.nav.canvas}</span>
           </button>
 
           <button
@@ -63,7 +65,7 @@ function AppContent() {
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
             </svg>
-            <span className="text-xs font-semibold">Elements</span>
+            <span className="text-xs font-semibold">{t.nav.elements}</span>
           </button>
 
           <button
@@ -81,7 +83,7 @@ function AppContent() {
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
             </svg>
-            <span className="text-xs font-semibold">Export</span>
+            <span className="text-xs font-semibold">{t.nav.export}</span>
           </button>
         </nav>
 
@@ -116,9 +118,11 @@ function AppContent() {
 
 function App() {
   return (
-    <DesignProvider>
-      <AppContent />
-    </DesignProvider>
+    <TranslationProvider>
+      <DesignProvider>
+        <AppContent />
+      </DesignProvider>
+    </TranslationProvider>
   );
 }
 

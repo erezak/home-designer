@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useDesign } from '../context/DesignContext';
+import { useTranslation } from '../context/TranslationContext';
 import { type DesignElement, formatCm } from '../types';
 
 // Format area in square centimeters or square meters
@@ -28,6 +29,7 @@ function flattenElements(elements: DesignElement[]): DesignElement[] {
 
 export function AreaSummary() {
   const { state } = useDesign();
+  const { t } = useTranslation();
   
   // Calculate areas
   const { wallArea, nichesArea, nicheCount } = useMemo(() => {
@@ -52,7 +54,7 @@ export function AreaSummary() {
   
   return (
     <div>
-      <h3 className="panel-header">Area Summary</h3>
+      <h3 className="panel-header">{t.areaSummary.title}</h3>
       
       <div className="panel space-y-4">
         {/* Wall Area - Hero Stats */}
@@ -65,7 +67,7 @@ export function AreaSummary() {
         >
           <div className="flex justify-between items-center">
             <span className="text-xs font-bold uppercase tracking-wide opacity-90">
-              Total Wall Area
+              {t.areaSummary.totalWallArea}
             </span>
             <span className="text-2xl font-extrabold">
               {formatArea(wallArea)}
@@ -82,7 +84,7 @@ export function AreaSummary() {
             className="text-sm font-bold uppercase tracking-wide"
             style={{ color: 'var(--color-text-secondary)' }}
           >
-            Niches ({nicheCount})
+            {t.areaSummary.niches} ({nicheCount})
           </span>
           <span 
             className="text-lg font-bold"
@@ -102,7 +104,7 @@ export function AreaSummary() {
               className="text-sm font-bold uppercase tracking-wide"
               style={{ color: 'var(--color-text-secondary)' }}
             >
-              Net Area
+              {t.areaSummary.netArea}
             </span>
             <span 
               className="text-xl font-extrabold"
@@ -119,7 +121,7 @@ export function AreaSummary() {
             className="text-xs font-semibold pt-2"
             style={{ color: 'var(--color-text-tertiary)' }}
           >
-            Niches coverage: {((nichesArea / wallArea) * 100).toFixed(1)}% of wall
+            {t.areaSummary.nichesCoverage} {((nichesArea / wallArea) * 100).toFixed(1)}% {t.areaSummary.ofWall}
           </div>
         )}
       </div>

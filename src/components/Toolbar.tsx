@@ -1,7 +1,9 @@
 import { useDesign } from '../context/DesignContext';
+import { useTranslation } from '../context/TranslationContext';
 
 export function Toolbar() {
   const { state, setView, setZoom } = useDesign();
+  const { language, setLanguage, t } = useTranslation();
 
   return (
     <div 
@@ -34,7 +36,7 @@ export function Toolbar() {
               className="text-xs font-medium mt-0.5"
               style={{ color: 'var(--color-text-tertiary)' }}
             >
-              Home Designer Pro
+              {t.toolbar.appSubtitle}
             </p>
           </div>
         </div>
@@ -46,7 +48,7 @@ export function Toolbar() {
           className="text-sm font-semibold uppercase tracking-wide mr-1"
           style={{ color: 'var(--color-text-tertiary)' }}
         >
-          View:
+          {t.toolbar.view}
         </span>
         <button
           onClick={() => setView('elevation')}
@@ -62,7 +64,7 @@ export function Toolbar() {
             transform: state.activeView === 'elevation' ? 'translateY(-2px)' : 'none'
           }}
         >
-          Elevation
+          {t.toolbar.elevation}
         </button>
         <button
           onClick={() => setView('plan')}
@@ -78,17 +80,17 @@ export function Toolbar() {
             transform: state.activeView === 'plan' ? 'translateY(-2px)' : 'none'
           }}
         >
-          Plan
+          {t.toolbar.plan}
         </button>
       </div>
 
-      {/* Right: Zoom Controls - Snappy Interactions */}
+      {/* Right: Zoom Controls & Language Toggle - Snappy Interactions */}
       <div className="flex items-center gap-3">
         <span 
           className="text-sm font-semibold uppercase tracking-wide"
           style={{ color: 'var(--color-text-tertiary)' }}
         >
-          Zoom:
+          {t.toolbar.zoom}
         </span>
         <button
           onClick={() => setZoom(state.zoom - 0.1)}
@@ -118,7 +120,23 @@ export function Toolbar() {
           onClick={() => setZoom(1)}
           className="btn-secondary btn-sm ml-2"
         >
-          Reset
+          {t.toolbar.reset}
+        </button>
+
+        {/* Language Toggle */}
+        <div 
+          className="h-8 w-px ml-2"
+          style={{ backgroundColor: 'var(--color-border)' }}
+        />
+        <button
+          onClick={() => setLanguage(language === 'en' ? 'he' : 'en')}
+          className="btn-secondary px-4 py-2 text-sm font-bold flex items-center gap-2"
+          title={language === 'en' ? 'Switch to Hebrew' : 'עבור לאנגלית'}
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+          </svg>
+          <span>{language === 'en' ? 'עב' : 'EN'}</span>
         </button>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 
 export type Language = 'en' | 'he';
 
@@ -338,16 +338,13 @@ export function TranslationProvider({ children }: { children: ReactNode }) {
   const handleSetLanguage = (lang: Language) => {
     setLanguage(lang);
     localStorage.setItem('home_designer_language', lang);
-    // Update document direction for RTL
-    document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
-    document.documentElement.lang = lang;
   };
 
-  // Set initial direction
-  if (typeof document !== 'undefined') {
+  // Set document direction when language changes
+  useEffect(() => {
     document.documentElement.dir = language === 'he' ? 'rtl' : 'ltr';
     document.documentElement.lang = language;
-  }
+  }, [language]);
 
   return (
     <TranslationContext.Provider

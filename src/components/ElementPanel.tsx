@@ -2,7 +2,6 @@ import { useDesign } from '../context/DesignContext';
 import { useTranslation } from '../context/TranslationContext';
 import { 
   type ElementType, 
-  ELEMENT_TYPE_NAMES, 
   MATERIAL_COLORS, 
   type MaterialType,
   type PositionMode,

@@ -333,7 +333,11 @@ export function TranslationProvider({ children }: { children: ReactNode }) {
     // Try to load from localStorage
     try {
       const saved = localStorage.getItem('home_designer_language');
-      return (saved === 'he' ? 'he' : 'en') as Language;
+      // Validate that saved value is a valid language
+      if (saved === 'he' || saved === 'en') {
+        return saved;
+      }
+      return 'en'; // Default to English for invalid values
     } catch {
       // Fallback to English if localStorage is unavailable
       return 'en';

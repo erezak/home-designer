@@ -1,16 +1,30 @@
 import { useDesign } from '../context/DesignContext';
+import { useTranslation } from '../context/TranslationContext';
 import { parseCm, MATERIAL_COLORS, type MaterialType } from '../types';
 
 export function CanvasSettings() {
   const { state, setCanvas } = useDesign();
+  const { t } = useTranslation();
   const { canvas } = state;
 
   const materialOptions: MaterialType[] = ['drywall', 'wood', 'mdf', 'stone', 'metal'];
 
+  const getMaterialName = (mat: MaterialType) => {
+    const materialMap: Record<MaterialType, string> = {
+      drywall: t.materials.drywall,
+      wood: t.materials.wood,
+      glass: t.materials.glass,
+      metal: t.materials.metal,
+      stone: t.materials.stone,
+      mdf: t.materials.mdf,
+    };
+    return materialMap[mat];
+  };
+
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="panel-header">Canvas Settings</h3>
+        <h3 className="panel-header">{t.canvasSettings.title}</h3>
       </div>
       
       {/* Name */}
@@ -19,14 +33,14 @@ export function CanvasSettings() {
           className="block text-xs font-bold uppercase tracking-wide mb-2"
           style={{ color: 'var(--color-text-secondary)' }}
         >
-          Design Name
+          {t.canvasSettings.designName}
         </label>
         <input
           type="text"
           className="input-field"
           value={canvas.name}
           onChange={(e) => setCanvas({ name: e.target.value })}
-          placeholder="Enter design name"
+          placeholder={t.canvasSettings.designNamePlaceholder}
         />
       </div>
       
@@ -36,7 +50,7 @@ export function CanvasSettings() {
           className="block text-xs font-bold uppercase tracking-wide mb-3"
           style={{ color: 'var(--color-text-secondary)' }}
         >
-          Dimensions
+          {t.canvasSettings.dimensions}
         </label>
         <div className="grid grid-cols-3 gap-3">
           <div>
@@ -44,7 +58,7 @@ export function CanvasSettings() {
               className="block text-xs font-semibold mb-1"
               style={{ color: 'var(--color-text-tertiary)' }}
             >
-              Width (cm)
+              {t.canvasSettings.width}
             </label>
             <input
               type="text"
@@ -66,7 +80,7 @@ export function CanvasSettings() {
               className="block text-xs font-semibold mb-1"
               style={{ color: 'var(--color-text-tertiary)' }}
             >
-              Height (cm)
+              {t.canvasSettings.height}
             </label>
             <input
               type="text"
@@ -88,7 +102,7 @@ export function CanvasSettings() {
               className="block text-xs font-semibold mb-1"
               style={{ color: 'var(--color-text-tertiary)' }}
             >
-              Depth (cm)
+              {t.canvasSettings.depth}
             </label>
             <input
               type="text"
@@ -115,7 +129,7 @@ export function CanvasSettings() {
             className="block text-xs font-bold uppercase tracking-wide mb-2"
             style={{ color: 'var(--color-text-secondary)' }}
           >
-            Material
+            {t.canvasSettings.material}
           </label>
           <select
             className="input-field"
@@ -129,7 +143,7 @@ export function CanvasSettings() {
           >
             {materialOptions.map((mat) => (
               <option key={mat} value={mat}>
-                {mat.charAt(0).toUpperCase() + mat.slice(1)}
+                {getMaterialName(mat)}
               </option>
             ))}
           </select>
@@ -140,7 +154,7 @@ export function CanvasSettings() {
             className="block text-xs font-bold uppercase tracking-wide mb-2"
             style={{ color: 'var(--color-text-secondary)' }}
           >
-            Scale (1:X)
+            {t.canvasSettings.scale}
           </label>
           <select
             className="input-field"
@@ -162,7 +176,7 @@ export function CanvasSettings() {
           className="block text-xs font-bold uppercase tracking-wide mb-3"
           style={{ color: 'var(--color-text-secondary)' }}
         >
-          Grid Options
+          {t.canvasSettings.gridOptions}
         </label>
         
         <label className="flex items-center gap-3 cursor-pointer group">
@@ -180,7 +194,7 @@ export function CanvasSettings() {
             className="text-sm font-semibold group-hover:text-blue-600 transition-colors"
             style={{ color: 'var(--color-text-primary)' }}
           >
-            Show Grid
+            {t.canvasSettings.showGrid}
           </span>
         </label>
         
@@ -190,7 +204,7 @@ export function CanvasSettings() {
               className="block text-xs font-semibold mb-1"
               style={{ color: 'var(--color-text-tertiary)' }}
             >
-              Grid Size (cm)
+              {t.canvasSettings.gridSize}
             </label>
             <input
               type="text"
@@ -222,7 +236,7 @@ export function CanvasSettings() {
             className="text-sm font-semibold group-hover:text-blue-600 transition-colors"
             style={{ color: 'var(--color-text-primary)' }}
           >
-            Snap to Grid
+            {t.canvasSettings.snapToGrid}
           </span>
         </label>
         
@@ -241,7 +255,7 @@ export function CanvasSettings() {
             className="text-sm font-semibold group-hover:text-blue-600 transition-colors"
             style={{ color: 'var(--color-text-primary)' }}
           >
-            Snap to Elements
+            {t.canvasSettings.snapToElements}
           </span>
         </label>
         
@@ -260,7 +274,7 @@ export function CanvasSettings() {
             className="text-sm font-semibold group-hover:text-blue-600 transition-colors"
             style={{ color: 'var(--color-text-primary)' }}
           >
-            Auto-position Elements
+            {t.canvasSettings.autoPosition}
           </span>
         </label>
         
@@ -279,7 +293,7 @@ export function CanvasSettings() {
             className="text-sm font-semibold group-hover:text-blue-600 transition-colors"
             style={{ color: 'var(--color-text-primary)' }}
           >
-            Show All Distances
+            {t.canvasSettings.showAllDistances}
           </span>
         </label>
       </div>

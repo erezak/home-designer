@@ -3,6 +3,7 @@ import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import yaml from 'js-yaml';
 import { useDesign } from '../context/DesignContext';
+import { useTranslation } from '../context/TranslationContext';
 import { formatCm } from '../types';
 
 type ExportFormat = 'json' | 'yaml';
@@ -13,6 +14,7 @@ interface ExportPanelProps {
 
 export function ExportPanel({ canvasRef }: ExportPanelProps) {
   const { state, exportState, importState } = useDesign();
+  const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [exportFormat, setExportFormat] = useState<ExportFormat>('json');
 
@@ -227,7 +229,7 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="panel-header">Export & Save</h3>
+        <h3 className="panel-header">{t.exportPanel.title}</h3>
       </div>
 
       <div className="space-y-3">
@@ -236,7 +238,7 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
             </svg>
-            Export PDF
+            {t.exportPanel.exportPdf}
           </span>
         </button>
 
@@ -245,7 +247,7 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            Export PNG
+            {t.exportPanel.exportPng}
           </span>
         </button>
 
@@ -254,7 +256,7 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
             </svg>
-            Print
+            {t.exportPanel.print}
           </span>
         </button>
       </div>
@@ -270,7 +272,7 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
             className="block text-xs font-bold uppercase tracking-wide mb-2"
             style={{ color: 'var(--color-text-secondary)' }}
           >
-            Project Format
+            {t.exportPanel.projectFormat}
           </label>
           <select
             className="input-field"
@@ -287,7 +289,7 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
             </svg>
-            Save Project ({exportFormat.toUpperCase()})
+            {t.exportPanel.saveProject} ({exportFormat.toUpperCase()})
           </span>
         </button>
 
@@ -299,7 +301,7 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" />
             </svg>
-            Load Project
+            {t.exportPanel.loadProject}
           </span>
         </button>
         <input
@@ -321,7 +323,7 @@ export function ExportPanel({ canvasRef }: ExportPanelProps) {
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Auto-saved to browser
+            {t.exportPanel.autoSaved}
           </p>
         </div>
       </div>

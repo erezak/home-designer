@@ -1,7 +1,7 @@
 import { useDesign } from '../context/DesignContext';
+import { useTranslation } from '../context/TranslationContext';
 import { 
   type ElementType, 
-  ELEMENT_TYPE_NAMES, 
   MATERIAL_COLORS, 
   type MaterialType,
   type PositionMode,
@@ -19,11 +19,46 @@ export function ElementPanel() {
     getSelectedElement,
     selectElement,
   } = useDesign();
+  const { t } = useTranslation();
   
   const selectedElement = getSelectedElement();
   const elementTypes: ElementType[] = ['niche', 'shelf', 'tv-recess', 'fireplace', 'custom'];
   const materialOptions: MaterialType[] = ['drywall', 'wood', 'glass', 'metal', 'stone', 'mdf'];
   const positionModes: PositionMode[] = ['auto', 'relative', 'absolute'];
+
+  // Helper functions for translations
+  const getElementTypeName = (type: ElementType) => {
+    const typeMap: Record<ElementType, string> = {
+      wall: t.elementTypes.wall,
+      niche: t.elementTypes.niche,
+      shelf: t.elementTypes.shelf,
+      'tv-recess': t.elementTypes.tvRecess,
+      fireplace: t.elementTypes.fireplace,
+      custom: t.elementTypes.custom,
+    };
+    return typeMap[type];
+  };
+
+  const getMaterialName = (mat: MaterialType) => {
+    const materialMap: Record<MaterialType, string> = {
+      drywall: t.materials.drywall,
+      wood: t.materials.wood,
+      glass: t.materials.glass,
+      metal: t.materials.metal,
+      stone: t.materials.stone,
+      mdf: t.materials.mdf,
+    };
+    return materialMap[mat];
+  };
+
+  const getPositionModeName = (mode: PositionMode) => {
+    const modeMap: Record<PositionMode, string> = {
+      auto: t.elementPanel.auto,
+      relative: t.elementPanel.relative,
+      absolute: t.elementPanel.absolute,
+    };
+    return modeMap[mode];
+  };
 
   // Get all elements for relative positioning dropdown
   const getAllElements = () => {
@@ -81,7 +116,7 @@ export function ElementPanel() {
     <div className="space-y-6">
       {/* Add Element Section - Hero CTA */}
       <div>
-        <h3 className="panel-header">Add Element</h3>
+        <h3 className="panel-header">{t.elementPanel.addElement}</h3>
         <div className="grid grid-cols-2 gap-3">
           {elementTypes.map((type) => (
             <button
@@ -93,7 +128,7 @@ export function ElementPanel() {
               }}
             >
               {getElementIcon(type)}
-              <span className="text-xs">{ELEMENT_TYPE_NAMES[type]}</span>
+              <span className="text-xs">{getElementTypeName(type)}</span>
             </button>
           ))}
         </div>
@@ -107,7 +142,7 @@ export function ElementPanel() {
             }}
           >
             <p className="text-xs font-bold">
-              ✓ Will be added inside: <span className="font-extrabold">{selectedElement.name}</span>
+              ✓ {t.elementPanel.willBeAddedInside} <span className="font-extrabold">{selectedElement.name}</span>
             </p>
           </div>
         )}
@@ -115,7 +150,7 @@ export function ElementPanel() {
       
       {/* Element List */}
       <div>
-        <h3 className="panel-header">Elements ({state.elements.length})</h3>
+        <h3 className="panel-header">{t.elementPanel.elementsCount} ({state.elements.length})</h3>
         {state.elements.length === 0 ? (
           <div 
             className="panel text-center py-8"
@@ -134,13 +169,13 @@ export function ElementPanel() {
               className="text-sm font-semibold"
               style={{ color: 'var(--color-text-secondary)' }}
             >
-              No elements yet
+              {t.elementPanel.noElements}
             </p>
             <p 
               className="text-xs mt-1"
               style={{ color: 'var(--color-text-tertiary)' }}
             >
-              Click the buttons above to add elements
+              {t.elementPanel.clickButtonsAbove}
             </p>
           </div>
         ) : (
@@ -162,12 +197,12 @@ export function ElementPanel() {
       {selectedElement && (
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="panel-header mb-0 pb-0 border-0">Edit Element</h3>
+            <h3 className="panel-header mb-0 pb-0 border-0">{t.elementPanel.editElement}</h3>
             <button
               onClick={() => deleteElement(selectedElement.id)}
               className="btn-danger btn-sm"
             >
-              Delete
+              {t.elementPanel.delete}
             </button>
           </div>
           
@@ -177,14 +212,14 @@ export function ElementPanel() {
               className="block text-xs font-bold uppercase tracking-wide mb-2"
               style={{ color: 'var(--color-text-secondary)' }}
             >
-              Name
+              {t.elementPanel.name}
             </label>
             <input
               type="text"
               className="input-field"
               value={selectedElement.name}
               onChange={(e) => updateElement(selectedElement.id, { name: e.target.value })}
-              placeholder="Element name"
+              placeholder={t.elementPanel.namePlaceholder}
             />
           </div>
           
@@ -195,7 +230,7 @@ export function ElementPanel() {
                 className="block text-xs font-bold uppercase tracking-wide mb-2"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Type
+                {t.elementPanel.type}
               </label>
               <select
                 className="input-field"
@@ -206,7 +241,7 @@ export function ElementPanel() {
               >
                 {elementTypes.map((type) => (
                   <option key={type} value={type}>
-                    {ELEMENT_TYPE_NAMES[type]}
+                    {getElementTypeName(type)}
                   </option>
                 ))}
               </select>
@@ -217,7 +252,7 @@ export function ElementPanel() {
                 className="block text-xs font-bold uppercase tracking-wide mb-2"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Material
+                {t.canvasSettings.material}
               </label>
               <select
                 className="input-field"
@@ -231,7 +266,7 @@ export function ElementPanel() {
               >
                 {materialOptions.map((mat) => (
                   <option key={mat} value={mat}>
-                    {mat.charAt(0).toUpperCase() + mat.slice(1)}
+                    {getMaterialName(mat)}
                   </option>
                 ))}
               </select>
@@ -244,7 +279,7 @@ export function ElementPanel() {
               className="block text-xs font-bold uppercase tracking-wide mb-3"
               style={{ color: 'var(--color-text-secondary)' }}
             >
-              Dimensions
+              {t.canvasSettings.dimensions}
             </label>
             <div className="grid grid-cols-3 gap-3">
               <div>
@@ -252,7 +287,7 @@ export function ElementPanel() {
                   className="block text-xs font-semibold mb-1"
                   style={{ color: 'var(--color-text-tertiary)' }}
                 >
-                  Width (cm)
+                  {t.canvasSettings.width}
                 </label>
                 <input
                   type="text"
@@ -276,7 +311,7 @@ export function ElementPanel() {
                   className="block text-xs font-semibold mb-1"
                   style={{ color: 'var(--color-text-tertiary)' }}
                 >
-                  Height (cm)
+                  {t.canvasSettings.height}
                 </label>
                 <input
                   type="text"
@@ -301,7 +336,7 @@ export function ElementPanel() {
                     className="block text-xs font-semibold mb-1"
                     style={{ color: 'var(--color-text-tertiary)' }}
                   >
-                    Depth (cm)
+                    {t.canvasSettings.depth}
                   </label>
                   <input
                     type="text"
@@ -328,7 +363,7 @@ export function ElementPanel() {
                 className="block text-xs font-bold uppercase tracking-wide mb-2"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Position Mode
+                {t.elementPanel.positionMode}
               </label>
               <select
                 className="input-field"
@@ -342,7 +377,7 @@ export function ElementPanel() {
               >
                 {positionModes.map((mode) => (
                   <option key={mode} value={mode}>
-                    {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                    {getPositionModeName(mode)}
                   </option>
                 ))}
               </select>
@@ -356,7 +391,7 @@ export function ElementPanel() {
                     className="block text-xs font-semibold mb-1"
                     style={{ color: 'var(--color-text-tertiary)' }}
                   >
-                    Relative To
+                    {t.elementPanel.relativeTo}
                   </label>
                   <select
                     className="input-field"
@@ -368,7 +403,7 @@ export function ElementPanel() {
                       }
                     })}
                   >
-                    <option value="">Select element...</option>
+                    <option value="">{t.elementPanel.selectElement}</option>
                     {getAllElements()
                       .filter((el) => el.id !== selectedElement.id)
                       .map((el) => (
@@ -383,7 +418,7 @@ export function ElementPanel() {
                     className="block text-xs font-semibold mb-1"
                     style={{ color: 'var(--color-text-tertiary)' }}
                   >
-                    Anchor
+                    {t.elementPanel.anchor}
                   </label>
                   <select
                     className="input-field"
@@ -395,10 +430,10 @@ export function ElementPanel() {
                       }
                     })}
                   >
-                    <option value="next-to">Next To (Right)</option>
-                    <option value="below">Below</option>
-                    <option value="above">Above</option>
-                    <option value="inside">Inside</option>
+                    <option value="next-to">{t.elementPanel.nextTo}</option>
+                    <option value="below">{t.elementPanel.below}</option>
+                    <option value="above">{t.elementPanel.above}</option>
+                    <option value="inside">{t.elementPanel.inside}</option>
                   </select>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
@@ -407,7 +442,7 @@ export function ElementPanel() {
                       className="block text-xs font-semibold mb-1"
                       style={{ color: 'var(--color-text-tertiary)' }}
                     >
-                      Offset X (cm)
+                      {t.elementPanel.offsetX}
                     </label>
                     <input
                       type="text"
@@ -434,7 +469,7 @@ export function ElementPanel() {
                       className="block text-xs font-semibold mb-1"
                       style={{ color: 'var(--color-text-tertiary)' }}
                     >
-                      Offset Y (cm)
+                      {t.elementPanel.offsetY}
                     </label>
                     <input
                       type="text"
@@ -468,7 +503,7 @@ export function ElementPanel() {
                     className="block text-xs font-semibold mb-1"
                     style={{ color: 'var(--color-text-tertiary)' }}
                   >
-                    X (cm)
+                    {t.elementPanel.x}
                   </label>
                   <input
                     type="text"
@@ -495,7 +530,7 @@ export function ElementPanel() {
                     className="block text-xs font-semibold mb-1"
                     style={{ color: 'var(--color-text-tertiary)' }}
                   >
-                    Y (cm)
+                    {t.elementPanel.y}
                   </label>
                   <input
                     type="text"
